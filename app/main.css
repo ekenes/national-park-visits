@@ -1,8 +1,132 @@
 html,
 body,
-#viewDiv {
+#mainViewDiv {
   padding: 0;
   margin: 0;
   height: 100%;
   width: 100%;
+  display: flex;
+  background-color: #fff;
+}
+
+#akViewDiv {
+  padding: 0;
+  margin: 0;
+  height: 225px;
+  width: 300px;
+  background-color: rgba(255,255,255,0.8);
+  position: absolute;
+  left: 15px;
+  bottom: 25px;
+  border: #dcd8d0;
+  border-width: thin;
+  border-style: solid;
+}
+
+#hiViewDiv {
+  padding: 0;
+  margin: 0;
+  height: 135px;
+  width: 250px;
+  background-color: rgba(255,255,255,0.8);
+  position: absolute;
+  left: 315px;
+  bottom: 25px;
+  border: #dcd8d0;
+  border-width: thin;
+  border-style: solid;
+}
+
+#viViewDiv {
+  padding: 0;
+  margin: 0;
+  height: 80px;
+  width: 150px;
+  background-color: rgba(255,255,255,0.8);
+  position: absolute;
+  right: 30%;
+  bottom: 25px;
+  border: #dcd8d0;
+  border-width: thin;
+  border-style: solid;
+}
+#timeSlider {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  height: 400px;
+  width: 50px;
+  background-color: rgba(0, 0, 0, 0);
+}
+#title {
+  padding: 10px;
+  text-align: right;
+  position: absolute;
+  top: 10px;
+  width: 500px;
+  right: 10px;
+  background-color: rgba(255,255,255,0.8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#titleText {
+  font-size: 12pt;
+  padding-bottom: 10px;
+}
+
+#percent-change {
+  /* position: absolute;
+  top: 10px;
+  left: 45%; */
+  font-size: 16pt;
+  font-weight: 500;
+}
+
+#annual-visits {
+  font-size: 18pt;
+  font-weight: 800;
+}
+
+.emphasis {
+  font-size: 16pt;
+  font-weight: 500;
+}
+
+.increase-style{
+  color:#018571;
+  font-weight: 500;
+}
+.decrease-style {
+  color:#a6611a;
+  font-weight: 500;
+}
+#legend{
+  width: 200px;
+  opacity: 0.9;
+  bottom: 20px;
+  right: 10px;
+  position: absolute;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+}
+
+#feature{
+  text-align: left;
+  padding: 10px 10px 10px 10px;
+  position: absolute;
+  top: 95px;
+  width: 500px;
+  right: 10px;
+  background-color: rgba(255,255,255,0.8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  display: none;
+  z-index: 2;
+}
+
+#viewSelectContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  left: 0;
+  width: 10%;
 }

@@ -21,5 +21,24 @@
   <body>
     <div id="viewDiv"></div>
     <script>require(["app/main"]);</script>
+    <!-- <div id="viewSelectContainer">
+      <button id="all" class="all-active">All</button>
+      <button id="us" class="us-inactive">Lower 48</button>
+      <button id="ak" class="ak-inactive">Alaska</button>
+      <button id="hi" class="hi-inactive">Hawaii</button>
+    </div> -->
+    <div id="mainViewDiv" class="mainView"></div>
+    <div id="akViewDiv" class="esri-widget"></div>
+    <div id="hiViewDiv" class="esri-widget"></div>
+    <div id="viViewDiv" class="esri-widget"></div>
+    <div id="timeSlider">
+      <div id="slider"></div>
+    </div>
+    <div id="title" class="esri-widget">
+      <div id="titleText"><span id="annual-visits"></span> people visited <span class="emphasis">national parks</span> in <span class="emphasis" id="year"></span></div>
+      <div>a <span id="percent-change"></span> change <span id="total-change"></span> from <span id="previous-year"></span></div>
+    </div>
+    <div id="feature"></div>
+    <div id="legend"></div>
   </body>
 </html>
