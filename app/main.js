@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Legend", "esri/core/watchUtils", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/renderers", "esri/symbols", "esri/geometry"], function (require, exports, WebMap, MapView, FeatureLayer, Legend, watchUtils, Slider, Feature, intl, renderers_1, symbols_1, geometry_1) {
+define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Legend", "esri/core/watchUtils", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/tasks/support/StatisticDefinition", "esri/renderers", "esri/symbols", "esri/geometry", "./popup", "./labels", "./renderer"], function (require, exports, WebMap, MapView, FeatureLayer, Legend, watchUtils, Slider, Feature, intl, StatisticDefinition, renderers_1, symbols_1, geometry_1, popup_1, labels_1, renderer_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -45,7 +45,10 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 var item = part.split("=");
                 result[item[0]] = parseInt(decodeURIComponent(item[1]));
             });
-            return result.viewType;
+            if (result && result.viewType) {
+                return result.viewType;
+            }
+            return;
         }
         // function to set an id as a url param
         function setUrlParams(viewType) {
@@ -53,165 +56,48 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         }
         function initializeSlider() {
             return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             year = slider.values[0];
-                            yearElement.innerHTML = year;
-                            previousYearElement.innerHTML = year - 1;
+                            yearElement.innerHTML = year.toString();
+                            previousYearElement.innerHTML = (year - 1).toString();
                             return [4 /*yield*/, mainView.whenLayerView(layer)];
                         case 1:
                             layerView = _a.sent();
-                            watchUtils.whenFalseOnce(layerView, "updating", createRenderer);
+                            watchUtils.whenFalseOnce(layerView, "updating", function () { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, queryStats(layerView, year)
+                                                .then(updateParkVisitationDisplay)];
+                                        case 1:
+                                            _a.sent();
+                                            return [4 /*yield*/, renderer_1.createRenderer({
+                                                    layer: layer,
+                                                    view: mainView,
+                                                    year: year
+                                                })];
+                                        case 2:
+                                            _a.sent();
+                                            layer.popupTemplate = popup_1.createPopupTemplate(year);
+                                            layer.labelingInfo = labels_1.createLabelingInfo(year);
+                                            slider.disabled = false;
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); });
                             slider.watch("values", function (_a) {
                                 var value = _a[0];
                                 yearElement.innerHTML = value;
-                                previousYearElement.innerHTML = value - 1;
-                                updateRenderer(value);
-                                layer.popupTemplate = createPopupTemplate(value);
-                                layer.labelingInfo = createLabelingInfo(value);
+                                previousYearElement.innerHTML = (value - 1).toString();
+                                renderer_1.updateRenderer(value);
+                                layer.popupTemplate = popup_1.createPopupTemplate(value);
+                                layer.labelingInfo = labels_1.createLabelingInfo(value);
                                 queryStats(layerView, value)
                                     .then(updateParkVisitationDisplay);
                             });
                             return [2 /*return*/, mainView];
-                    }
-                });
-            });
-        }
-        // update the layer's renderer each time the user changes a parameter
-        function updateRenderer(year) {
-            var renderer = layer.renderer.clone();
-            var previousYear = year - 1;
-            var valueExpression = "(($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100";
-            var valueExpressionTitle = "% Change in park visits (" + previousYear + " - " + year + ")";
-            renderer.valueExpression = valueExpression;
-            renderer.valueExpressionTitle = valueExpressionTitle;
-            renderer.visualVariables.forEach(function (visualVariable) {
-                visualVariable.valueExpression = visualVariable.valueExpression !== "$view.scale" ? valueExpression : "$view.scale";
-                visualVariable.valueExpressionTitle = valueExpressionTitle;
-            });
-            layer.renderer = renderer;
-        }
-        function createLabelingInfo(year) {
-            var color = "#ae9a73";
-            var haloColor = "#f7ebd6";
-            var haloSize = 0;
-            return [{
-                    where: "F" + year + " >= 3000000",
-                    labelExpressionInfo: {
-                        expression: "Replace($feature.Park, 'National Park', '')"
-                    },
-                    labelPlacement: "above-right",
-                    symbol: {
-                        type: "text",
-                        font: {
-                            size: 12,
-                            family: "Noto Sans",
-                            weight: "bold"
-                        },
-                        xoffset: -8,
-                        yoffset: -8,
-                        horizontalAlignment: "left",
-                        color: color,
-                        haloColor: haloColor,
-                        haloSize: haloSize
-                    }
-                }, {
-                    where: "F" + year + " >= 1000000 AND F" + year + " < 3000000",
-                    // minScale: 9387410,
-                    labelExpressionInfo: {
-                        expression: "Replace($feature.Park, 'National Park', '')"
-                    },
-                    labelPlacement: "above-right",
-                    symbol: {
-                        type: "text",
-                        font: {
-                            size: 9,
-                            family: "Noto Sans",
-                            weight: "bold"
-                        },
-                        xoffset: -8,
-                        yoffset: -8,
-                        horizontalAlignment: "left",
-                        color: color,
-                        haloColor: haloColor,
-                        haloSize: haloSize
-                    }
-                }, {
-                    where: "F" + year + " < 1000000",
-                    // minScale: 9387410,
-                    labelExpressionInfo: {
-                        expression: "Replace($feature.Park, 'National Park', '')"
-                    },
-                    labelPlacement: "above-right",
-                    symbol: {
-                        type: "text",
-                        font: {
-                            size: 8,
-                            family: "Noto Sans"
-                        },
-                        xoffset: -8,
-                        yoffset: -8,
-                        horizontalAlignment: "left",
-                        color: color,
-                        haloColor: haloColor,
-                        haloSize: haloSize
-                    }
-                }];
-        }
-        function createRenderer() {
-            return __awaiter(this, void 0, void 0, function () {
-                var previousYear, valueExpression, valueExpressionTitle, colorScheme, params, renderer, sizeVariable;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            queryStats(layerView, year)
-                                .then(updateParkVisitationDisplay);
-                            previousYear = year - 1;
-                            valueExpression = "(($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100";
-                            valueExpressionTitle = "% Change in park visitation (" + previousYear + " - " + year + ")";
-                            colorScheme = colorSchemes.getSchemeByName({
-                                geometryType: layer.geometryType,
-                                name: "Green and Brown 1",
-                                theme: "above-and-below"
-                            });
-                            params = {
-                                layer: layer,
-                                view: mainView,
-                                theme: "above-and-below",
-                                valueExpression: valueExpression,
-                                valueExpressionTitle: valueExpressionTitle,
-                                minValue: -200,
-                                maxValue: 200,
-                                defaultSymbolEnabled: false,
-                                colorOptions: {
-                                    colorScheme: colorScheme,
-                                    isContinuous: false,
-                                },
-                                symbolOptions: {
-                                    symbolStyle: "circle-arrow"
-                                }
-                            };
-                            return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer(params)];
-                        case 1:
-                            renderer = (_a.sent()).renderer;
-                            sizeVariable = renderer.visualVariables.filter(function (vv) { return vv.type === "size"; })[0];
-                            sizeVariable.stops = [
-                                { value: -100, size: 40 },
-                                { value: -50, size: 24 },
-                                { value: 0, size: 12 },
-                                { value: 50, size: 24 },
-                                { value: 100, size: 40 }
-                            ];
-                            renderer.authoringInfo.statistics = {
-                                min: -100,
-                                max: 100
-                            };
-                            layer.renderer = renderer;
-                            layer.popupTemplate = createPopupTemplate(year);
-                            layer.labelingInfo = createLabelingInfo(year);
-                            slider.disabled = false;
-                            return [2 /*return*/];
                     }
                 });
             });
@@ -245,7 +131,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                             response = _a.sent();
                                             lastHighlight = highlight;
                                             id = null;
-                                            if (response ? .results.length : ) {
+                                            if (response && response.results.length) {
                                                 feature = response.results[0].graphic;
                                                 // feature.popupTemplate = layer.popupTemplate;
                                                 id = feature.getObjectId();
@@ -282,7 +168,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         function disableNavigation(view) {
             view.popup.dockEnabled = true;
             // Removes the zoom action on the popup
-            view.popup.actions = [];
+            view.popup.actions = null;
             // stops propagation of default behavior when an event fires
             function stopEvtPropagation(event) {
                 event.stopPropagation();
@@ -310,90 +196,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             });
             return view;
         }
-        // prevents the user from opening the popup with click
-        function disablePopupOnClick(view) {
-            view.on("click", function (event) {
-                event.stopPropagation();
-            });
-            return view;
-        }
-        function createFieldsForChart() {
-            var start = 1905;
-            var end = 2019;
-            fieldsForChart = [];
-            fieldInfos = [];
-            for (var y = start; y <= end; y++) {
-                fieldsForChart.push("F" + y);
-                fieldInfos.push({
-                    fieldName: "F" + y,
-                    label: y,
-                    format: {
-                        places: 0,
-                        digitSeparator: true
-                    }
-                });
-            }
-        }
-        function createPopupTemplate(year) {
-            if (fieldsForChart.length < 1) {
-                createFieldsForChart();
-            }
-            return {
-                title: "{Park}",
-                outFields: ["*"],
-                expressionInfos: [{
-                        name: "max",
-                        title: "Highest growth year",
-                        expression: highestGrowthArcade
-                    }, {
-                        name: "min",
-                        title: "Lowest growth year",
-                        expression: lowestGrowthArcade
-                    }, {
-                        name: "growth",
-                        title: "Change from " + (year - 1) + " - " + year,
-                        expression: "\n          var popCurrent = $feature.F" + year + ";\n          var popPrevious = IIF(" + year + " == 1904, 0, $feature.F" + (year - 1) + ");\n          popCurrent - popPrevious;\n        "
-                    }, {
-                        name: "percent-growth",
-                        title: "% growth from " + (year - 1) + " - " + year,
-                        expression: "\n          var popCurrent = $feature.F" + year + ";\n          var popPrevious = IIF(" + year + " == 1904, 0, $feature.F" + (year - 1) + ");\n          var perChange = ((popCurrent - popPrevious) / popPrevious) * 100;\n          var direction = IIF(perChange < 0, \"decrease\", \"increase\");\n          return Text(Abs(perChange), '#,###.0') + \"% \" + direction;\n        "
-                    }],
-                fieldInfos: fieldInfos,
-                content: [{
-                        type: "text",
-                        text: "\n          <b>{F" + year + "}</b> people visited {Park} in " + year + ", a <b>{expression/percent-growth}</b> from the previous year.\n        "
-                    }, {
-                        type: "fields",
-                        fieldInfos: [{
-                                fieldName: "expression/growth",
-                                format: {
-                                    places: 0,
-                                    digitSeparator: true
-                                }
-                            }, {
-                                fieldName: "expression/max"
-                            }, {
-                                fieldName: "expression/min"
-                            }, {
-                                fieldName: "TOTAL",
-                                label: "Total visits (1904-2019)",
-                                format: {
-                                    places: 0,
-                                    digitSeparator: true
-                                }
-                            }]
-                    }, {
-                        type: "media",
-                        mediaInfos: [{
-                                type: "line-chart",
-                                title: "Park visitation (1905-2019)",
-                                value: {
-                                    fields: fieldsForChart
-                                }
-                            }]
-                    }]
-            };
-        }
         function queryStats(layerView, year) {
             return __awaiter(this, void 0, void 0, function () {
                 var query, onStatisticField, response, stats;
@@ -402,19 +204,19 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                         case 0:
                             query = layerView.createQuery();
                             onStatisticField = createCumulativeSumField(year);
-                            query.outStatistics = [{
+                            query.outStatistics = [new StatisticDefinition({
                                     statisticType: "sum",
                                     onStatisticField: createCumulativeSumField(year),
                                     outStatisticFieldName: "total_accumulated_visitation"
-                                }, {
+                                }), new StatisticDefinition({
                                     statisticType: "sum",
                                     onStatisticField: "F" + year,
                                     outStatisticFieldName: "annual_visitation"
-                                }, {
+                                }), new StatisticDefinition({
                                     statisticType: "sum",
                                     onStatisticField: year > 1904 ? "F" + (year - 1) : "F1904",
                                     outStatisticFieldName: "previous_annual_visitation"
-                                }];
+                                })];
                             return [4 /*yield*/, layerView.queryFeatures(query)];
                         case 1:
                             response = _a.sent();
@@ -472,7 +274,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 check = true; })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         }
-        var viewType, layer, map, mainExtent, mainView, legend, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, akExtent, akView, hiView, viView, slider, year, layerView, featureWidget, highlight, lastHighlight, fieldsForChart, fieldInfos;
+        var viewType, layer, map, mainExtent, mainView, legend, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, akExtent, akView, hiView, viView, slider, year, layerView, featureWidget, highlight, lastHighlight;
         return __generator(this, function (_a) {
             viewType = getUrlParams();
             if (!viewType) {
@@ -723,8 +525,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             });
             highlight = null;
             lastHighlight = null;
-            fieldsForChart = [];
-            fieldInfos = [];
             ;
             return [2 /*return*/];
         });

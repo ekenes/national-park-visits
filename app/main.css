@@ -53,7 +53,7 @@ body,
 #timeSlider {
   position: absolute;
   left: 10px;
-  top: 10px;
+  top: 30px;
   height: 400px;
   width: 50px;
   background-color: rgba(0, 0, 0, 0);
@@ -123,10 +123,13 @@ body,
 }
 
 #viewSelectContainer{
-  display: flex;
+  top: 10px;
+  left: 10px;
+  position: absolute;
+  /* display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
   left: 0;
-  width: 10%;
+  width: 10%; */
 }

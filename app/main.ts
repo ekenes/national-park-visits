@@ -10,26 +10,40 @@ import WebStyleSymbol = require("esri/symbols/WebStyleSymbol");
 import Slider = require("esri/widgets/Slider");
 import Feature = require("esri/widgets/Feature");
 import intl = require("esri/intl");
+import FieldInfo = require("esri/popup/FieldInfo");
+import colorSchemes = require("esri/smartMapping/symbology/color");
+import Graphic = require("esri/Graphic");
+import StatisticDefinition = require("esri/tasks/support/StatisticDefinition");
 import { SimpleRenderer } from "esri/renderers";
 import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { Extent } from "esri/geometry";
+import { createPopupTemplate } from "./popup";
+import { createLabelingInfo } from "./labels";
+import { createRenderer, updateRenderer } from "./renderer";
 
 (async () => {
 
+  interface UrlParams {
+    viewType?: "all" | "us" | "ak" | "hi" | "vi"
+  }
+
   function getUrlParams() {
     const queryParams = document.location.search.substr(1);
-    let result = {};
+    let result: UrlParams = {};
 
     queryParams.split("&").forEach(function(part) {
       var item = part.split("=");
       result[item[0]] = parseInt(decodeURIComponent(item[1]));
     });
 
-    return result.viewType;
+    if (result && result.viewType){
+      return result.viewType;
+    }
+    return;
   }
 
   // function to set an id as a url param
-  function setUrlParams(viewType) {
+  function setUrlParams(viewType: UrlParams["viewType"]) {
     window.history.pushState("", "", `${window.location.pathname}?view=${viewType}`);
   }
 
@@ -144,12 +158,12 @@ import { Extent } from "esri/geometry";
     container: document.getElementById("legend")
   });
 
-  const yearElement = document.getElementById("year");
-  const previousYearElement = document.getElementById("previous-year");
+  const yearElement = document.getElementById("year") as HTMLSpanElement;
+  const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
 
-  const annualVisitsElement = document.getElementById("annual-visits");
-  const percentChangeElement = document.getElementById("percent-change");
-  const totalChangeElement = document.getElementById("total-change");
+  const annualVisitsElement = document.getElementById("annual-visits") as HTMLSpanElement;
+  const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
+  const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
 
   const akExtent = new Extent({
     spatialReference: {
@@ -291,7 +305,7 @@ import { Extent } from "esri/geometry";
     .then(disableNavigation)
     .then(enableHighlightOnPointerMove)
 
-  let layerView: ;
+  let layerView: esri.FeatureLayerView;
 
   let featureWidget = new Feature({
     map: mainView.map,
@@ -300,15 +314,28 @@ import { Extent } from "esri/geometry";
   });
 
   async function initializeSlider() {
-    year = slider.values[0]
-    yearElement.innerHTML = year;
-    previousYearElement.innerHTML = year-1;
+    year = slider.values[0];
+    yearElement.innerHTML = year.toString();
+    previousYearElement.innerHTML = (year-1).toString();
     layerView = await mainView.whenLayerView(layer);
-    watchUtils.whenFalseOnce(layerView, "updating", createRenderer);
+    watchUtils.whenFalseOnce(layerView, "updating", async () => {
+      await queryStats(layerView, year)
+      .then(updateParkVisitationDisplay);
+
+      await createRenderer({
+        layer,
+        view: mainView,
+        year
+      });
+
+      layer.popupTemplate = createPopupTemplate(year);
+      layer.labelingInfo = createLabelingInfo(year);
+      slider.disabled = false;
+    });
 
     slider.watch("values", ([ value ]) => {
       yearElement.innerHTML = value;
-      previousYearElement.innerHTML = value - 1;
+      previousYearElement.innerHTML = (value - 1).toString();
       updateRenderer(value);
       layer.popupTemplate = createPopupTemplate(value);
       layer.labelingInfo = createLabelingInfo(value);
@@ -320,149 +347,9 @@ import { Extent } from "esri/geometry";
   }
 
 
-  // update the layer's renderer each time the user changes a parameter
-  function updateRenderer(year) {
-    const renderer = layer.renderer.clone();
-    const previousYear = year - 1;
-    const valueExpression = `(($feature.F${year} - $feature.F${previousYear}) / $feature.F${previousYear}) * 100`;
-    const valueExpressionTitle = `% Change in park visits (${previousYear} - ${year})`;
 
-    renderer.valueExpression = valueExpression;
-    renderer.valueExpressionTitle = valueExpressionTitle;
 
-    renderer.visualVariables.forEach( visualVariable => {
-      visualVariable.valueExpression = visualVariable.valueExpression !== "$view.scale" ? valueExpression : "$view.scale";
-      visualVariable.valueExpressionTitle = valueExpressionTitle;
-    });
-
-    layer.renderer = renderer;
-  }
-
-  function createLabelingInfo(year){
-    const color = "#ae9a73";
-    const haloColor = "#f7ebd6";
-    const haloSize = 0;
-
-    return [{
-      where: `F${year} >= 3000000`,
-      labelExpressionInfo: {
-        expression: "Replace($feature.Park, 'National Park', '')"
-      },
-      labelPlacement: "above-right",
-      symbol: {
-        type: "text",
-        font: {
-          size: 12,
-          family: "Noto Sans",
-          weight: "bold"
-        },
-        xoffset: -8,
-        yoffset: -8,
-        horizontalAlignment: "left",
-        color,
-        haloColor,
-        haloSize
-
-      }
-    }, {
-      where: `F${year} >= 1000000 AND F${year} < 3000000`,
-      // minScale: 9387410,
-      labelExpressionInfo: {
-        expression: "Replace($feature.Park, 'National Park', '')"
-      },
-      labelPlacement: "above-right",
-      symbol: {
-        type: "text",
-        font: {
-          size: 9,
-          family: "Noto Sans",
-          weight: "bold"
-        },
-        xoffset: -8,
-        yoffset: -8,
-        horizontalAlignment: "left",
-        color,
-        haloColor,
-        haloSize
-
-      }
-    }, {
-      where: `F${year} < 1000000`,
-      // minScale: 9387410,
-      labelExpressionInfo: {
-        expression: "Replace($feature.Park, 'National Park', '')"
-      },
-      labelPlacement: "above-right",
-      symbol: {
-        type: "text",
-        font: {
-          size: 8,
-          family: "Noto Sans"
-        },
-        xoffset: -8,
-        yoffset: -8,
-        horizontalAlignment: "left",
-        color,
-        haloColor,
-        haloSize
-      }
-    }];
-  }
-
-  async function createRenderer() {
-
-    queryStats(layerView, year)
-      .then(updateParkVisitationDisplay);
-
-    const previousYear = year - 1;
-    const valueExpression = `(($feature.F${year} - $feature.F${previousYear}) / $feature.F${previousYear}) * 100`;
-    const valueExpressionTitle = `% Change in park visitation (${previousYear} - ${year})`;
-
-    const colorScheme = colorSchemes.getSchemeByName({
-      geometryType: layer.geometryType,
-      name: "Green and Brown 1",
-      theme: "above-and-below"
-    });
-
-    let params = {
-      layer,
-      view: mainView,
-      theme: "above-and-below",
-      valueExpression,
-      valueExpressionTitle,
-      minValue: -200,
-      maxValue: 200,
-      defaultSymbolEnabled: false,
-      colorOptions: {
-        colorScheme,
-        isContinuous: false,
-      },
-      symbolOptions: {
-        symbolStyle: "circle-arrow"
-      }
-    };
-
-    const { renderer } = await univariateRendererCreator.createContinuousRenderer(params);
-    const sizeVariable = renderer.visualVariables.filter( vv => vv.type === "size")[0];
-    sizeVariable.stops = [
-      { value: -100, size: 40 },
-      { value: -50, size: 24 },
-      { value: 0, size: 12 },
-      { value: 50, size: 24 },
-      { value: 100, size: 40 }
-    ]
-
-    renderer.authoringInfo.statistics = {
-      min: -100,
-      max: 100
-    };
-    layer.renderer = renderer;
-    layer.popupTemplate = createPopupTemplate(year);
-    layer.labelingInfo = createLabelingInfo(year);
-    slider.disabled = false;
-  }
-
-  function maintainFixedExtent(view) {
+  function maintainFixedExtent(view: MapView) {
     var fixedExtent = view.extent.clone();
     // keep a fixed extent in the view
     // when the view size changes
@@ -472,8 +359,8 @@ import { Extent } from "esri/geometry";
     return view;
   }
 
-  let highlight = null;
-  let lastHighlight = null;
+  let highlight: esri.Handle = null;
+  let lastHighlight: esri.Handle = null;
 
   async function enableHighlightOnPointerMove(view: MapView) {
     const layerView = await view.whenLayerView(layer);
@@ -488,7 +375,7 @@ import { Extent } from "esri/geometry";
       // if no features are returned, then close the popup
       var id = null;
 
-      if (response?.results.length) {
+      if (response && response.results.length) {
         var feature = response.results[0].graphic;
 
         // feature.popupTemplate = layer.popupTemplate;
@@ -522,10 +409,10 @@ import { Extent } from "esri/geometry";
     view.popup.dockEnabled = true;
 
     // Removes the zoom action on the popup
-    view.popup.actions = [];
+    view.popup.actions = null;
 
     // stops propagation of default behavior when an event fires
-    function stopEvtPropagation(event) {
+    function stopEvtPropagation(event:any) {
       event.stopPropagation();
     }
 
@@ -559,134 +446,32 @@ import { Extent } from "esri/geometry";
     return view;
   }
 
-  // prevents the user from opening the popup with click
 
-  function disablePopupOnClick(view) {
-    view.on("click", function (event) {
-      event.stopPropagation();
-    });
-    return view;
-  }
 
-  let fieldsForChart = [];
-  let fieldInfos = [];
-
-  function createFieldsForChart (){
-    const start = 1905;
-    const end = 2019;
-    fieldsForChart = [];
-    fieldInfos = [];
-
-    for (let y=start; y <= end; y++){
-      fieldsForChart.push(`F${y}`);
-      fieldInfos.push({
-        fieldName: `F${y}`,
-        label: y,
-        format: {
-          places: 0,
-          digitSeparator: true
-        }
-      });
-    }
-  }
-
-  function createPopupTemplate(year){
-    if(fieldsForChart.length < 1){
-      createFieldsForChart();
-    }
-    return {
-      title: "{Park}",
-      outFields: ["*"],
-      expressionInfos: [{
-        name: "max",
-        title: "Highest growth year",
-        expression: highestGrowthArcade
-      }, {
-        name: "min",
-        title: "Lowest growth year",
-        expression: lowestGrowthArcade
-      }, {
-        name: "growth",
-        title: `Change from ${year-1} - ${year}`,
-        expression: `
-          var popCurrent = $feature.F${year};
-          var popPrevious = IIF(${year} == 1904, 0, $feature.F${year - 1});
-          popCurrent - popPrevious;
-        `
-      }, {
-        name: "percent-growth",
-        title: `% growth from ${year-1} - ${year}`,
-        expression: `
-          var popCurrent = $feature.F${year};
-          var popPrevious = IIF(${year} == 1904, 0, $feature.F${year - 1});
-          var perChange = ((popCurrent - popPrevious) / popPrevious) * 100;
-          var direction = IIF(perChange < 0, "decrease", "increase");
-          return Text(Abs(perChange), '#,###.0') + "% " + direction;
-        `
-      }],
-      fieldInfos: fieldInfos,
-      content: [{
-        type: "text",
-        text: `
-          <b>{F${year}}</b> people visited {Park} in ${year}, a <b>{expression/percent-growth}</b> from the previous year.
-        `
-      }, {
-        type: "fields",
-        fieldInfos: [{
-          fieldName: "expression/growth",
-          format: {
-            places: 0,
-            digitSeparator: true
-          }
-        }, {
-          fieldName: "expression/max"
-        }, {
-          fieldName: "expression/min"
-        }, {
-          fieldName: "TOTAL",
-          label: "Total visits (1904-2019)",
-          format: {
-            places: 0,
-            digitSeparator: true
-          }
-        }]
-      }, {
-        type: "media",
-        mediaInfos: [{
-          type: "line-chart",
-          title: "Park visitation (1905-2019)",
-          value: {
-            fields: fieldsForChart
-          }
-        }]
-      }]
-    };
-  }
-
-  async function queryStats(layerView, year){
+  async function queryStats(layerView:esri.FeatureLayerView, year:number){
     const query = layerView.createQuery();
     const onStatisticField = createCumulativeSumField(year);
 
-    query.outStatistics = [{
+    query.outStatistics = [new StatisticDefinition({
       statisticType: "sum",
       onStatisticField: createCumulativeSumField(year),
       outStatisticFieldName: "total_accumulated_visitation"
-    }, {
+    }), new StatisticDefinition({
       statisticType: "sum",
       onStatisticField: `F${year}`,
       outStatisticFieldName: "annual_visitation"
-    }, {
+    }), new StatisticDefinition({
       statisticType: "sum",
       onStatisticField: year > 1904 ? `F${year-1}` : "F1904",
       outStatisticFieldName: "previous_annual_visitation"
-    }];
+    })];
 
     const response = await layerView.queryFeatures(query);
     const stats = response.features[0].attributes;
     return stats;
   }
 
-  function createCumulativeSumField(year){
+  function createCumulativeSumField(year: number){
     let onStatisticField = "";
     for( let start = 1904; start < year; start++){
       onStatisticField += `F${start} + `;
@@ -695,7 +480,7 @@ import { Extent } from "esri/geometry";
     return onStatisticField;
   }
 
-  function updateParkVisitationDisplay(stats){
+  function updateParkVisitationDisplay(stats: Graphic["attributes"]){
     const annual = stats.annual_visitation;
     const total = stats.total_accumulated_visitation;
     const previous = stats.previous_annual_visitation || null;
@@ -706,17 +491,17 @@ import { Extent } from "esri/geometry";
       digitSeparator: true,
       maximumFractionDigits: 0,
       minimumFractionDigits: 0
-    });
+    } as any);
 
     const formattedPercentChange = intl.formatNumber(Math.abs(percentChange), {
       digitSeparator: true,
       maximumFractionDigits: 1,
       minimumFractionDigits: 1
-    });
+    } as any);
 
     annualVisitsElement.innerText = intl.formatNumber(annual, {
       digitSeparator: true
-    });
+    } as any);
 
     if(previous){
       if(percentChange > 0){

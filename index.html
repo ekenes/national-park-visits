@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
     <title>National Park Visitation Statistics</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/css/main.css">
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/next/esri/css/main.css">
     <link rel="stylesheet" href="app/main.css">
     <script>
       var locationPath = location.pathname.replace(/\/[^\/]+$/, "");
@@ -16,21 +16,22 @@
         ]
       };
     </script>
-    <script src="https://js.arcgis.com/next/"></script>
+    <script src="https://jsdev.arcgis.com/next/"></script>
   </head>
   <body>
-    <div id="viewDiv"></div>
     <script>require(["app/main"]);</script>
-    <!-- <div id="viewSelectContainer">
-      <button id="all" class="all-active">All</button>
-      <button id="us" class="us-inactive">Lower 48</button>
-      <button id="ak" class="ak-inactive">Alaska</button>
-      <button id="hi" class="hi-inactive">Hawaii</button>
-    </div> -->
     <div id="mainViewDiv" class="mainView"></div>
     <div id="akViewDiv" class="esri-widget"></div>
     <div id="hiViewDiv" class="esri-widget"></div>
     <div id="viViewDiv" class="esri-widget"></div>
+    <div id="viewSelectContainer">
+      <select id="viewSelect">
+        <option value="all">All</option>
+        <option value="us">Lower 48</option>
+        <option value="ak">Alaska</option>
+        <option value="hi">Hawaii</option>
+      </select>
+    </div>
     <div id="timeSlider">
       <div id="slider"></div>
     </div>
