@@ -91,7 +91,10 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 var value = _a[0];
                                 yearElement.innerHTML = value;
                                 previousYearElement.innerHTML = (value - 1).toString();
-                                renderer_1.updateRenderer(value);
+                                renderer_1.updateRenderer({
+                                    layer: layer,
+                                    year: value
+                                });
                                 layer.popupTemplate = popup_1.createPopupTemplate(value);
                                 layer.labelingInfo = labels_1.createLabelingInfo(value);
                                 queryStats(layerView, value)

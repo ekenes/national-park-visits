@@ -336,7 +336,10 @@ import { createRenderer, updateRenderer } from "./renderer";
     slider.watch("values", ([ value ]) => {
       yearElement.innerHTML = value;
       previousYearElement.innerHTML = (value - 1).toString();
-      updateRenderer(value);
+      updateRenderer({
+        layer,
+        year: value
+      });
       layer.popupTemplate = createPopupTemplate(value);
       layer.labelingInfo = createLabelingInfo(value);
 
