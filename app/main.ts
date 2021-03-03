@@ -24,6 +24,8 @@ import { createRenderer, updateRenderer } from "./renderer";
 
 (async () => {
 
+  const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
+
   const views = {
     ak: {
       container: document.getElementById("akViewDiv") as HTMLDivElement,
@@ -59,7 +61,7 @@ import { createRenderer, updateRenderer } from "./renderer";
     if (result && result.viewType){
       return result.viewType;
     }
-    return;
+    return "all";
   }
 
   // function to set an id as a url param
@@ -333,12 +335,31 @@ const legend = new Legend({
 });
 
 
+function disableSelectOptionByValue(selectElement: HTMLSelectElement, value: string){
+  const op = selectElement.getElementsByTagName("option");
+  for (var i = 0; i < op.length; i++) {
+    (op[i].value.toLowerCase() == value.toLowerCase())
+      ? op[i].disabled = true
+      : op[i].disabled = false;
+  }
+}
+
+function enableSelectOptionsAll(selectElement: HTMLSelectElement){
+  const op = selectElement.getElementsByTagName("option");
+  for (var i = 0; i < op.length; i++) {
+    op[i].disabled = false;
+  }
+}
+
 let viewType = getUrlParams();
 
-if(!viewType){
-  viewType = isMobileBrowser() ? "us" : "all";
-  setUrlParams(viewType);
+if(isMobileBrowser()){
+  viewType = viewType === "all" ? "us" : viewType;
+  disableSelectOptionByValue(viewSelect, "all");
 }
+
+setUrlParams(viewType);
+viewSelect.value = viewType;
 
 let selectedView: MapView = null;
 
@@ -595,8 +616,6 @@ renderViews(viewType);
       percentChangeElement.innerHTML = null;
     }
   }
-
-  const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
 
   async function renderViews (newValue: UrlParams["viewType"]) {
     setUrlParams(newValue);

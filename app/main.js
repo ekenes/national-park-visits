@@ -48,7 +48,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             if (result && result.viewType) {
                 return result.viewType;
             }
-            return;
+            return "all";
         }
         // function to set an id as a url param
         function setUrlParams(viewType) {
@@ -335,6 +335,20 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 destroyView(view, k);
             }
         }
+        function disableSelectOptionByValue(selectElement, value) {
+            var op = selectElement.getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                (op[i].value.toLowerCase() == value.toLowerCase())
+                    ? op[i].disabled = true
+                    : op[i].disabled = false;
+            }
+        }
+        function enableSelectOptionsAll(selectElement) {
+            var op = selectElement.getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                op[i].disabled = false;
+            }
+        }
         function initializeSlider() {
             return __awaiter(this, void 0, void 0, function () {
                 var _this = this;
@@ -602,8 +616,9 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 check = true; })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         }
-        var views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, legend, viewType, selectedView, year, layerView, featureWidget, slider, highlight, lastHighlight, viewSelect;
+        var viewSelect, views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, legend, viewType, selectedView, year, layerView, featureWidget, slider, highlight, lastHighlight;
         return __generator(this, function (_a) {
+            viewSelect = document.getElementById("viewSelect");
             views = {
                 ak: {
                     container: document.getElementById("akViewDiv"),
@@ -633,10 +648,12 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 container: document.getElementById("legend")
             });
             viewType = getUrlParams();
-            if (!viewType) {
-                viewType = isMobileBrowser() ? "us" : "all";
-                setUrlParams(viewType);
+            if (isMobileBrowser()) {
+                viewType = viewType === "all" ? "us" : viewType;
+                disableSelectOptionByValue(viewSelect, "all");
             }
+            setUrlParams(viewType);
+            viewSelect.value = viewType;
             selectedView = null;
             renderViews(viewType);
             year = 0;
@@ -665,7 +682,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             });
             highlight = null;
             lastHighlight = null;
-            viewSelect = document.getElementById("viewSelect");
             viewSelect.addEventListener("change", function () {
                 var newValue = viewSelect.value;
                 renderViews(newValue);
