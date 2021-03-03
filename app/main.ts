@@ -14,6 +14,7 @@ import FieldInfo = require("esri/popup/FieldInfo");
 import colorSchemes = require("esri/smartMapping/symbology/color");
 import Graphic = require("esri/Graphic");
 import StatisticDefinition = require("esri/tasks/support/StatisticDefinition");
+import promiseUtils = require("esri/core/promiseUtils");
 import { SimpleRenderer } from "esri/renderers";
 import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { Extent } from "esri/geometry";
@@ -22,6 +23,25 @@ import { createLabelingInfo } from "./labels";
 import { createRenderer, updateRenderer } from "./renderer";
 
 (async () => {
+
+  const views = {
+    ak: {
+      container: document.getElementById("akViewDiv") as HTMLDivElement,
+      view: null as any //createAkView()
+    },
+    hi: {
+      container: document.getElementById("hiViewDiv") as HTMLDivElement,
+      view: null as any//createHiView()
+    },
+    vi: {
+      container: document.getElementById("viViewDiv") as HTMLDivElement,
+      view: null as any//createViView()
+    },
+    us: {
+      container: document.getElementById("mainViewDiv") as HTMLDivElement,
+      view: null as any//createUsView()
+    }
+  }
 
   interface UrlParams {
     viewType?: "all" | "us" | "ak" | "hi" | "vi"
@@ -33,7 +53,7 @@ import { createRenderer, updateRenderer } from "./renderer";
 
     queryParams.split("&").forEach(function(part) {
       var item = part.split("=");
-      result[item[0]] = parseInt(decodeURIComponent(item[1]));
+      result[item[0]] = decodeURIComponent(item[1]);
     });
 
     if (result && result.viewType){
@@ -44,35 +64,41 @@ import { createRenderer, updateRenderer } from "./renderer";
 
   // function to set an id as a url param
   function setUrlParams(viewType: UrlParams["viewType"]) {
-    window.history.pushState("", "", `${window.location.pathname}?view=${viewType}`);
+    window.history.pushState("", "", `${window.location.pathname}?viewType=${viewType}`);
   }
 
-  let viewType = getUrlParams();
+  const yearElement = document.getElementById("year") as HTMLSpanElement;
+  const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
 
-  if(!viewType){
-    viewType = isMobileBrowser() ? "us" : "all";
-    setUrlParams(viewType);
+  const annualVisitsElement = document.getElementById("annual-visits") as HTMLSpanElement;
+  const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
+  const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
+
+  let layer: FeatureLayer = null;
+
+  function createLayer(){
+    return new FeatureLayer({
+      title: "U.S. National Parks",
+      portalItem: {
+        id: "0e3fd5de259f46acb169c54eb501cfe5"
+      },
+      renderer: new SimpleRenderer({
+        symbol: new SimpleMarkerSymbol({
+          color: [255,0,0,1],
+          outline: null
+        })
+      }),
+      outFields: ["*"],
+      layerId: 0,
+      minScale: 0,
+      maxScale: 0,
+      popupEnabled: false
+    });
   }
 
-  const layer = new FeatureLayer({
-    title: "U.S. National Parks",
-    portalItem: {
-      id: "0e3fd5de259f46acb169c54eb501cfe5"
-    },
-    renderer: new SimpleRenderer({
-      symbol: new SimpleMarkerSymbol({
-        color: [0,0,0,0],
-        outline: null
-      })
-    }),
-    outFields: ["*"],
-    layerId: 0,
-    minScale: 0,
-    maxScale: 0,
-    popupEnabled: false
-  });
-
-  const map = new WebMap({
+function createMap(){
+  layer = createLayer();
+  return new WebMap({
     basemap: {
       baseLayers: [
         new FeatureLayer({
@@ -108,20 +134,14 @@ import { createRenderer, updateRenderer } from "./renderer";
     },
     layers: [layer]
   });
+}
 
-  const mainExtent = {
-    spatialReference: {
-      wkid: 5070
-    },
-    xmin: -2985714.7547551794,
-    ymin: 66403.41816565767,
-    xmax: 2965420.009085534,
-    ymax: 3244802.8703926024
-  };
 
-  const mainView = new MapView({
-    container: "mainViewDiv",
+async function createUsView(container: MapView["container"], map: WebMap){
+  container.style.display = "flex";
+  const usView = new MapView({
     map,
+    container,
     popup: {
       highlightEnabled: true,
       dockEnabled: true,
@@ -130,7 +150,15 @@ import { createRenderer, updateRenderer } from "./renderer";
         position: "top-right"
       }
     },
-    extent: mainExtent,
+    extent: {
+      spatialReference: {
+        wkid: 5070
+      },
+      xmin: -2985714.7547551794,
+      ymin: 66403.41816565767,
+      xmax: 2965420.009085534,
+      ymax: 3244802.8703926024
+    },
     constraints: {
       minScale: 16215262,
       maxScale: 2000000,
@@ -152,33 +180,23 @@ import { createRenderer, updateRenderer } from "./renderer";
       components: ["attribution"]
     }
   });
+  return await usView.when();
+}
 
-  const legend = new Legend({
-    view: mainView,
-    container: document.getElementById("legend")
-  });
-
-  const yearElement = document.getElementById("year") as HTMLSpanElement;
-  const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
-
-  const annualVisitsElement = document.getElementById("annual-visits") as HTMLSpanElement;
-  const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
-  const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
-
-  const akExtent = new Extent({
-    spatialReference: {
-      wkid: 5936
-    },
-    xmin: 737823.0703569443,
-    ymin: -2103604.250401656,
-    xmax: 3689660.4504700145,
-    ymax: 110273.7846831464
-  });
-
+async function createAkView(container: MapView["container"], map: WebMap){
+  container.style.display = "flex";
   const akView = new MapView({
-    container: "akViewDiv",
-    map: map,
-    extent: akExtent,
+    map,
+    container,
+    extent: new Extent({
+      spatialReference: {
+        wkid: 5936
+      },
+      xmin: 737823.0703569443,
+      ymin: -2103604.250401656,
+      xmax: 3689660.4504700145,
+      ymax: 110273.7846831464
+    }),
     spatialReference: {
       // WGS_1984_EPSG_Alaska_Polar_Stereographic
       wkid: 5936
@@ -200,10 +218,14 @@ import { createRenderer, updateRenderer } from "./renderer";
       components: []
     }
   });
+  return await akView.when();
+}
 
+function createHiView(container: MapView["container"], map: WebMap){
+  container.style.display = "flex";
   const hiView = new MapView({
-    container: "hiViewDiv",
     map,
+    container,
     extent: new Extent({
       spatialReference: {
         wkid: 102007
@@ -233,10 +255,14 @@ import { createRenderer, updateRenderer } from "./renderer";
       components: []
     }
   });
+  return hiView.when();
+}
 
+async function createViView(container: MapView["container"], map: WebMap){
+  container.style.display = "flex";
   const viView = new MapView({
-    container: "viViewDiv",
     map,
+    container,
     extent: {
       spatialReference: {
         wkid: 5070
@@ -266,13 +292,92 @@ import { createRenderer, updateRenderer } from "./renderer";
       components: []
     }
   });
+  return await viView.when();
+}
+
+async function createAllViews(map: WebMap){
+
+  views.us.view = await createUsView(views.us.container, map);
+  views.ak.view = await createAkView(views.ak.container, map);
+  views.hi.view = await createHiView(views.hi.container, map);
+  views.vi.view = await createViView(views.vi.container, map);
+
+  return views;
+}
+
+
+
+function destroyView(view: MapView, key: string){
+  if(view){
+    view.map.removeAll();
+    view.container.style.display = "none";
+    view.container = null;
+    view.map = null;
+    views[key].view = null;
+  }
+}
+
+function destroyAllViews(){
+  for (let k in views){
+    const view = views[k].view;
+    destroyView(view, k);
+  }
+}
+
+
+
+
+const legend = new Legend({
+  view: views.us.view,
+  container: document.getElementById("legend")
+});
+
+
+let viewType = getUrlParams();
+
+if(!viewType){
+  viewType = isMobileBrowser() ? "us" : "all";
+  setUrlParams(viewType);
+}
+
+let selectedView: MapView = null;
+
+renderViews(viewType);
+
+
+  let year = 0;
+
+  // usView
+  //   .when()
+  //   .then(initializeSlider)
+  //   .then(maintainFixedExtent)
+  //   .then(enableHighlightOnPointerMove)
+  // akView
+  //   .when()
+  //   .then(enableHighlightOnPointerMove)
+  // hiView
+  //   .when()
+  //   .then(disableNavigation)
+  //   .then(enableHighlightOnPointerMove)
+  // viView
+  //   .when()
+  //   .then(disableNavigation)
+  //   .then(enableHighlightOnPointerMove)
+
+  let layerView: esri.FeatureLayerView;
+
+  let featureWidget = new Feature({
+    // map: views.us.view.map,
+    // spatialReference: views.us.view.spatialReference,
+    container: document.getElementById("feature")
+  });
 
   const slider = new Slider({
     disabled: true,
     container: "timeSlider",
     min: 1905,
-    max: 2019,
-    values: [ 2019 ],
+    max: 2020,
+    values: [ 2020 ],
     steps: 1,
     layout: "vertical",
     visibleElements: {
@@ -286,45 +391,18 @@ import { createRenderer, updateRenderer } from "./renderer";
     }]
   });
 
-  let year = 0;
-
-  mainView
-    .when()
-    .then(initializeSlider)
-    .then(maintainFixedExtent)
-    .then(enableHighlightOnPointerMove)
-  akView
-    .when()
-    .then(enableHighlightOnPointerMove)
-  hiView
-    .when()
-    .then(disableNavigation)
-    .then(enableHighlightOnPointerMove)
-  viView
-    .when()
-    .then(disableNavigation)
-    .then(enableHighlightOnPointerMove)
-
-  let layerView: esri.FeatureLayerView;
-
-  let featureWidget = new Feature({
-    map: mainView.map,
-    spatialReference: mainView.spatialReference,
-    container: document.getElementById("feature")
-  });
-
   async function initializeSlider() {
     year = slider.values[0];
     yearElement.innerHTML = year.toString();
     previousYearElement.innerHTML = (year-1).toString();
-    layerView = await mainView.whenLayerView(layer);
+    layerView = await views.us.view.whenLayerView(layer);
     watchUtils.whenFalseOnce(layerView, "updating", async () => {
       await queryStats(layerView, year)
       .then(updateParkVisitationDisplay);
 
       await createRenderer({
         layer,
-        view: mainView,
+        view: views.us.view,
         year
       });
 
@@ -346,9 +424,8 @@ import { createRenderer, updateRenderer } from "./renderer";
       queryStats(layerView, value)
         .then(updateParkVisitationDisplay);
     });
-    return mainView;
+    return views.us.view;
   }
-
 
 
 
@@ -518,6 +595,41 @@ import { createRenderer, updateRenderer } from "./renderer";
       percentChangeElement.innerHTML = null;
     }
   }
+
+  const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
+
+  async function renderViews (newValue: UrlParams["viewType"]) {
+    setUrlParams(newValue);
+
+    destroyAllViews();
+
+    const esriMap = createMap();
+
+    switch(newValue){
+      case "all":
+        await createAllViews(esriMap);
+        break;
+      case "us":
+        await createUsView(views.us.container, esriMap);
+        break;
+      case "ak":
+        await createAkView(views.us.container, esriMap);
+        break;
+      case "hi":
+        await createHiView(views.us.container, esriMap);
+        break;
+      case "vi":
+        await createViView(views.us.container, esriMap);
+        break;
+      default:
+        break;
+    }
+  }
+
+  viewSelect.addEventListener("change", ()=> {
+    const newValue = viewSelect.value as UrlParams["viewType"];
+    renderViews(newValue);
+  });
 
   function isMobileBrowser() {
     let check = false;
