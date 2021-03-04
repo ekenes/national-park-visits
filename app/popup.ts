@@ -1,20 +1,6 @@
-import esri = __esri;
-
-import WebMap = require("esri/WebMap");
 import MapView = require("esri/views/MapView");
-import FeatureLayer = require("esri/layers/FeatureLayer");
-import Legend = require("esri/widgets/Legend");
-import univariateColorSize = require("esri/smartMapping/renderers/univariateColorSize");
-import watchUtils = require("esri/core/watchUtils");
-import WebStyleSymbol = require("esri/symbols/WebStyleSymbol");
-import Slider = require("esri/widgets/Slider");
-import Feature = require("esri/widgets/Feature");
-import intl = require("esri/intl");
 import FieldInfo = require("esri/popup/FieldInfo");
 import PopupTemplate = require("esri/PopupTemplate");
-import { SimpleRenderer } from "esri/renderers";
-import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
-import { Extent } from "esri/geometry";
 import { highestGrowthArcade, lowestGrowthArcade } from "./expressions";
 
 export function disablePopupOnClick(view: MapView) {

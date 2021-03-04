@@ -55,3 +55,25 @@ export const visitationChangeArcade = `
   }
   return lowest;
 `;
+
+
+interface ValueExpressionInfo {
+  valueExpression: string;
+  valueExpressionTitle: string;
+}
+
+export function updatePercentChangeValueExpression(year: number): ValueExpressionInfo {
+  const previousYear = year - 1;
+  const valueExpression = `(($feature.F${year} - $feature.F${previousYear}) / $feature.F${previousYear}) * 100`;
+  const valueExpressionTitle = `% Change in park visitation (${previousYear} - ${year})`;
+
+  return { valueExpression, valueExpressionTitle };
+}
+
+export function updateTotalChangeValueExpression(year: number): ValueExpressionInfo {
+  const previousYear = year - 1;
+  const valueExpression = `$feature.F${year} - $feature.F${previousYear}`;
+  const valueExpressionTitle = `Total change in park visits (${previousYear} - ${year})`;
+
+  return { valueExpression, valueExpressionTitle };
+}

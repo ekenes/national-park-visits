@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/SizeVariable", "esri/renderers/visualVariables/ColorVariable", "esri/renderers/visualVariables/support/SizeStop", "esri/symbols", "esri/rasterRenderers", "./cimReference"], function (require, exports, colorSchemes, univariateRendererCreator, SizeVariable, ColorVariable, SizeStop, symbols_1, rasterRenderers_1, cimReference_1) {
+define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/SizeVariable", "esri/renderers/visualVariables/ColorVariable", "esri/renderers/visualVariables/support/SizeStop", "esri/symbols", "esri/renderers", "./cimReference", "./expressions"], function (require, exports, colorSchemes, univariateRendererCreator, SizeVariable, ColorVariable, SizeStop, symbols_1, renderers_1, cimReference_1, expressions_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var colorScheme = colorSchemes.getSchemeByName({
@@ -44,18 +44,6 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     });
     exports.renderers = {};
     exports.rendererType = "percent-change";
-    function updatePercentChangeValueExpression(year) {
-        var previousYear = year - 1;
-        var valueExpression = "(($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100";
-        var valueExpressionTitle = "% Change in park visitation (" + previousYear + " - " + year + ")";
-        return { valueExpression: valueExpression, valueExpressionTitle: valueExpressionTitle };
-    }
-    function updateTotalChangeValueExpression(year) {
-        var previousYear = year - 1;
-        var valueExpression = "$feature.F" + year + " - $feature.F" + previousYear;
-        var valueExpressionTitle = "Total change in park visits (" + previousYear + " - " + year + ")";
-        return { valueExpression: valueExpression, valueExpressionTitle: valueExpressionTitle };
-    }
     function createPercentChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
             var layer, view, year, _a, valueExpression, valueExpressionTitle, rendererParams, renderer, sizeVariable;
@@ -63,7 +51,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                 switch (_b.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
-                        _a = updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+                        _a = expressions_1.updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
                         rendererParams = {
                             layer: layer,
                             view: view,
@@ -99,7 +87,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     }
     function updatePercentChangeRenderer(params) {
         var year = params.year, renderer = params.renderer;
-        var _a = updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+        var _a = expressions_1.updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
         renderer.valueExpression = valueExpression;
         renderer.valueExpressionTitle = valueExpressionTitle;
         renderer.visualVariables.forEach(function (visualVariable) {
@@ -115,7 +103,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                 switch (_b.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
-                        _a = updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+                        _a = expressions_1.updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
                         rendererParams = {
                             layer: layer,
                             view: view,
@@ -150,7 +138,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     }
     function updateTotalChangeRenderer(params) {
         var year = params.year, renderer = params.renderer;
-        var _a = updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+        var _a = expressions_1.updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
         renderer.valueExpression = valueExpression;
         renderer.valueExpressionTitle = valueExpressionTitle;
         renderer.visualVariables.forEach(function (visualVariable) {
@@ -164,7 +152,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
         var symbol = new symbols_1.CIMSymbol({
             data: cimReference_1.cimReference
         });
-        return new rasterRenderers_1.ClassBreaksRenderer({
+        return new renderers_1.ClassBreaksRenderer({
             field: "F" + year,
             classBreakInfos: [
                 {
@@ -225,7 +213,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                         renderer = createBivariateRenderer(year);
                         return [3 /*break*/, 7];
                     case 6:
-                        renderer = new rasterRenderers_1.ClassBreaksRenderer({
+                        renderer = new renderers_1.ClassBreaksRenderer({
                             defaultSymbol: new symbols_1.SimpleMarkerSymbol()
                         });
                         return [3 /*break*/, 7];
@@ -249,7 +237,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                 renderer = createBivariateRenderer(year);
                 break;
             default:
-                renderer = new rasterRenderers_1.ClassBreaksRenderer({
+                renderer = new renderers_1.ClassBreaksRenderer({
                     defaultSymbol: new symbols_1.SimpleMarkerSymbol()
                 });
                 break;

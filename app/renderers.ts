@@ -1,28 +1,17 @@
 import esri = __esri;
 
-import WebMap = require("esri/WebMap");
 import MapView = require("esri/views/MapView");
 import FeatureLayer = require("esri/layers/FeatureLayer");
-import Legend = require("esri/widgets/Legend");
-import univariateColorSize = require("esri/smartMapping/renderers/univariateColorSize");
-import watchUtils = require("esri/core/watchUtils");
-import WebStyleSymbol = require("esri/symbols/WebStyleSymbol");
-import Slider = require("esri/widgets/Slider");
-import Feature = require("esri/widgets/Feature");
-import intl = require("esri/intl");
-import FieldInfo = require("esri/popup/FieldInfo");
 import colorSchemes = require("esri/smartMapping/symbology/color");
 import univariateRendererCreator = require("esri/smartMapping/renderers/univariateColorSize");
 import SizeVariable = require("esri/renderers/visualVariables/SizeVariable");
 import ColorVariable = require("esri/renderers/visualVariables/ColorVariable");
 import SizeStop = require("esri/renderers/visualVariables/support/SizeStop");
-import { SimpleRenderer } from "esri/renderers";
-import { CIMSymbol, SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
-import { Extent } from "esri/geometry";
-import { createPopupTemplate } from "./popup";
-import { createLabelingInfo } from "./labels";
-import { ClassBreaksRenderer } from "esri/rasterRenderers";
+
+import { CIMSymbol, SimpleMarkerSymbol } from "esri/symbols";
+import { ClassBreaksRenderer } from "esri/renderers";
 import { cimReference } from "./cimReference";
+import { updatePercentChangeValueExpression, updateTotalChangeValueExpression } from "./expressions";
 
 const colorScheme = colorSchemes.getSchemeByName({
   geometryType: "point",
@@ -33,27 +22,6 @@ const colorScheme = colorSchemes.getSchemeByName({
 export const renderers = { };
 
 export const rendererType = "percent-change";
-
-interface ValueExpressionInfo {
-  valueExpression: string;
-  valueExpressionTitle: string;
-}
-
-function updatePercentChangeValueExpression(year: number): ValueExpressionInfo {
-  const previousYear = year - 1;
-  const valueExpression = `(($feature.F${year} - $feature.F${previousYear}) / $feature.F${previousYear}) * 100`;
-  const valueExpressionTitle = `% Change in park visitation (${previousYear} - ${year})`;
-
-  return { valueExpression, valueExpressionTitle };
-}
-
-function updateTotalChangeValueExpression(year: number): ValueExpressionInfo {
-  const previousYear = year - 1;
-  const valueExpression = `$feature.F${year} - $feature.F${previousYear}`;
-  const valueExpressionTitle = `Total change in park visits (${previousYear} - ${year})`;
-
-  return { valueExpression, valueExpressionTitle };
-}
 
 interface CreateRendererParams {
   layer: FeatureLayer;
