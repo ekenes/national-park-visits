@@ -99,115 +99,99 @@ import { queryStats } from "./stats";
     });
   }
 
-function createMap(){
-  layer = createLayer();
-  return new WebMap({
-    basemap: {
-      baseLayers: [
-        new FeatureLayer({
-          popupEnabled: false,
-          portalItem: {
-            id: "99fd67933e754a1181cc755146be21ca"
-          },
-          minScale: 0,
-          maxScale: 0,
-          renderer: new SimpleRenderer({
-            symbol: new SimpleFillSymbol({
-              color: "#f7ebd6",
-              outline: {
-                style: "solid",
-                width: 1,
-                color : "#dcd8d0"
-              }
-            })
+  function createMap(){
+    layer = createLayer();
+    return new WebMap({
+      basemap: {
+        baseLayers: [
+          new FeatureLayer({
+            popupEnabled: false,
+            portalItem: {
+              id: "99fd67933e754a1181cc755146be21ca"
+            },
+            minScale: 0,
+            maxScale: 0,
+            renderer: new SimpleRenderer({
+              symbol: new SimpleFillSymbol({
+                color: "#f7ebd6",
+                outline: {
+                  style: "solid",
+                  width: 1,
+                  color : "#dcd8d0"
+                }
+              })
+            }),
+            effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
           }),
-          effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
-        }),
-        new FeatureLayer({
-          popupEnabled: false,
-          portalItem: {
-            id: "f092c20803a047cba81fbf1e30eff0b5"
-          },
-          minScale: 0,
-          maxScale: 0,
-          definitionExpression: `NAME LIKE '%NP%' OR NAME LIKE '%National Park%'`,
-          effect: "grayscale(0.3) opacity(0.55) drop-shadow(2px 2px 10px green)"
-        })
-      ]
-    },
-    layers: [layer]
-  });
-}
-
-
-async function createUsView(container: MapView["container"], map: WebMap){
-  container.style.display = "flex";
-  const usView = new MapView({
-    map,
-    container,
-    popup: {
-      highlightEnabled: true,
-      dockEnabled: true,
-      dockOptions: {
-        breakpoint: false,
-        position: "top-right"
-      }
-    },
-    extent: {
-      spatialReference: {
-        wkid: 5070
+          new FeatureLayer({
+            popupEnabled: false,
+            portalItem: {
+              id: "f092c20803a047cba81fbf1e30eff0b5"
+            },
+            minScale: 0,
+            maxScale: 0,
+            definitionExpression: `NAME LIKE '%NP%' OR NAME LIKE '%National Park%'`,
+            effect: "grayscale(0.3) opacity(0.55) drop-shadow(2px 2px 10px green)"
+          })
+        ]
       },
-      xmin: -2985714.7547551794,
-      ymin: 66403.41816565767,
-      xmax: 2965420.009085534,
-      ymax: 3244802.8703926024
-    },
-    constraints: {
-      minScale: 16215262,
-      maxScale: 2000000,
-      geometry: new Extent({
+      layers: [layer]
+    });
+  }
+
+
+  async function createUsView(container: MapView["container"], map: WebMap){
+    container.style.display = "flex";
+    const usView = new MapView({
+      map,
+      container,
+      popup: {
+        highlightEnabled: true,
+        dockEnabled: true,
+        dockOptions: {
+          breakpoint: false,
+          position: "top-right"
+        }
+      },
+      extent: {
         spatialReference: {
           wkid: 5070
         },
-        xmin: -1921286.8554006994,
-        ymin: 726332.1394147258,
-        xmax: 1694697.29902421,
-        ymax: 2715123.424348426
-      })
-    },
-    spatialReference: {
-      // NAD_1983_Contiguous_USA_Albers
-      wkid: 5070
-    },
-    ui: {
-      components: ["attribution"]
-    }
-  });
-  return await usView.when();
-}
-
-async function createAkView(container: MapView["container"], map: WebMap){
-  container.style.display = "flex";
-  const akView = new MapView({
-    map,
-    container,
-    extent: new Extent({
-      spatialReference: {
-        wkid: 5936
+        xmin: -2985714.7547551794,
+        ymin: 66403.41816565767,
+        xmax: 2965420.009085534,
+        ymax: 3244802.8703926024
       },
-      xmin: 737823.0703569443,
-      ymin: -2103604.250401656,
-      xmax: 3689660.4504700145,
-      ymax: 110273.7846831464
-    }),
-    spatialReference: {
-      // WGS_1984_EPSG_Alaska_Polar_Stereographic
-      wkid: 5936
-    },
-    constraints: {
-      minScale: 36810426,
-      maxScale: 12400323,
-      geometry: new Extent({
+      constraints: {
+        minScale: 16215262,
+        maxScale: 2000000,
+        geometry: new Extent({
+          spatialReference: {
+            wkid: 5070
+          },
+          xmin: -1921286.8554006994,
+          ymin: 726332.1394147258,
+          xmax: 1694697.29902421,
+          ymax: 2715123.424348426
+        })
+      },
+      spatialReference: {
+        // NAD_1983_Contiguous_USA_Albers
+        wkid: 5070
+      },
+      ui: {
+        components: ["attribution"]
+      }
+    });
+    return await usView.when();
+  }
+
+  async function createAkView(container: MapView["container"], map: WebMap){
+    container.style.display = "flex";
+    const akView = new MapView({
+      map,
+      container,
+      extent: new Extent({
         spatialReference: {
           wkid: 5936
         },
@@ -215,36 +199,37 @@ async function createAkView(container: MapView["container"], map: WebMap){
         ymin: -2103604.250401656,
         xmax: 3689660.4504700145,
         ymax: 110273.7846831464
-      })
-    },
-    ui: {
-      components: []
-    }
-  });
-  return await akView.when();
-}
-
-function createHiView(container: MapView["container"], map: WebMap){
-  container.style.display = "flex";
-  const hiView = new MapView({
-    map,
-    container,
-    extent: new Extent({
+      }),
       spatialReference: {
-        wkid: 102007
+        // WGS_1984_EPSG_Alaska_Polar_Stereographic
+        wkid: 5936
       },
-      xmin: -390787.1649959057,
-      ymin: 564313.6231185358,
-      xmax: 756460.4545479296,
-      ymax: 1183827.3376722068
-    }),
-    spatialReference: {
-      // Hawaii_Albers_Equal_Area_Conic
-      wkid: 102007
-    },
-    constraints: {
-      minScale: 17344181,
-      geometry: new Extent({
+      constraints: {
+        minScale: 36810426,
+        maxScale: 12400323,
+        geometry: new Extent({
+          spatialReference: {
+            wkid: 5936
+          },
+          xmin: 737823.0703569443,
+          ymin: -2103604.250401656,
+          xmax: 3689660.4504700145,
+          ymax: 110273.7846831464
+        })
+      },
+      ui: {
+        components: []
+      }
+    });
+    return await akView.when();
+  }
+
+  function createHiView(container: MapView["container"], map: WebMap){
+    container.style.display = "flex";
+    const hiView = new MapView({
+      map,
+      container,
+      extent: new Extent({
         spatialReference: {
           wkid: 102007
         },
@@ -252,36 +237,36 @@ function createHiView(container: MapView["container"], map: WebMap){
         ymin: 564313.6231185358,
         xmax: 756460.4545479296,
         ymax: 1183827.3376722068
-      })
-    },
-    ui: {
-      components: []
-    }
-  });
-  return hiView.when();
-}
-
-async function createViView(container: MapView["container"], map: WebMap){
-  container.style.display = "flex";
-  const viView = new MapView({
-    map,
-    container,
-    extent: {
+      }),
       spatialReference: {
-        wkid: 5070
+        // Hawaii_Albers_Equal_Area_Conic
+        wkid: 102007
       },
-      xmin: 3368052.0840510447,
-      ymin: 56364.032814495884,
-      xmax: 3369766.5874800514,
-      ymax: 58078.53624350274
-    },
-    spatialReference: {
-      wkid: 5070
-    },
-    constraints: {
-      minScale: 43200,
-      maxScale: 43200,
-      geometry: new Extent({
+      constraints: {
+        minScale: 17344181,
+        geometry: new Extent({
+          spatialReference: {
+            wkid: 102007
+          },
+          xmin: -390787.1649959057,
+          ymin: 564313.6231185358,
+          xmax: 756460.4545479296,
+          ymax: 1183827.3376722068
+        })
+      },
+      ui: {
+        components: []
+      }
+    });
+    return hiView.when();
+  }
+
+  async function createViView(container: MapView["container"], map: WebMap){
+    container.style.display = "flex";
+    const viView = new MapView({
+      map,
+      container,
+      extent: {
         spatialReference: {
           wkid: 5070
         },
@@ -289,94 +274,97 @@ async function createViView(container: MapView["container"], map: WebMap){
         ymin: 56364.032814495884,
         xmax: 3369766.5874800514,
         ymax: 58078.53624350274
-      })
-    },
-    ui: {
-      components: []
+      },
+      spatialReference: {
+        wkid: 5070
+      },
+      constraints: {
+        minScale: 43200,
+        maxScale: 43200,
+        geometry: new Extent({
+          spatialReference: {
+            wkid: 5070
+          },
+          xmin: 3368052.0840510447,
+          ymin: 56364.032814495884,
+          xmax: 3369766.5874800514,
+          ymax: 58078.53624350274
+        })
+      },
+      ui: {
+        components: []
+      }
+    });
+    return await viView.when();
+  }
+
+  async function createAllViews(map: WebMap){
+
+    views.us.view = await createUsView(views.us.container, map)
+      .then(maintainFixedExtent)
+      .then(enableHighlightOnPointerMove)
+    views.ak.view = await createAkView(views.ak.container, map)
+      .then(enableHighlightOnPointerMove)
+    views.hi.view = await createHiView(views.hi.container, map)
+      .then(disableNavigation)
+      .then(enableHighlightOnPointerMove)
+    views.vi.view = await createViView(views.vi.container, map)
+      .then(disableNavigation)
+      .then(enableHighlightOnPointerMove)
+
+    return views;
+  }
+
+
+
+  function destroyView(view: MapView, key: string){
+    if(view){
+      view.map.removeAll();
+      view.container.style.display = "none";
+      view.container = null;
+      view.map = null;
+      views[key].view = null;
     }
-  });
-  return await viView.when();
-}
-
-async function createAllViews(map: WebMap){
-
-  views.us.view = await createUsView(views.us.container, map);
-  views.ak.view = await createAkView(views.ak.container, map);
-  views.hi.view = await createHiView(views.hi.container, map);
-  views.vi.view = await createViView(views.vi.container, map);
-
-  return views;
-}
-
-
-
-function destroyView(view: MapView, key: string){
-  if(view){
-    view.map.removeAll();
-    view.container.style.display = "none";
-    view.container = null;
-    view.map = null;
-    views[key].view = null;
   }
-}
 
-function destroyAllViews(){
-  for (let k in views){
-    const view = views[k].view;
-    destroyView(view, k);
+  function destroyAllViews(){
+    for (let k in views){
+      const view = views[k].view;
+      destroyView(view, k);
+    }
   }
-}
 
 
-function disableSelectOptionByValue(selectElement: HTMLSelectElement, value: string){
-  const op = selectElement.getElementsByTagName("option");
-  for (var i = 0; i < op.length; i++) {
-    (op[i].value.toLowerCase() == value.toLowerCase())
-      ? op[i].disabled = true
-      : op[i].disabled = false;
+  function disableSelectOptionByValue(selectElement: HTMLSelectElement, value: string){
+    const op = selectElement.getElementsByTagName("option");
+    for (var i = 0; i < op.length; i++) {
+      (op[i].value.toLowerCase() == value.toLowerCase())
+        ? op[i].disabled = true
+        : op[i].disabled = false;
+    }
   }
-}
 
-function enableSelectOptionsAll(selectElement: HTMLSelectElement){
-  const op = selectElement.getElementsByTagName("option");
-  for (var i = 0; i < op.length; i++) {
-    op[i].disabled = false;
+  function enableSelectOptionsAll(selectElement: HTMLSelectElement){
+    const op = selectElement.getElementsByTagName("option");
+    for (var i = 0; i < op.length; i++) {
+      op[i].disabled = false;
+    }
   }
-}
 
-let viewType = getUrlParams();
+  let viewType = getUrlParams();
 
-if(isMobileBrowser()){
-  viewType = viewType === "all" ? "us" : viewType;
-  disableSelectOptionByValue(viewSelect, "all");
-}
+  if(isMobileBrowser()){
+    viewType = viewType === "all" ? "us" : viewType;
+    disableSelectOptionByValue(viewSelect, "all");
+  }
 
-setUrlParams(viewType);
-viewSelect.value = viewType;
+  setUrlParams(viewType);
+  viewSelect.value = viewType;
 
-let selectedView: MapView = null;
-
-await renderViews(viewType);
+  await renderViews(viewType);
 
 
   let year = 0;
-
-  // usView
-  //   .when()
-  //   .then(initializeSlider)
-  //   .then(maintainFixedExtent)
-  //   .then(enableHighlightOnPointerMove)
-  // akView
-  //   .when()
-  //   .then(enableHighlightOnPointerMove)
-  // hiView
-  //   .when()
-  //   .then(disableNavigation)
-  //   .then(enableHighlightOnPointerMove)
-  // viView
-  //   .when()
-  //   .then(disableNavigation)
-  //   .then(enableHighlightOnPointerMove)
 
   let layerView: esri.FeatureLayerView;
   let featureWidget: Feature;
@@ -464,7 +452,7 @@ await renderViews(viewType);
     layer.labelingInfo = createLabelingInfo(year);
   }
 
-  function maintainFixedExtent(view: MapView) {
+  function maintainFixedExtent(view: MapView): MapView {
     var fixedExtent = view.extent.clone();
     // keep a fixed extent in the view
     // when the view size changes
@@ -477,7 +465,7 @@ await renderViews(viewType);
   let highlight: esri.Handle = null;
   let lastHighlight: esri.Handle = null;
 
-  async function enableHighlightOnPointerMove(view: MapView) {
+  async function enableHighlightOnPointerMove(view: MapView): Promise<MapView> {
     const layerView = await view.whenLayerView(layer);
     view.on("pointer-move", async (event) => {
       const response = await view.hitTest(event, {
@@ -517,6 +505,8 @@ await renderViews(viewType);
         lastHighlight = null;
       }
     });
+
+    return view;
   }
 
   // disables all navigation in the view

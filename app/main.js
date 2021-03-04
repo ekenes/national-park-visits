@@ -300,19 +300,26 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     switch (_e.label) {
                         case 0:
                             _a = views.us;
-                            return [4 /*yield*/, createUsView(views.us.container, map)];
+                            return [4 /*yield*/, createUsView(views.us.container, map)
+                                    .then(maintainFixedExtent)
+                                    .then(enableHighlightOnPointerMove)];
                         case 1:
                             _a.view = _e.sent();
                             _b = views.ak;
-                            return [4 /*yield*/, createAkView(views.ak.container, map)];
+                            return [4 /*yield*/, createAkView(views.ak.container, map)
+                                    .then(enableHighlightOnPointerMove)];
                         case 2:
                             _b.view = _e.sent();
                             _c = views.hi;
-                            return [4 /*yield*/, createHiView(views.hi.container, map)];
+                            return [4 /*yield*/, createHiView(views.hi.container, map)
+                                    .then(disableNavigation)
+                                    .then(enableHighlightOnPointerMove)];
                         case 3:
                             _c.view = _e.sent();
                             _d = views.vi;
-                            return [4 /*yield*/, createViView(views.vi.container, map)];
+                            return [4 /*yield*/, createViView(views.vi.container, map)
+                                    .then(disableNavigation)
+                                    .then(enableHighlightOnPointerMove)];
                         case 4:
                             _d.view = _e.sent();
                             return [2 /*return*/, views];
@@ -488,7 +495,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                     }
                                 });
                             }); });
-                            return [2 /*return*/];
+                            return [2 /*return*/, view];
                     }
                 });
             });
@@ -609,7 +616,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 check = true; })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         }
-        var viewSelect, views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, viewType, selectedView, year, layerView, featureWidget, legend, slider, highlight, lastHighlight;
+        var viewSelect, views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, viewType, year, layerView, featureWidget, legend, slider, highlight, lastHighlight;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -645,7 +652,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     }
                     setUrlParams(viewType);
                     viewSelect.value = viewType;
-                    selectedView = null;
                     return [4 /*yield*/, renderViews(viewType)];
                 case 1:
                     _a.sent();
