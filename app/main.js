@@ -55,12 +55,12 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             window.history.pushState("", "", window.location.pathname + "?viewType=" + viewType);
         }
         function createLayer() {
-            return new FeatureLayer({
+            var layer = new FeatureLayer({
                 title: "U.S. National Parks",
                 portalItem: {
                     id: "0e3fd5de259f46acb169c54eb501cfe5"
                 },
-                renderer: new renderers_1.SimpleRenderer({
+                renderer: renderers[rendererType] ? renderers[rendererType] : new renderers_1.SimpleRenderer({
                     symbol: new symbols_1.SimpleMarkerSymbol({
                         color: [255, 0, 0, 0],
                         outline: null
@@ -72,6 +72,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 maxScale: 0,
                 popupEnabled: false
             });
+            return layer;
         }
         function createMap() {
             layer = createLayer();
@@ -371,33 +372,38 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         }
         function initializeSlider() {
             return __awaiter(this, void 0, void 0, function () {
+                var year, vType, view;
                 var _this = this;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             year = slider.values[0];
+                            vType = viewType === "all" ? "us" : viewType;
+                            view = views[vType].view;
                             yearElement.innerHTML = year.toString();
                             previousYearElement.innerHTML = (year - 1).toString();
-                            return [4 /*yield*/, views.us.view.whenLayerView(layer)];
+                            return [4 /*yield*/, view.whenLayerView(layer)];
                         case 1:
                             layerView = _a.sent();
                             watchUtils.whenFalseOnce(layerView, "updating", function () { return __awaiter(_this, void 0, void 0, function () {
-                                var stats, _a;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
+                                var stats, _a, _b;
+                                return __generator(this, function (_c) {
+                                    switch (_c.label) {
                                         case 0: return [4 /*yield*/, stats_1.queryStats(layerView, year)];
                                         case 1:
-                                            stats = _b.sent();
+                                            stats = _c.sent();
                                             updateParkVisitationDisplay(stats);
-                                            _a = layer;
+                                            _a = renderers;
+                                            _b = rendererType;
                                             return [4 /*yield*/, renderer_1.createRenderer({
                                                     layer: layer,
-                                                    view: views.us.view,
+                                                    view: view,
                                                     year: year,
-                                                    type: "percent-change"
+                                                    type: rendererType
                                                 })];
                                         case 2:
-                                            _a.renderer = _b.sent();
+                                            _a[_b] = _c.sent();
+                                            layer.renderer = renderers[rendererType];
                                             layer.popupTemplate = popup_1.createPopupTemplate(year);
                                             layer.labelingInfo = labels_1.createLabelingInfo(year);
                                             slider.disabled = false;
@@ -415,7 +421,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                                 yearElement.innerHTML = value;
                                                 previousYearElement.innerHTML = (value - 1).toString();
                                                 updateLayer(value);
-                                                return [4 /*yield*/, stats_1.queryStats(layerView, year)];
+                                                return [4 /*yield*/, stats_1.queryStats(layerView, value)];
                                             case 1:
                                                 stats = _b.sent();
                                                 updateParkVisitationDisplay(stats);
@@ -430,11 +436,12 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             });
         }
         function updateLayer(year) {
-            layer.renderer = renderer_1.updateRenderer({
+            renderers[rendererType] = renderer_1.updateRenderer({
                 renderer: layer.renderer,
                 year: year,
-                type: "percent-change"
+                type: rendererType
             });
+            layer.renderer = renderers[rendererType];
             layer.popupTemplate = popup_1.createPopupTemplate(year);
             layer.labelingInfo = labels_1.createLabelingInfo(year);
         }
@@ -568,9 +575,9 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         }
         function renderViews(newValue) {
             return __awaiter(this, void 0, void 0, function () {
-                var esriMap, _a;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
+                var esriMap, _a, _b, _c, _d, _e;
+                return __generator(this, function (_f) {
+                    switch (_f.label) {
                         case 0:
                             setUrlParams(newValue);
                             destroyAllViews();
@@ -586,23 +593,31 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                             return [3 /*break*/, 11];
                         case 1: return [4 /*yield*/, createAllViews(esriMap)];
                         case 2:
-                            _b.sent();
+                            _f.sent();
                             return [3 /*break*/, 12];
-                        case 3: return [4 /*yield*/, createUsView(views.us.container, esriMap)];
+                        case 3:
+                            _b = views.us;
+                            return [4 /*yield*/, createUsView(views.us.container, esriMap)];
                         case 4:
-                            _b.sent();
+                            _b.view = _f.sent();
                             return [3 /*break*/, 12];
-                        case 5: return [4 /*yield*/, createAkView(views.us.container, esriMap)];
+                        case 5:
+                            _c = views.ak;
+                            return [4 /*yield*/, createAkView(views.us.container, esriMap)];
                         case 6:
-                            _b.sent();
+                            _c.view = _f.sent();
                             return [3 /*break*/, 12];
-                        case 7: return [4 /*yield*/, createHiView(views.us.container, esriMap)];
+                        case 7:
+                            _d = views.hi;
+                            return [4 /*yield*/, createHiView(views.us.container, esriMap)];
                         case 8:
-                            _b.sent();
+                            _d.view = _f.sent();
                             return [3 /*break*/, 12];
-                        case 9: return [4 /*yield*/, createViView(views.us.container, esriMap)];
+                        case 9:
+                            _e = views.vi;
+                            return [4 /*yield*/, createViView(views.us.container, esriMap)];
                         case 10:
-                            _b.sent();
+                            _e.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 11: return [3 /*break*/, 12];
                         case 12: return [2 /*return*/];
@@ -616,7 +631,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 check = true; })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         }
-        var viewSelect, views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, viewType, year, layerView, featureWidget, legend, slider, highlight, lastHighlight;
+        var viewSelect, views, rendererType, renderers, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, viewType, layerView, featureWidget, legend, slider, highlight, lastHighlight;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -639,6 +654,8 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                             view: null
                         }
                     };
+                    rendererType = "percent-change";
+                    renderers = {};
                     yearElement = document.getElementById("year");
                     previousYearElement = document.getElementById("previous-year");
                     annualVisitsElement = document.getElementById("annual-visits");
@@ -655,7 +672,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     return [4 /*yield*/, renderViews(viewType)];
                 case 1:
                     _a.sent();
-                    year = 0;
                     udpateViewWidgets();
                     slider = new Slider({
                         disabled: true,

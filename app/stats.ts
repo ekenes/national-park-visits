@@ -22,7 +22,7 @@ import { createPopupTemplate } from "./popup";
 import { createLabelingInfo } from "./labels";
 import { createRenderer, updateRenderer } from "./renderer";
 
-export async function queryStats(layerView:esri.FeatureLayerView, year:number){
+export async function queryStats(layerView:esri.FeatureLayerView, year:number): Promise<any> {
   const query = layerView.createQuery();
   const onStatisticField = createCumulativeSumField(year);
 

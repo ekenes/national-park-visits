@@ -44,7 +44,11 @@ import { queryStats } from "./stats";
       container: document.getElementById("mainViewDiv") as HTMLDivElement,
       view: null as any
     }
-  }
+  };
+
+  const rendererType = "percent-change";
+
+  const renderers = { };
 
   interface UrlParams {
     viewType?: "all" | "us" | "ak" | "hi" | "vi"
@@ -80,12 +84,12 @@ import { queryStats } from "./stats";
   let layer: FeatureLayer = null;
 
   function createLayer(){
-    return new FeatureLayer({
+    const layer =  new FeatureLayer({
       title: "U.S. National Parks",
       portalItem: {
         id: "0e3fd5de259f46acb169c54eb501cfe5"
       },
-      renderer: new SimpleRenderer({
+      renderer: renderers[rendererType] ? renderers[rendererType] : new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
           color: [255,0,0,0],
           outline: null
@@ -97,6 +101,8 @@ import { queryStats } from "./stats";
       maxScale: 0,
       popupEnabled: false
     });
+
+    return layer;
   }
 
   function createMap(){
@@ -363,9 +369,6 @@ import { queryStats } from "./stats";
 
   await renderViews(viewType);
 
-
-  let year = 0;
-
   let layerView: esri.FeatureLayerView;
   let featureWidget: Feature;
   let legend: Legend;
@@ -411,21 +414,26 @@ import { queryStats } from "./stats";
   initializeSlider();
 
   async function initializeSlider() {
-    year = slider.values[0];
+    const year = slider.values[0];
+
+    const vType: UrlParams["viewType"] = viewType === "all" ? "us" : viewType;
+    const view = views[vType].view;
+
     yearElement.innerHTML = year.toString();
     previousYearElement.innerHTML = (year-1).toString();
-    layerView = await views.us.view.whenLayerView(layer);
+    layerView = await view.whenLayerView(layer);
     watchUtils.whenFalseOnce(layerView, "updating", async () => {
       const stats = await queryStats(layerView, year);
       updateParkVisitationDisplay(stats);
 
-      layer.renderer = await createRenderer({
+      renderers[rendererType] = await createRenderer({
         layer,
-        view: views.us.view,
+        view,
         year,
-        type: "percent-change"
+        type: rendererType
       });
 
+      layer.renderer = renderers[rendererType];
       layer.popupTemplate = createPopupTemplate(year);
       layer.labelingInfo = createLabelingInfo(year);
       slider.disabled = false;
@@ -437,17 +445,19 @@ import { queryStats } from "./stats";
 
       updateLayer(value);
 
-      const stats = await queryStats(layerView, year);
+      const stats = await queryStats(layerView, value);
       updateParkVisitationDisplay(stats);
     });
   }
 
   function updateLayer(year: number){
-    layer.renderer = updateRenderer({
+    renderers[rendererType] = updateRenderer({
       renderer: layer.renderer as ClassBreaksRenderer,
       year,
-      type: "percent-change"
+      type: rendererType
     });
+
+    layer.renderer = renderers[rendererType];
     layer.popupTemplate = createPopupTemplate(year);
     layer.labelingInfo = createLabelingInfo(year);
   }
@@ -599,16 +609,16 @@ import { queryStats } from "./stats";
         await createAllViews(esriMap);
         break;
       case "us":
-        await createUsView(views.us.container, esriMap);
+        views.us.view = await createUsView(views.us.container, esriMap);
         break;
       case "ak":
-        await createAkView(views.us.container, esriMap);
+        views.ak.view = await createAkView(views.us.container, esriMap);
         break;
       case "hi":
-        await createHiView(views.us.container, esriMap);
+        views.hi.view = await createHiView(views.us.container, esriMap);
         break;
       case "vi":
-        await createViView(views.us.container, esriMap);
+        views.vi.view = await createViView(views.us.container, esriMap);
         break;
       default:
         break;
