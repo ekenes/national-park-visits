@@ -346,25 +346,29 @@ define(["require", "exports", "esri/widgets/Legend", "esri/core/watchUtils", "es
                             return [3 /*break*/, 12];
                         case 3:
                             _b = views_1.views.us;
-                            return [4 /*yield*/, views_1.createUsView(views_1.views.us.container, esriMap)];
+                            return [4 /*yield*/, views_1.createUsView(views_1.views.us.container, esriMap)
+                                    .then(enableHighlightOnPointerMove)];
                         case 4:
                             _b.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 5:
                             _c = views_1.views.ak;
-                            return [4 /*yield*/, views_1.createAkView(views_1.views.us.container, esriMap)];
+                            return [4 /*yield*/, views_1.createAkView(views_1.views.us.container, esriMap)
+                                    .then(enableHighlightOnPointerMove)];
                         case 6:
                             _c.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 7:
                             _d = views_1.views.hi;
-                            return [4 /*yield*/, views_1.createHiView(views_1.views.us.container, esriMap)];
+                            return [4 /*yield*/, views_1.createHiView(views_1.views.us.container, esriMap)
+                                    .then(enableHighlightOnPointerMove)];
                         case 8:
                             _d.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 9:
                             _e = views_1.views.vi;
-                            return [4 /*yield*/, views_1.createViView(views_1.views.us.container, esriMap)];
+                            return [4 /*yield*/, views_1.createViView(views_1.views.us.container, esriMap)
+                                    .then(enableHighlightOnPointerMove)];
                         case 10:
                             _e.view = _f.sent();
                             return [3 /*break*/, 12];

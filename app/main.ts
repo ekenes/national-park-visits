@@ -347,16 +347,20 @@ import { createViView, createAkView, createHiView, createUsView, layer, createMa
         await createAllViews(esriMap);
         break;
       case "us":
-        views.us.view = await createUsView(views.us.container, esriMap);
+        views.us.view = await createUsView(views.us.container, esriMap)
+          .then(enableHighlightOnPointerMove)
         break;
       case "ak":
-        views.ak.view = await createAkView(views.us.container, esriMap);
+        views.ak.view = await createAkView(views.us.container, esriMap)
+          .then(enableHighlightOnPointerMove)
         break;
       case "hi":
-        views.hi.view = await createHiView(views.us.container, esriMap);
+        views.hi.view = await createHiView(views.us.container, esriMap)
+          .then(enableHighlightOnPointerMove)
         break;
       case "vi":
-        views.vi.view = await createViView(views.us.container, esriMap);
+        views.vi.view = await createViView(views.us.container, esriMap)
+          .then(enableHighlightOnPointerMove)
         break;
       default:
         break;
