@@ -7,7 +7,7 @@ export async function queryStats(layerView:esri.FeatureLayerView, year:number): 
 
   query.outStatistics = [new StatisticDefinition({
     statisticType: "sum",
-    onStatisticField: createCumulativeSumField(year),
+    onStatisticField,
     outStatisticFieldName: "total_accumulated_visitation"
   }), new StatisticDefinition({
     statisticType: "sum",

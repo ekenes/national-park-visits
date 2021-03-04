@@ -34,9 +34,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/renderers", "esri/symbols", "esri/geometry", "./renderers"], function (require, exports, WebMap, MapView, FeatureLayer, renderers_1, symbols_1, geometry_1, renderers_2) {
+define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/renderers", "esri/symbols", "esri/geometry", "./renderers", "./labels", "./popup", "./widgets"], function (require, exports, WebMap, MapView, FeatureLayer, renderers_1, symbols_1, geometry_1, renderers_2, labels_1, popup_1, widgets_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var ViewVars = /** @class */ (function () {
+        function ViewVars() {
+        }
+        ViewVars.viewType = null;
+        return ViewVars;
+    }());
+    exports.ViewVars = ViewVars;
     exports.views = {
         ak: {
             container: document.getElementById("akViewDiv"),
@@ -68,6 +75,9 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     outline: null
                 })
             }),
+            labelsVisible: true,
+            labelingInfo: renderers_2.renderers[renderers_2.rendererType] ? labels_1.createLabelingInfo(widgets_1.year) : null,
+            popupTemplate: renderers_2.rendererType[renderers_2.rendererType] ? popup_1.createPopupTemplate(widgets_1.year) : null,
             outFields: ["*"],
             layerId: 0,
             minScale: 0,

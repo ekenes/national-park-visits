@@ -47,7 +47,7 @@ define(["require", "exports", "esri/tasks/support/StatisticDefinition"], functio
                         onStatisticField = createCumulativeSumField(year);
                         query.outStatistics = [new StatisticDefinition({
                                 statisticType: "sum",
-                                onStatisticField: createCumulativeSumField(year),
+                                onStatisticField: onStatisticField,
                                 outStatisticFieldName: "total_accumulated_visitation"
                             }), new StatisticDefinition({
                                 statisticType: "sum",

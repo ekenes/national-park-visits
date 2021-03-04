@@ -6,6 +6,14 @@ import { SimpleRenderer } from "esri/renderers";
 import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { Extent } from "esri/geometry";
 import { renderers, rendererType } from "./renderers";
+import { createLabelingInfo } from "./labels";
+import { createPopupTemplate } from "./popup";
+import { UrlParams } from "./urlParams";
+import { year } from "./widgets";
+
+export class ViewVars {
+  public static viewType: UrlParams["viewType"] = null;
+}
 
 export const views = {
   ak: {
@@ -26,7 +34,6 @@ export const views = {
   }
 };
 
-
 export let layer: FeatureLayer = null;
 
 export function createLayer(){
@@ -41,6 +48,9 @@ export function createLayer(){
         outline: null
       })
     }),
+    labelsVisible: true,
+    labelingInfo: renderers[rendererType] ? createLabelingInfo(year) : null,
+    popupTemplate: rendererType[rendererType] ? createPopupTemplate(year) : null,
     outFields: ["*"],
     layerId: 0,
     minScale: 0,
