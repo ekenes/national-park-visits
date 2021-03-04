@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Legend", "esri/core/watchUtils", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/tasks/support/StatisticDefinition", "esri/renderers", "esri/symbols", "esri/geometry", "./popup", "./labels", "./renderer"], function (require, exports, WebMap, MapView, FeatureLayer, Legend, watchUtils, Slider, Feature, intl, StatisticDefinition, renderers_1, symbols_1, geometry_1, popup_1, labels_1, renderer_1) {
+define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Legend", "esri/core/watchUtils", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/renderers", "esri/symbols", "esri/geometry", "./popup", "./labels", "./renderer", "./stats"], function (require, exports, WebMap, MapView, FeatureLayer, Legend, watchUtils, Slider, Feature, intl, renderers_1, symbols_1, geometry_1, popup_1, labels_1, renderer_1, stats_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -62,7 +62,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 },
                 renderer: new renderers_1.SimpleRenderer({
                     symbol: new symbols_1.SimpleMarkerSymbol({
-                        color: [255, 0, 0, 1],
+                        color: [255, 0, 0, 0],
                         outline: null
                     })
                 }),
@@ -349,6 +349,19 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 op[i].disabled = false;
             }
         }
+        function udpateViewWidgets() {
+            var vType = viewType === "all" ? "us" : viewType;
+            var view = views[vType].view;
+            featureWidget = new Feature({
+                map: view.map,
+                spatialReference: view.spatialReference,
+                container: document.getElementById("feature")
+            });
+            legend = new Legend({
+                view: view,
+                container: document.getElementById("legend")
+            });
+        }
         function initializeSlider() {
             return __awaiter(this, void 0, void 0, function () {
                 var _this = this;
@@ -362,19 +375,22 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                         case 1:
                             layerView = _a.sent();
                             watchUtils.whenFalseOnce(layerView, "updating", function () { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, queryStats(layerView, year)
-                                                .then(updateParkVisitationDisplay)];
+                                var stats, _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0: return [4 /*yield*/, stats_1.queryStats(layerView, year)];
                                         case 1:
-                                            _a.sent();
+                                            stats = _b.sent();
+                                            updateParkVisitationDisplay(stats);
+                                            _a = layer;
                                             return [4 /*yield*/, renderer_1.createRenderer({
                                                     layer: layer,
                                                     view: views.us.view,
-                                                    year: year
+                                                    year: year,
+                                                    type: "percent-change"
                                                 })];
                                         case 2:
-                                            _a.sent();
+                                            _a.renderer = _b.sent();
                                             layer.popupTemplate = popup_1.createPopupTemplate(year);
                                             layer.labelingInfo = labels_1.createLabelingInfo(year);
                                             slider.disabled = false;
@@ -384,21 +400,36 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                             }); });
                             slider.watch("values", function (_a) {
                                 var value = _a[0];
-                                yearElement.innerHTML = value;
-                                previousYearElement.innerHTML = (value - 1).toString();
-                                renderer_1.updateRenderer({
-                                    layer: layer,
-                                    year: value
+                                return __awaiter(_this, void 0, void 0, function () {
+                                    var stats;
+                                    return __generator(this, function (_b) {
+                                        switch (_b.label) {
+                                            case 0:
+                                                yearElement.innerHTML = value;
+                                                previousYearElement.innerHTML = (value - 1).toString();
+                                                updateLayer(value);
+                                                return [4 /*yield*/, stats_1.queryStats(layerView, year)];
+                                            case 1:
+                                                stats = _b.sent();
+                                                updateParkVisitationDisplay(stats);
+                                                return [2 /*return*/];
+                                        }
+                                    });
                                 });
-                                layer.popupTemplate = popup_1.createPopupTemplate(value);
-                                layer.labelingInfo = labels_1.createLabelingInfo(value);
-                                queryStats(layerView, value)
-                                    .then(updateParkVisitationDisplay);
                             });
-                            return [2 /*return*/, views.us.view];
+                            return [2 /*return*/];
                     }
                 });
             });
+        }
+        function updateLayer(year) {
+            layer.renderer = renderer_1.updateRenderer({
+                renderer: layer.renderer,
+                year: year,
+                type: "percent-change"
+            });
+            layer.popupTemplate = popup_1.createPopupTemplate(year);
+            layer.labelingInfo = labels_1.createLabelingInfo(year);
         }
         function maintainFixedExtent(view) {
             var fixedExtent = view.extent.clone();
@@ -494,44 +525,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             });
             return view;
         }
-        function queryStats(layerView, year) {
-            return __awaiter(this, void 0, void 0, function () {
-                var query, onStatisticField, response, stats;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            query = layerView.createQuery();
-                            onStatisticField = createCumulativeSumField(year);
-                            query.outStatistics = [new StatisticDefinition({
-                                    statisticType: "sum",
-                                    onStatisticField: createCumulativeSumField(year),
-                                    outStatisticFieldName: "total_accumulated_visitation"
-                                }), new StatisticDefinition({
-                                    statisticType: "sum",
-                                    onStatisticField: "F" + year,
-                                    outStatisticFieldName: "annual_visitation"
-                                }), new StatisticDefinition({
-                                    statisticType: "sum",
-                                    onStatisticField: year > 1904 ? "F" + (year - 1) : "F1904",
-                                    outStatisticFieldName: "previous_annual_visitation"
-                                })];
-                            return [4 /*yield*/, layerView.queryFeatures(query)];
-                        case 1:
-                            response = _a.sent();
-                            stats = response.features[0].attributes;
-                            return [2 /*return*/, stats];
-                    }
-                });
-            });
-        }
-        function createCumulativeSumField(year) {
-            var onStatisticField = "";
-            for (var start = 1904; start < year; start++) {
-                onStatisticField += "F" + start + " + ";
-            }
-            onStatisticField += "F" + year;
-            return onStatisticField;
-        }
         function updateParkVisitationDisplay(stats) {
             var annual = stats.annual_visitation;
             var total = stats.total_accumulated_visitation;
@@ -616,78 +609,85 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 check = true; })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         }
-        var viewSelect, views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, legend, viewType, selectedView, year, layerView, featureWidget, slider, highlight, lastHighlight;
+        var viewSelect, views, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, viewType, selectedView, year, layerView, featureWidget, legend, slider, highlight, lastHighlight;
         return __generator(this, function (_a) {
-            viewSelect = document.getElementById("viewSelect");
-            views = {
-                ak: {
-                    container: document.getElementById("akViewDiv"),
-                    view: null //createAkView()
-                },
-                hi: {
-                    container: document.getElementById("hiViewDiv"),
-                    view: null //createHiView()
-                },
-                vi: {
-                    container: document.getElementById("viViewDiv"),
-                    view: null //createViView()
-                },
-                us: {
-                    container: document.getElementById("mainViewDiv"),
-                    view: null //createUsView()
-                }
-            };
-            yearElement = document.getElementById("year");
-            previousYearElement = document.getElementById("previous-year");
-            annualVisitsElement = document.getElementById("annual-visits");
-            percentChangeElement = document.getElementById("percent-change");
-            totalChangeElement = document.getElementById("total-change");
-            layer = null;
-            legend = new Legend({
-                view: views.us.view,
-                container: document.getElementById("legend")
-            });
-            viewType = getUrlParams();
-            if (isMobileBrowser()) {
-                viewType = viewType === "all" ? "us" : viewType;
-                disableSelectOptionByValue(viewSelect, "all");
+            switch (_a.label) {
+                case 0:
+                    viewSelect = document.getElementById("viewSelect");
+                    views = {
+                        ak: {
+                            container: document.getElementById("akViewDiv"),
+                            view: null
+                        },
+                        hi: {
+                            container: document.getElementById("hiViewDiv"),
+                            view: null
+                        },
+                        vi: {
+                            container: document.getElementById("viViewDiv"),
+                            view: null
+                        },
+                        us: {
+                            container: document.getElementById("mainViewDiv"),
+                            view: null
+                        }
+                    };
+                    yearElement = document.getElementById("year");
+                    previousYearElement = document.getElementById("previous-year");
+                    annualVisitsElement = document.getElementById("annual-visits");
+                    percentChangeElement = document.getElementById("percent-change");
+                    totalChangeElement = document.getElementById("total-change");
+                    layer = null;
+                    viewType = getUrlParams();
+                    if (isMobileBrowser()) {
+                        viewType = viewType === "all" ? "us" : viewType;
+                        disableSelectOptionByValue(viewSelect, "all");
+                    }
+                    setUrlParams(viewType);
+                    viewSelect.value = viewType;
+                    selectedView = null;
+                    return [4 /*yield*/, renderViews(viewType)];
+                case 1:
+                    _a.sent();
+                    year = 0;
+                    udpateViewWidgets();
+                    slider = new Slider({
+                        disabled: true,
+                        container: "timeSlider",
+                        min: 1905,
+                        max: 2020,
+                        values: [2020],
+                        steps: 1,
+                        layout: "vertical",
+                        visibleElements: {
+                            labels: false,
+                            rangeLabels: true
+                        },
+                        tickConfigs: [{
+                                mode: "position",
+                                values: [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
+                                labelsVisible: true
+                            }]
+                    });
+                    initializeSlider();
+                    highlight = null;
+                    lastHighlight = null;
+                    viewSelect.addEventListener("change", function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    viewType = viewSelect.value;
+                                    return [4 /*yield*/, renderViews(viewType)];
+                                case 1:
+                                    _a.sent();
+                                    udpateViewWidgets();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    ;
+                    return [2 /*return*/];
             }
-            setUrlParams(viewType);
-            viewSelect.value = viewType;
-            selectedView = null;
-            renderViews(viewType);
-            year = 0;
-            featureWidget = new Feature({
-                // map: views.us.view.map,
-                // spatialReference: views.us.view.spatialReference,
-                container: document.getElementById("feature")
-            });
-            slider = new Slider({
-                disabled: true,
-                container: "timeSlider",
-                min: 1905,
-                max: 2020,
-                values: [2020],
-                steps: 1,
-                layout: "vertical",
-                visibleElements: {
-                    labels: false,
-                    rangeLabels: true
-                },
-                tickConfigs: [{
-                        mode: "position",
-                        values: [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
-                        labelsVisible: true
-                    }]
-            });
-            highlight = null;
-            lastHighlight = null;
-            viewSelect.addEventListener("change", function () {
-                var newValue = viewSelect.value;
-                renderViews(newValue);
-            });
-            ;
-            return [2 /*return*/];
         });
     }); })();
 });

@@ -15,12 +15,13 @@ import colorSchemes = require("esri/smartMapping/symbology/color");
 import Graphic = require("esri/Graphic");
 import StatisticDefinition = require("esri/tasks/support/StatisticDefinition");
 import promiseUtils = require("esri/core/promiseUtils");
-import { SimpleRenderer } from "esri/renderers";
+import { ClassBreaksRenderer, SimpleRenderer } from "esri/renderers";
 import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { Extent } from "esri/geometry";
 import { createPopupTemplate } from "./popup";
 import { createLabelingInfo } from "./labels";
 import { createRenderer, updateRenderer } from "./renderer";
+import { queryStats } from "./stats";
 
 (async () => {
 
@@ -29,19 +30,19 @@ import { createRenderer, updateRenderer } from "./renderer";
   const views = {
     ak: {
       container: document.getElementById("akViewDiv") as HTMLDivElement,
-      view: null as any //createAkView()
+      view: null as any
     },
     hi: {
       container: document.getElementById("hiViewDiv") as HTMLDivElement,
-      view: null as any//createHiView()
+      view: null as any
     },
     vi: {
       container: document.getElementById("viViewDiv") as HTMLDivElement,
-      view: null as any//createViView()
+      view: null as any
     },
     us: {
       container: document.getElementById("mainViewDiv") as HTMLDivElement,
-      view: null as any//createUsView()
+      view: null as any
     }
   }
 
@@ -86,7 +87,7 @@ import { createRenderer, updateRenderer } from "./renderer";
       },
       renderer: new SimpleRenderer({
         symbol: new SimpleMarkerSymbol({
-          color: [255,0,0,1],
+          color: [255,0,0,0],
           outline: null
         })
       }),
@@ -327,14 +328,6 @@ function destroyAllViews(){
 }
 
 
-
-
-const legend = new Legend({
-  view: views.us.view,
-  container: document.getElementById("legend")
-});
-
-
 function disableSelectOptionByValue(selectElement: HTMLSelectElement, value: string){
   const op = selectElement.getElementsByTagName("option");
   for (var i = 0; i < op.length; i++) {
@@ -363,7 +356,7 @@ viewSelect.value = viewType;
 
 let selectedView: MapView = null;
 
-renderViews(viewType);
+await renderViews(viewType);
 
 
   let year = 0;
@@ -386,12 +379,27 @@ renderViews(viewType);
   //   .then(enableHighlightOnPointerMove)
 
   let layerView: esri.FeatureLayerView;
+  let featureWidget: Feature;
+  let legend: Legend;
 
-  let featureWidget = new Feature({
-    // map: views.us.view.map,
-    // spatialReference: views.us.view.spatialReference,
-    container: document.getElementById("feature")
-  });
+  udpateViewWidgets();
+
+  function udpateViewWidgets(){
+    const vType: UrlParams["viewType"] = viewType === "all" ? "us" : viewType;
+    const view = views[vType].view;
+
+    featureWidget = new Feature({
+      map: view.map,
+      spatialReference: view.spatialReference,
+      container: document.getElementById("feature")
+    });
+
+    legend = new Legend({
+      view,
+      container: document.getElementById("legend")
+    });
+  }
+
 
   const slider = new Slider({
     disabled: true,
@@ -412,19 +420,22 @@ renderViews(viewType);
     }]
   });
 
+  initializeSlider();
+
   async function initializeSlider() {
     year = slider.values[0];
     yearElement.innerHTML = year.toString();
     previousYearElement.innerHTML = (year-1).toString();
     layerView = await views.us.view.whenLayerView(layer);
     watchUtils.whenFalseOnce(layerView, "updating", async () => {
-      await queryStats(layerView, year)
-      .then(updateParkVisitationDisplay);
+      const stats = await queryStats(layerView, year);
+      updateParkVisitationDisplay(stats);
 
-      await createRenderer({
+      layer.renderer = await createRenderer({
         layer,
         view: views.us.view,
-        year
+        year,
+        type: "percent-change"
       });
 
       layer.popupTemplate = createPopupTemplate(year);
@@ -432,23 +443,26 @@ renderViews(viewType);
       slider.disabled = false;
     });
 
-    slider.watch("values", ([ value ]) => {
+    slider.watch("values", async ([ value ]) => {
       yearElement.innerHTML = value;
       previousYearElement.innerHTML = (value - 1).toString();
-      updateRenderer({
-        layer,
-        year: value
-      });
-      layer.popupTemplate = createPopupTemplate(value);
-      layer.labelingInfo = createLabelingInfo(value);
 
-      queryStats(layerView, value)
-        .then(updateParkVisitationDisplay);
+      updateLayer(value);
+
+      const stats = await queryStats(layerView, year);
+      updateParkVisitationDisplay(stats);
     });
-    return views.us.view;
   }
 
-
+  function updateLayer(year: number){
+    layer.renderer = updateRenderer({
+      renderer: layer.renderer as ClassBreaksRenderer,
+      year,
+      type: "percent-change"
+    });
+    layer.popupTemplate = createPopupTemplate(year);
+    layer.labelingInfo = createLabelingInfo(year);
+  }
 
   function maintainFixedExtent(view: MapView) {
     var fixedExtent = view.extent.clone();
@@ -547,40 +561,6 @@ renderViews(viewType);
     return view;
   }
 
-
-
-  async function queryStats(layerView:esri.FeatureLayerView, year:number){
-    const query = layerView.createQuery();
-    const onStatisticField = createCumulativeSumField(year);
-
-    query.outStatistics = [new StatisticDefinition({
-      statisticType: "sum",
-      onStatisticField: createCumulativeSumField(year),
-      outStatisticFieldName: "total_accumulated_visitation"
-    }), new StatisticDefinition({
-      statisticType: "sum",
-      onStatisticField: `F${year}`,
-      outStatisticFieldName: "annual_visitation"
-    }), new StatisticDefinition({
-      statisticType: "sum",
-      onStatisticField: year > 1904 ? `F${year-1}` : "F1904",
-      outStatisticFieldName: "previous_annual_visitation"
-    })];
-
-    const response = await layerView.queryFeatures(query);
-    const stats = response.features[0].attributes;
-    return stats;
-  }
-
-  function createCumulativeSumField(year: number){
-    let onStatisticField = "";
-    for( let start = 1904; start < year; start++){
-      onStatisticField += `F${start} + `;
-    }
-    onStatisticField += `F${year}`;
-    return onStatisticField;
-  }
-
   function updateParkVisitationDisplay(stats: Graphic["attributes"]){
     const annual = stats.annual_visitation;
     const total = stats.total_accumulated_visitation;
@@ -645,9 +625,10 @@ renderViews(viewType);
     }
   }
 
-  viewSelect.addEventListener("change", ()=> {
-    const newValue = viewSelect.value as UrlParams["viewType"];
-    renderViews(newValue);
+  viewSelect.addEventListener("change", async ()=> {
+    viewType = viewSelect.value as UrlParams["viewType"];
+    await renderViews(viewType);
+    udpateViewWidgets();
   });
 
   function isMobileBrowser() {

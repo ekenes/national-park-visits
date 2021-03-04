@@ -34,48 +34,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/support/SizeStop"], function (require, exports, colorSchemes, univariateRendererCreator, SizeStop) {
+define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/SizeVariable", "esri/renderers/visualVariables/ColorVariable", "esri/renderers/visualVariables/support/SizeStop", "esri/symbols", "esri/rasterRenderers", "./cimReference"], function (require, exports, colorSchemes, univariateRendererCreator, SizeVariable, ColorVariable, SizeStop, symbols_1, rasterRenderers_1, cimReference_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // update the layer's renderer each time the user changes a parameter
-    function updateRenderer(params) {
-        var year = params.year, layer = params.layer;
-        var renderer = layer.renderer.clone();
+    var colorScheme = colorSchemes.getSchemeByName({
+        geometryType: "point",
+        name: "Green and Brown 1",
+        theme: "above-and-below"
+    });
+    exports.renderers = {
+        "percent-change": rasterRenderers_1.ClassBreaksRenderer,
+        "total-change": rasterRenderers_1.ClassBreaksRenderer,
+        "bivariate": rasterRenderers_1.ClassBreaksRenderer
+    };
+    function updatePercentChangeValueExpression(year) {
         var previousYear = year - 1;
         var valueExpression = "(($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100";
-        var valueExpressionTitle = "% Change in park visits (" + previousYear + " - " + year + ")";
-        renderer.valueExpression = valueExpression;
-        renderer.valueExpressionTitle = valueExpressionTitle;
-        renderer.visualVariables.forEach(function (visualVariable) {
-            visualVariable.valueExpression = visualVariable.valueExpression !== "$view.scale" ? valueExpression : "$view.scale";
-            visualVariable.valueExpressionTitle = valueExpressionTitle;
-        });
-        layer.renderer = renderer;
+        var valueExpressionTitle = "% Change in park visitation (" + previousYear + " - " + year + ")";
+        return { valueExpression: valueExpression, valueExpressionTitle: valueExpressionTitle };
     }
-    exports.updateRenderer = updateRenderer;
-    function createRenderer(params) {
+    function updateTotalChangeValueExpression(year) {
+        var previousYear = year - 1;
+        var valueExpression = "$feature.F" + year + " - $feature.F" + previousYear;
+        var valueExpressionTitle = "Total change in park visits (" + previousYear + " - " + year + ")";
+        return { valueExpression: valueExpression, valueExpressionTitle: valueExpressionTitle };
+    }
+    function createPercentChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var layer, view, year, previousYear, valueExpression, valueExpressionTitle, colorScheme, rendererParams, renderer, sizeVariable;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var layer, view, year, _a, valueExpression, valueExpressionTitle, rendererParams, renderer, sizeVariable;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
-                        previousYear = year - 1;
-                        valueExpression = "(($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100";
-                        valueExpressionTitle = "% Change in park visitation (" + previousYear + " - " + year + ")";
-                        colorScheme = colorSchemes.getSchemeByName({
-                            geometryType: layer.geometryType,
-                            name: "Green and Brown 1",
-                            theme: "above-and-below"
-                        });
+                        _a = updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
                         rendererParams = {
                             layer: layer,
                             view: view,
                             theme: "above-and-below",
                             valueExpression: valueExpression,
                             valueExpressionTitle: valueExpressionTitle,
-                            minValue: -200,
-                            maxValue: 200,
                             defaultSymbolEnabled: false,
                             colorOptions: {
                                 colorScheme: colorScheme,
@@ -87,7 +84,9 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                         };
                         return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer(rendererParams)];
                     case 1:
-                        renderer = (_a.sent()).renderer;
+                        renderer = (_b.sent()).renderer;
+                        renderer.classBreakInfos[0].maxValue = 0;
+                        renderer.classBreakInfos[1].minValue = 0;
                         sizeVariable = renderer.visualVariables.filter(function (vv) { return vv.type === "size"; })[0];
                         sizeVariable.stops = [
                             new SizeStop({ value: -100, size: 40 }),
@@ -96,16 +95,170 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                             new SizeStop({ value: 50, size: 24 }),
                             new SizeStop({ value: 100, size: 40 })
                         ];
-                        renderer.authoringInfo.statistics = {
-                            min: -100,
-                            max: 100
-                        };
-                        layer.renderer = renderer;
                         return [2 /*return*/, renderer];
                 }
             });
         });
     }
+    function updatePercentChangeRenderer(params) {
+        var year = params.year, renderer = params.renderer;
+        var _a = updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+        renderer.valueExpression = valueExpression;
+        renderer.valueExpressionTitle = valueExpressionTitle;
+        renderer.visualVariables.forEach(function (visualVariable) {
+            visualVariable.valueExpression = visualVariable.valueExpression !== "$view.scale" ? valueExpression : "$view.scale";
+            visualVariable.valueExpressionTitle = valueExpressionTitle;
+        });
+        return renderer;
+    }
+    function createTotalChangeRenderer(params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var layer, view, year, _a, valueExpression, valueExpressionTitle, rendererParams, renderer, sizeVariable;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        layer = params.layer, view = params.view, year = params.year;
+                        _a = updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+                        rendererParams = {
+                            layer: layer,
+                            view: view,
+                            theme: "above-and-below",
+                            valueExpression: valueExpression,
+                            valueExpressionTitle: valueExpressionTitle,
+                            defaultSymbolEnabled: false,
+                            colorOptions: {
+                                colorScheme: colorScheme,
+                                isContinuous: false,
+                            },
+                            symbolOptions: {
+                                symbolStyle: "circle-arrow"
+                            }
+                        };
+                        return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer(rendererParams)];
+                    case 1:
+                        renderer = (_b.sent()).renderer;
+                        sizeVariable = renderer.visualVariables.filter(function (vv) { return vv.type === "size"; })[0];
+                        ;
+                        sizeVariable.stops = [
+                            new SizeStop({ value: -500000, size: 40 }),
+                            new SizeStop({ value: -250000, size: 24 }),
+                            new SizeStop({ value: 0, size: 12 }),
+                            new SizeStop({ value: 250000, size: 24 }),
+                            new SizeStop({ value: 500000, size: 40 })
+                        ];
+                        return [2 /*return*/, renderer];
+                }
+            });
+        });
+    }
+    function updateTotalChangeRenderer(params) {
+        var year = params.year, renderer = params.renderer;
+        var _a = updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+        renderer.valueExpression = valueExpression;
+        renderer.valueExpressionTitle = valueExpressionTitle;
+        renderer.visualVariables.forEach(function (visualVariable) {
+            visualVariable.valueExpression = visualVariable.valueExpression !== "$view.scale" ? valueExpression : "$view.scale";
+            visualVariable.valueExpressionTitle = valueExpressionTitle;
+        });
+        return renderer;
+    }
+    function createBivariateRenderer(year) {
+        var colors = ["#a6611a", "#dfc27d", "#f0f0f0", "#80cdc1", "#018571"];
+        var symbol = new symbols_1.CIMSymbol({
+            data: cimReference_1.cimReference
+        });
+        return new rasterRenderers_1.ClassBreaksRenderer({
+            field: "F" + year,
+            classBreakInfos: [
+                {
+                    minValue: -9007199254740991,
+                    maxValue: 9007199254740991,
+                    symbol: symbol
+                }
+            ],
+            visualVariables: [
+                new SizeVariable({
+                    field: "F" + year,
+                    legendOptions: {
+                        title: "Total park visits in " + year
+                    },
+                    stops: [
+                        { value: 100000, size: "14px" },
+                        { value: 1000000, size: "25px" },
+                        { value: 4000000, size: "40px" },
+                        { value: 10000000, size: "60px" }
+                    ]
+                }), new ColorVariable({
+                    valueExpression: "\n          var current = DefaultValue($feature.F" + year + ", 1);\n          var previous = 0;\n          if(" + year + " > 1905){\n            previous = DefaultValue($feature.F" + (year - 1) + ", 1)\n          }\n          var val = ((current - previous) / previous) * 100;\n          return val;\n        ",
+                    valueExpressionTitle: "% Change from previous year",
+                    stops: [
+                        { value: -10, color: colors[0], label: "Fewer visits" },
+                        { value: -0.1, color: colors[1] },
+                        { value: 0, color: colors[2], label: "No change" },
+                        { value: 0.1, color: colors[3] },
+                        { value: 10, color: colors[4], label: "More visits" }
+                    ]
+                })
+            ]
+        });
+    }
+    function createRenderer(params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var year, type, renderer, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        year = params.year, type = params.type;
+                        _a = type;
+                        switch (_a) {
+                            case "percent-change": return [3 /*break*/, 1];
+                            case "total-change": return [3 /*break*/, 3];
+                            case "bivariate": return [3 /*break*/, 5];
+                        }
+                        return [3 /*break*/, 6];
+                    case 1: return [4 /*yield*/, createPercentChangeRenderer(params)];
+                    case 2:
+                        renderer = _b.sent();
+                        return [3 /*break*/, 7];
+                    case 3: return [4 /*yield*/, createTotalChangeRenderer(params)];
+                    case 4:
+                        renderer = _b.sent();
+                        return [3 /*break*/, 7];
+                    case 5:
+                        renderer = createBivariateRenderer(year);
+                        return [3 /*break*/, 7];
+                    case 6:
+                        renderer = new rasterRenderers_1.ClassBreaksRenderer({
+                            defaultSymbol: new symbols_1.SimpleMarkerSymbol()
+                        });
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/, renderer];
+                }
+            });
+        });
+    }
     exports.createRenderer = createRenderer;
+    function updateRenderer(params) {
+        var year = params.year, type = params.type;
+        var renderer;
+        switch (type) {
+            case "percent-change":
+                renderer = updatePercentChangeRenderer(params);
+                break;
+            case "total-change":
+                renderer = updateTotalChangeRenderer(params);
+                break;
+            case "bivariate":
+                renderer = createBivariateRenderer(year);
+                break;
+            default:
+                renderer = new rasterRenderers_1.ClassBreaksRenderer({
+                    defaultSymbol: new symbols_1.SimpleMarkerSymbol()
+                });
+                break;
+        }
+        return renderer.clone();
+    }
+    exports.updateRenderer = updateRenderer;
 });
 //# sourceMappingURL=renderer.js.map
