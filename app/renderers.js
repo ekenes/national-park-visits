@@ -258,4 +258,4 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     }
     exports.updateRenderer = updateRenderer;
 });
-//# sourceMappingURL=renderer.js.map
+//# sourceMappingURL=renderers.js.map

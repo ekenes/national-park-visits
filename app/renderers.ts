@@ -30,11 +30,9 @@ const colorScheme = colorSchemes.getSchemeByName({
   theme: "above-and-below"
 });
 
-export const renderers = {
-  "percent-change": ClassBreaksRenderer,
-  "total-change": ClassBreaksRenderer,
-  "bivariate": ClassBreaksRenderer
-}
+export const renderers = { };
+
+export const rendererType = "percent-change";
 
 interface ValueExpressionInfo {
   valueExpression: string;

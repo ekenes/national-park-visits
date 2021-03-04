@@ -20,35 +20,13 @@ import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { Extent } from "esri/geometry";
 import { createPopupTemplate } from "./popup";
 import { createLabelingInfo } from "./labels";
-import { createRenderer, updateRenderer } from "./renderer";
+import { createRenderer, updateRenderer, renderers, rendererType } from "./renderers";
 import { queryStats } from "./stats";
+import { createViView, createAkView, createHiView, createUsView, layer, createMap, views, destroyAllViews } from "./views";
 
 (async () => {
 
   const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
-
-  const views = {
-    ak: {
-      container: document.getElementById("akViewDiv") as HTMLDivElement,
-      view: null as any
-    },
-    hi: {
-      container: document.getElementById("hiViewDiv") as HTMLDivElement,
-      view: null as any
-    },
-    vi: {
-      container: document.getElementById("viViewDiv") as HTMLDivElement,
-      view: null as any
-    },
-    us: {
-      container: document.getElementById("mainViewDiv") as HTMLDivElement,
-      view: null as any
-    }
-  };
-
-  const rendererType = "percent-change";
-
-  const renderers = { };
 
   interface UrlParams {
     viewType?: "all" | "us" | "ak" | "hi" | "vi"
@@ -81,228 +59,6 @@ import { queryStats } from "./stats";
   const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
   const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
 
-  let layer: FeatureLayer = null;
-
-  function createLayer(){
-    const layer =  new FeatureLayer({
-      title: "U.S. National Parks",
-      portalItem: {
-        id: "0e3fd5de259f46acb169c54eb501cfe5"
-      },
-      renderer: renderers[rendererType] ? renderers[rendererType] : new SimpleRenderer({
-        symbol: new SimpleMarkerSymbol({
-          color: [255,0,0,0],
-          outline: null
-        })
-      }),
-      outFields: ["*"],
-      layerId: 0,
-      minScale: 0,
-      maxScale: 0,
-      popupEnabled: false
-    });
-
-    return layer;
-  }
-
-  function createMap(){
-    layer = createLayer();
-    return new WebMap({
-      basemap: {
-        baseLayers: [
-          new FeatureLayer({
-            popupEnabled: false,
-            portalItem: {
-              id: "99fd67933e754a1181cc755146be21ca"
-            },
-            minScale: 0,
-            maxScale: 0,
-            renderer: new SimpleRenderer({
-              symbol: new SimpleFillSymbol({
-                color: "#f7ebd6",
-                outline: {
-                  style: "solid",
-                  width: 1,
-                  color : "#dcd8d0"
-                }
-              })
-            }),
-            effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
-          }),
-          new FeatureLayer({
-            popupEnabled: false,
-            portalItem: {
-              id: "f092c20803a047cba81fbf1e30eff0b5"
-            },
-            minScale: 0,
-            maxScale: 0,
-            definitionExpression: `NAME LIKE '%NP%' OR NAME LIKE '%National Park%'`,
-            effect: "grayscale(0.3) opacity(0.55) drop-shadow(2px 2px 10px green)"
-          })
-        ]
-      },
-      layers: [layer]
-    });
-  }
-
-
-  async function createUsView(container: MapView["container"], map: WebMap){
-    container.style.display = "flex";
-    const usView = new MapView({
-      map,
-      container,
-      popup: {
-        highlightEnabled: true,
-        dockEnabled: true,
-        dockOptions: {
-          breakpoint: false,
-          position: "top-right"
-        }
-      },
-      extent: {
-        spatialReference: {
-          wkid: 5070
-        },
-        xmin: -2985714.7547551794,
-        ymin: 66403.41816565767,
-        xmax: 2965420.009085534,
-        ymax: 3244802.8703926024
-      },
-      constraints: {
-        minScale: 16215262,
-        maxScale: 2000000,
-        geometry: new Extent({
-          spatialReference: {
-            wkid: 5070
-          },
-          xmin: -1921286.8554006994,
-          ymin: 726332.1394147258,
-          xmax: 1694697.29902421,
-          ymax: 2715123.424348426
-        })
-      },
-      spatialReference: {
-        // NAD_1983_Contiguous_USA_Albers
-        wkid: 5070
-      },
-      ui: {
-        components: ["attribution"]
-      }
-    });
-    return await usView.when();
-  }
-
-  async function createAkView(container: MapView["container"], map: WebMap){
-    container.style.display = "flex";
-    const akView = new MapView({
-      map,
-      container,
-      extent: new Extent({
-        spatialReference: {
-          wkid: 5936
-        },
-        xmin: 737823.0703569443,
-        ymin: -2103604.250401656,
-        xmax: 3689660.4504700145,
-        ymax: 110273.7846831464
-      }),
-      spatialReference: {
-        // WGS_1984_EPSG_Alaska_Polar_Stereographic
-        wkid: 5936
-      },
-      constraints: {
-        minScale: 36810426,
-        maxScale: 12400323,
-        geometry: new Extent({
-          spatialReference: {
-            wkid: 5936
-          },
-          xmin: 737823.0703569443,
-          ymin: -2103604.250401656,
-          xmax: 3689660.4504700145,
-          ymax: 110273.7846831464
-        })
-      },
-      ui: {
-        components: []
-      }
-    });
-    return await akView.when();
-  }
-
-  function createHiView(container: MapView["container"], map: WebMap){
-    container.style.display = "flex";
-    const hiView = new MapView({
-      map,
-      container,
-      extent: new Extent({
-        spatialReference: {
-          wkid: 102007
-        },
-        xmin: -390787.1649959057,
-        ymin: 564313.6231185358,
-        xmax: 756460.4545479296,
-        ymax: 1183827.3376722068
-      }),
-      spatialReference: {
-        // Hawaii_Albers_Equal_Area_Conic
-        wkid: 102007
-      },
-      constraints: {
-        minScale: 17344181,
-        geometry: new Extent({
-          spatialReference: {
-            wkid: 102007
-          },
-          xmin: -390787.1649959057,
-          ymin: 564313.6231185358,
-          xmax: 756460.4545479296,
-          ymax: 1183827.3376722068
-        })
-      },
-      ui: {
-        components: []
-      }
-    });
-    return hiView.when();
-  }
-
-  async function createViView(container: MapView["container"], map: WebMap){
-    container.style.display = "flex";
-    const viView = new MapView({
-      map,
-      container,
-      extent: {
-        spatialReference: {
-          wkid: 5070
-        },
-        xmin: 3368052.0840510447,
-        ymin: 56364.032814495884,
-        xmax: 3369766.5874800514,
-        ymax: 58078.53624350274
-      },
-      spatialReference: {
-        wkid: 5070
-      },
-      constraints: {
-        minScale: 43200,
-        maxScale: 43200,
-        geometry: new Extent({
-          spatialReference: {
-            wkid: 5070
-          },
-          xmin: 3368052.0840510447,
-          ymin: 56364.032814495884,
-          xmax: 3369766.5874800514,
-          ymax: 58078.53624350274
-        })
-      },
-      ui: {
-        components: []
-      }
-    });
-    return await viView.when();
-  }
 
   async function createAllViews(map: WebMap){
 
@@ -320,26 +76,6 @@ import { queryStats } from "./stats";
 
     return views;
   }
-
-
-
-  function destroyView(view: MapView, key: string){
-    if(view){
-      view.map.removeAll();
-      view.container.style.display = "none";
-      view.container = null;
-      view.map = null;
-      views[key].view = null;
-    }
-  }
-
-  function destroyAllViews(){
-    for (let k in views){
-      const view = views[k].view;
-      destroyView(view, k);
-    }
-  }
-
 
   function disableSelectOptionByValue(selectElement: HTMLSelectElement, value: string){
     const op = selectElement.getElementsByTagName("option");
@@ -367,6 +103,13 @@ import { queryStats } from "./stats";
   setUrlParams(viewType);
   viewSelect.value = viewType;
 
+
+  viewSelect.addEventListener("change", async ()=> {
+    viewType = viewSelect.value as UrlParams["viewType"];
+    await renderViews(viewType);
+    udpateViewWidgets();
+  });
+
   await renderViews(viewType);
 
   let layerView: esri.FeatureLayerView;
@@ -379,18 +122,21 @@ import { queryStats } from "./stats";
     const vType: UrlParams["viewType"] = viewType === "all" ? "us" : viewType;
     const view = views[vType].view;
 
-    featureWidget = new Feature({
-      map: view.map,
-      spatialReference: view.spatialReference,
-      container: document.getElementById("feature")
-    });
+    if(!featureWidget){
+      featureWidget = new Feature({
+        container: document.getElementById("feature")
+      });
+    }
+    featureWidget.map = view.map;
+    featureWidget.spatialReference = view.spatialReference;
 
-    legend = new Legend({
-      view,
-      container: document.getElementById("legend")
-    });
+    if(!legend){
+      legend = new Legend({
+        container: document.getElementById("legend")
+      });
+    }
+    legend.view = view;
   }
-
 
   const slider = new Slider({
     disabled: true,
@@ -597,7 +343,7 @@ import { queryStats } from "./stats";
     }
   }
 
-  async function renderViews (newValue: UrlParams["viewType"]) {
+  async function renderViews(newValue: UrlParams["viewType"]) {
     setUrlParams(newValue);
 
     destroyAllViews();
@@ -624,12 +370,6 @@ import { queryStats } from "./stats";
         break;
     }
   }
-
-  viewSelect.addEventListener("change", async ()=> {
-    viewType = viewSelect.value as UrlParams["viewType"];
-    await renderViews(viewType);
-    udpateViewWidgets();
-  });
 
   function isMobileBrowser() {
     let check = false;

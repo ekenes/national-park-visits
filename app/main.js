@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Legend", "esri/core/watchUtils", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/renderers", "esri/symbols", "esri/geometry", "./popup", "./labels", "./renderer", "./stats"], function (require, exports, WebMap, MapView, FeatureLayer, Legend, watchUtils, Slider, Feature, intl, renderers_1, symbols_1, geometry_1, popup_1, labels_1, renderer_1, stats_1) {
+define(["require", "exports", "esri/widgets/Legend", "esri/core/watchUtils", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "./popup", "./labels", "./renderers", "./stats", "./views"], function (require, exports, Legend, watchUtils, Slider, Feature, intl, popup_1, labels_1, renderers_1, stats_1, views_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -54,294 +54,39 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         function setUrlParams(viewType) {
             window.history.pushState("", "", window.location.pathname + "?viewType=" + viewType);
         }
-        function createLayer() {
-            var layer = new FeatureLayer({
-                title: "U.S. National Parks",
-                portalItem: {
-                    id: "0e3fd5de259f46acb169c54eb501cfe5"
-                },
-                renderer: renderers[rendererType] ? renderers[rendererType] : new renderers_1.SimpleRenderer({
-                    symbol: new symbols_1.SimpleMarkerSymbol({
-                        color: [255, 0, 0, 0],
-                        outline: null
-                    })
-                }),
-                outFields: ["*"],
-                layerId: 0,
-                minScale: 0,
-                maxScale: 0,
-                popupEnabled: false
-            });
-            return layer;
-        }
-        function createMap() {
-            layer = createLayer();
-            return new WebMap({
-                basemap: {
-                    baseLayers: [
-                        new FeatureLayer({
-                            popupEnabled: false,
-                            portalItem: {
-                                id: "99fd67933e754a1181cc755146be21ca"
-                            },
-                            minScale: 0,
-                            maxScale: 0,
-                            renderer: new renderers_1.SimpleRenderer({
-                                symbol: new symbols_1.SimpleFillSymbol({
-                                    color: "#f7ebd6",
-                                    outline: {
-                                        style: "solid",
-                                        width: 1,
-                                        color: "#dcd8d0"
-                                    }
-                                })
-                            }),
-                            effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
-                        }),
-                        new FeatureLayer({
-                            popupEnabled: false,
-                            portalItem: {
-                                id: "f092c20803a047cba81fbf1e30eff0b5"
-                            },
-                            minScale: 0,
-                            maxScale: 0,
-                            definitionExpression: "NAME LIKE '%NP%' OR NAME LIKE '%National Park%'",
-                            effect: "grayscale(0.3) opacity(0.55) drop-shadow(2px 2px 10px green)"
-                        })
-                    ]
-                },
-                layers: [layer]
-            });
-        }
-        function createUsView(container, map) {
-            return __awaiter(this, void 0, void 0, function () {
-                var usView;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            container.style.display = "flex";
-                            usView = new MapView({
-                                map: map,
-                                container: container,
-                                popup: {
-                                    highlightEnabled: true,
-                                    dockEnabled: true,
-                                    dockOptions: {
-                                        breakpoint: false,
-                                        position: "top-right"
-                                    }
-                                },
-                                extent: {
-                                    spatialReference: {
-                                        wkid: 5070
-                                    },
-                                    xmin: -2985714.7547551794,
-                                    ymin: 66403.41816565767,
-                                    xmax: 2965420.009085534,
-                                    ymax: 3244802.8703926024
-                                },
-                                constraints: {
-                                    minScale: 16215262,
-                                    maxScale: 2000000,
-                                    geometry: new geometry_1.Extent({
-                                        spatialReference: {
-                                            wkid: 5070
-                                        },
-                                        xmin: -1921286.8554006994,
-                                        ymin: 726332.1394147258,
-                                        xmax: 1694697.29902421,
-                                        ymax: 2715123.424348426
-                                    })
-                                },
-                                spatialReference: {
-                                    // NAD_1983_Contiguous_USA_Albers
-                                    wkid: 5070
-                                },
-                                ui: {
-                                    components: ["attribution"]
-                                }
-                            });
-                            return [4 /*yield*/, usView.when()];
-                        case 1: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        }
-        function createAkView(container, map) {
-            return __awaiter(this, void 0, void 0, function () {
-                var akView;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            container.style.display = "flex";
-                            akView = new MapView({
-                                map: map,
-                                container: container,
-                                extent: new geometry_1.Extent({
-                                    spatialReference: {
-                                        wkid: 5936
-                                    },
-                                    xmin: 737823.0703569443,
-                                    ymin: -2103604.250401656,
-                                    xmax: 3689660.4504700145,
-                                    ymax: 110273.7846831464
-                                }),
-                                spatialReference: {
-                                    // WGS_1984_EPSG_Alaska_Polar_Stereographic
-                                    wkid: 5936
-                                },
-                                constraints: {
-                                    minScale: 36810426,
-                                    maxScale: 12400323,
-                                    geometry: new geometry_1.Extent({
-                                        spatialReference: {
-                                            wkid: 5936
-                                        },
-                                        xmin: 737823.0703569443,
-                                        ymin: -2103604.250401656,
-                                        xmax: 3689660.4504700145,
-                                        ymax: 110273.7846831464
-                                    })
-                                },
-                                ui: {
-                                    components: []
-                                }
-                            });
-                            return [4 /*yield*/, akView.when()];
-                        case 1: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        }
-        function createHiView(container, map) {
-            container.style.display = "flex";
-            var hiView = new MapView({
-                map: map,
-                container: container,
-                extent: new geometry_1.Extent({
-                    spatialReference: {
-                        wkid: 102007
-                    },
-                    xmin: -390787.1649959057,
-                    ymin: 564313.6231185358,
-                    xmax: 756460.4545479296,
-                    ymax: 1183827.3376722068
-                }),
-                spatialReference: {
-                    // Hawaii_Albers_Equal_Area_Conic
-                    wkid: 102007
-                },
-                constraints: {
-                    minScale: 17344181,
-                    geometry: new geometry_1.Extent({
-                        spatialReference: {
-                            wkid: 102007
-                        },
-                        xmin: -390787.1649959057,
-                        ymin: 564313.6231185358,
-                        xmax: 756460.4545479296,
-                        ymax: 1183827.3376722068
-                    })
-                },
-                ui: {
-                    components: []
-                }
-            });
-            return hiView.when();
-        }
-        function createViView(container, map) {
-            return __awaiter(this, void 0, void 0, function () {
-                var viView;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            container.style.display = "flex";
-                            viView = new MapView({
-                                map: map,
-                                container: container,
-                                extent: {
-                                    spatialReference: {
-                                        wkid: 5070
-                                    },
-                                    xmin: 3368052.0840510447,
-                                    ymin: 56364.032814495884,
-                                    xmax: 3369766.5874800514,
-                                    ymax: 58078.53624350274
-                                },
-                                spatialReference: {
-                                    wkid: 5070
-                                },
-                                constraints: {
-                                    minScale: 43200,
-                                    maxScale: 43200,
-                                    geometry: new geometry_1.Extent({
-                                        spatialReference: {
-                                            wkid: 5070
-                                        },
-                                        xmin: 3368052.0840510447,
-                                        ymin: 56364.032814495884,
-                                        xmax: 3369766.5874800514,
-                                        ymax: 58078.53624350274
-                                    })
-                                },
-                                ui: {
-                                    components: []
-                                }
-                            });
-                            return [4 /*yield*/, viView.when()];
-                        case 1: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        }
         function createAllViews(map) {
             return __awaiter(this, void 0, void 0, function () {
                 var _a, _b, _c, _d;
                 return __generator(this, function (_e) {
                     switch (_e.label) {
                         case 0:
-                            _a = views.us;
-                            return [4 /*yield*/, createUsView(views.us.container, map)
+                            _a = views_1.views.us;
+                            return [4 /*yield*/, views_1.createUsView(views_1.views.us.container, map)
                                     .then(maintainFixedExtent)
                                     .then(enableHighlightOnPointerMove)];
                         case 1:
                             _a.view = _e.sent();
-                            _b = views.ak;
-                            return [4 /*yield*/, createAkView(views.ak.container, map)
+                            _b = views_1.views.ak;
+                            return [4 /*yield*/, views_1.createAkView(views_1.views.ak.container, map)
                                     .then(enableHighlightOnPointerMove)];
                         case 2:
                             _b.view = _e.sent();
-                            _c = views.hi;
-                            return [4 /*yield*/, createHiView(views.hi.container, map)
+                            _c = views_1.views.hi;
+                            return [4 /*yield*/, views_1.createHiView(views_1.views.hi.container, map)
                                     .then(disableNavigation)
                                     .then(enableHighlightOnPointerMove)];
                         case 3:
                             _c.view = _e.sent();
-                            _d = views.vi;
-                            return [4 /*yield*/, createViView(views.vi.container, map)
+                            _d = views_1.views.vi;
+                            return [4 /*yield*/, views_1.createViView(views_1.views.vi.container, map)
                                     .then(disableNavigation)
                                     .then(enableHighlightOnPointerMove)];
                         case 4:
                             _d.view = _e.sent();
-                            return [2 /*return*/, views];
+                            return [2 /*return*/, views_1.views];
                     }
                 });
             });
-        }
-        function destroyView(view, key) {
-            if (view) {
-                view.map.removeAll();
-                view.container.style.display = "none";
-                view.container = null;
-                view.map = null;
-                views[key].view = null;
-            }
-        }
-        function destroyAllViews() {
-            for (var k in views) {
-                var view = views[k].view;
-                destroyView(view, k);
-            }
         }
         function disableSelectOptionByValue(selectElement, value) {
             var op = selectElement.getElementsByTagName("option");
@@ -359,16 +104,20 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         }
         function udpateViewWidgets() {
             var vType = viewType === "all" ? "us" : viewType;
-            var view = views[vType].view;
-            featureWidget = new Feature({
-                map: view.map,
-                spatialReference: view.spatialReference,
-                container: document.getElementById("feature")
-            });
-            legend = new Legend({
-                view: view,
-                container: document.getElementById("legend")
-            });
+            var view = views_1.views[vType].view;
+            if (!featureWidget) {
+                featureWidget = new Feature({
+                    container: document.getElementById("feature")
+                });
+            }
+            featureWidget.map = view.map;
+            featureWidget.spatialReference = view.spatialReference;
+            if (!legend) {
+                legend = new Legend({
+                    container: document.getElementById("legend")
+                });
+            }
+            legend.view = view;
         }
         function initializeSlider() {
             return __awaiter(this, void 0, void 0, function () {
@@ -379,10 +128,10 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                         case 0:
                             year = slider.values[0];
                             vType = viewType === "all" ? "us" : viewType;
-                            view = views[vType].view;
+                            view = views_1.views[vType].view;
                             yearElement.innerHTML = year.toString();
                             previousYearElement.innerHTML = (year - 1).toString();
-                            return [4 /*yield*/, view.whenLayerView(layer)];
+                            return [4 /*yield*/, view.whenLayerView(views_1.layer)];
                         case 1:
                             layerView = _a.sent();
                             watchUtils.whenFalseOnce(layerView, "updating", function () { return __awaiter(_this, void 0, void 0, function () {
@@ -393,19 +142,19 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                         case 1:
                                             stats = _c.sent();
                                             updateParkVisitationDisplay(stats);
-                                            _a = renderers;
-                                            _b = rendererType;
-                                            return [4 /*yield*/, renderer_1.createRenderer({
-                                                    layer: layer,
+                                            _a = renderers_1.renderers;
+                                            _b = renderers_1.rendererType;
+                                            return [4 /*yield*/, renderers_1.createRenderer({
+                                                    layer: views_1.layer,
                                                     view: view,
                                                     year: year,
-                                                    type: rendererType
+                                                    type: renderers_1.rendererType
                                                 })];
                                         case 2:
                                             _a[_b] = _c.sent();
-                                            layer.renderer = renderers[rendererType];
-                                            layer.popupTemplate = popup_1.createPopupTemplate(year);
-                                            layer.labelingInfo = labels_1.createLabelingInfo(year);
+                                            views_1.layer.renderer = renderers_1.renderers[renderers_1.rendererType];
+                                            views_1.layer.popupTemplate = popup_1.createPopupTemplate(year);
+                                            views_1.layer.labelingInfo = labels_1.createLabelingInfo(year);
                                             slider.disabled = false;
                                             return [2 /*return*/];
                                     }
@@ -436,14 +185,14 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             });
         }
         function updateLayer(year) {
-            renderers[rendererType] = renderer_1.updateRenderer({
-                renderer: layer.renderer,
+            renderers_1.renderers[renderers_1.rendererType] = renderers_1.updateRenderer({
+                renderer: views_1.layer.renderer,
                 year: year,
-                type: rendererType
+                type: renderers_1.rendererType
             });
-            layer.renderer = renderers[rendererType];
-            layer.popupTemplate = popup_1.createPopupTemplate(year);
-            layer.labelingInfo = labels_1.createLabelingInfo(year);
+            views_1.layer.renderer = renderers_1.renderers[renderers_1.rendererType];
+            views_1.layer.popupTemplate = popup_1.createPopupTemplate(year);
+            views_1.layer.labelingInfo = labels_1.createLabelingInfo(year);
         }
         function maintainFixedExtent(view) {
             var fixedExtent = view.extent.clone();
@@ -460,7 +209,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 var _this = this;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, view.whenLayerView(layer)];
+                        case 0: return [4 /*yield*/, view.whenLayerView(views_1.layer)];
                         case 1:
                             layerView = _a.sent();
                             view.on("pointer-move", function (event) { return __awaiter(_this, void 0, void 0, function () {
@@ -468,7 +217,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0: return [4 /*yield*/, view.hitTest(event, {
-                                                include: layer
+                                                include: views_1.layer
                                             })];
                                         case 1:
                                             response = _a.sent();
@@ -580,8 +329,8 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     switch (_f.label) {
                         case 0:
                             setUrlParams(newValue);
-                            destroyAllViews();
-                            esriMap = createMap();
+                            views_1.destroyAllViews();
+                            esriMap = views_1.createMap();
                             _a = newValue;
                             switch (_a) {
                                 case "all": return [3 /*break*/, 1];
@@ -596,26 +345,26 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                             _f.sent();
                             return [3 /*break*/, 12];
                         case 3:
-                            _b = views.us;
-                            return [4 /*yield*/, createUsView(views.us.container, esriMap)];
+                            _b = views_1.views.us;
+                            return [4 /*yield*/, views_1.createUsView(views_1.views.us.container, esriMap)];
                         case 4:
                             _b.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 5:
-                            _c = views.ak;
-                            return [4 /*yield*/, createAkView(views.us.container, esriMap)];
+                            _c = views_1.views.ak;
+                            return [4 /*yield*/, views_1.createAkView(views_1.views.us.container, esriMap)];
                         case 6:
                             _c.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 7:
-                            _d = views.hi;
-                            return [4 /*yield*/, createHiView(views.us.container, esriMap)];
+                            _d = views_1.views.hi;
+                            return [4 /*yield*/, views_1.createHiView(views_1.views.us.container, esriMap)];
                         case 8:
                             _d.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 9:
-                            _e = views.vi;
-                            return [4 /*yield*/, createViView(views.us.container, esriMap)];
+                            _e = views_1.views.vi;
+                            return [4 /*yield*/, views_1.createViView(views_1.views.us.container, esriMap)];
                         case 10:
                             _e.view = _f.sent();
                             return [3 /*break*/, 12];
@@ -631,37 +380,16 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 check = true; })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         }
-        var viewSelect, views, rendererType, renderers, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, layer, viewType, layerView, featureWidget, legend, slider, highlight, lastHighlight;
+        var viewSelect, yearElement, previousYearElement, annualVisitsElement, percentChangeElement, totalChangeElement, viewType, layerView, featureWidget, legend, slider, highlight, lastHighlight;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     viewSelect = document.getElementById("viewSelect");
-                    views = {
-                        ak: {
-                            container: document.getElementById("akViewDiv"),
-                            view: null
-                        },
-                        hi: {
-                            container: document.getElementById("hiViewDiv"),
-                            view: null
-                        },
-                        vi: {
-                            container: document.getElementById("viViewDiv"),
-                            view: null
-                        },
-                        us: {
-                            container: document.getElementById("mainViewDiv"),
-                            view: null
-                        }
-                    };
-                    rendererType = "percent-change";
-                    renderers = {};
                     yearElement = document.getElementById("year");
                     previousYearElement = document.getElementById("previous-year");
                     annualVisitsElement = document.getElementById("annual-visits");
                     percentChangeElement = document.getElementById("percent-change");
                     totalChangeElement = document.getElementById("total-change");
-                    layer = null;
                     viewType = getUrlParams();
                     if (isMobileBrowser()) {
                         viewType = viewType === "all" ? "us" : viewType;
@@ -669,6 +397,19 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     }
                     setUrlParams(viewType);
                     viewSelect.value = viewType;
+                    viewSelect.addEventListener("change", function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    viewType = viewSelect.value;
+                                    return [4 /*yield*/, renderViews(viewType)];
+                                case 1:
+                                    _a.sent();
+                                    udpateViewWidgets();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     return [4 /*yield*/, renderViews(viewType)];
                 case 1:
                     _a.sent();
@@ -694,19 +435,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                     initializeSlider();
                     highlight = null;
                     lastHighlight = null;
-                    viewSelect.addEventListener("change", function () { return __awaiter(void 0, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    viewType = viewSelect.value;
-                                    return [4 /*yield*/, renderViews(viewType)];
-                                case 1:
-                                    _a.sent();
-                                    udpateViewWidgets();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); });
                     ;
                     return [2 /*return*/];
             }
