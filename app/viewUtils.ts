@@ -19,7 +19,7 @@ let lastHighlight: esri.Handle = null;
 
 export async function enableHighlightOnPointerMove(view: MapView): Promise<MapView> {
   const layerView = await view.whenLayerView(layer);
-  view.on("pointer-move", async (event) => {
+  view.on("click", async (event) => {
     const response = await view.hitTest(event, {
       include: layer
     });
@@ -45,7 +45,7 @@ export async function enableHighlightOnPointerMove(view: MapView): Promise<MapVi
         (Widgets.featureWidget.container as HTMLElement).style.display = "block";
       }
     } else {
-      if (Widgets.featureWidget.graphic) {
+      if (Widgets.featureWidget && Widgets.featureWidget.graphic) {
         Widgets.featureWidget.graphic = null;
         (Widgets.featureWidget.container as HTMLElement).style.display = "none";
       }

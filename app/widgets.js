@@ -51,7 +51,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     var annualVisitsElement = document.getElementById("annual-visits");
     var percentChangeElement = document.getElementById("percent-change");
     var totalChangeElement = document.getElementById("total-change");
-    function updateViewWidgets() {
+    function updateViewWidgets(isMobile) {
         var vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
         var view = views_1.views[vType].view;
         if (!Widgets.featureWidget) {
@@ -63,6 +63,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
         Widgets.featureWidget.spatialReference = view.spatialReference;
         if (!legend) {
             legend = new Legend({
+                style: isMobile ? "card" : "classic",
                 container: document.getElementById("legend")
             });
         }

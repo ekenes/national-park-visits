@@ -3,7 +3,7 @@
     "lib": [
       "DOM",
       "ES2015.Promise",
-      "es2015"
+      "ES2020"
     ],
     "module": "amd",
     "noImplicitAny": true,

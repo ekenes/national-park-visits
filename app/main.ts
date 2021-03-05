@@ -27,7 +27,7 @@ import { createLabelingInfo } from "./labels";
   viewSelect.addEventListener("change", async ()=> {
     ViewVars.viewType = viewSelect.value as UrlParams["viewType"];
     await renderViews(ViewVars.viewType);
-    updateViewWidgets();
+    updateViewWidgets(isMobile);
   });
 
   await renderViews(ViewVars.viewType);
@@ -54,7 +54,7 @@ import { createLabelingInfo } from "./labels";
     layer.popupTemplate = createPopupTemplate(year);
     layer.labelingInfo = createLabelingInfo(year);
 
-    updateViewWidgets();
+    updateViewWidgets(isMobile);
 
     if(isMobile){
       initializeYearSelect();

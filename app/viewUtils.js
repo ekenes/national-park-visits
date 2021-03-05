@@ -58,7 +58,7 @@ define(["require", "exports", "./views", "./widgets"], function (require, export
                     case 0: return [4 /*yield*/, view.whenLayerView(views_1.layer)];
                     case 1:
                         layerView = _a.sent();
-                        view.on("pointer-move", function (event) { return __awaiter(_this, void 0, void 0, function () {
+                        view.on("click", function (event) { return __awaiter(_this, void 0, void 0, function () {
                             var response, id, feature, selectionId;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
@@ -83,7 +83,7 @@ define(["require", "exports", "./views", "./widgets"], function (require, export
                                             }
                                         }
                                         else {
-                                            if (widgets_1.Widgets.featureWidget.graphic) {
+                                            if (widgets_1.Widgets.featureWidget && widgets_1.Widgets.featureWidget.graphic) {
                                                 widgets_1.Widgets.featureWidget.graphic = null;
                                                 widgets_1.Widgets.featureWidget.container.style.display = "none";
                                             }

@@ -1,5 +1,4 @@
 import Legend = require("esri/widgets/Legend");
-import watchUtils = require("esri/core/watchUtils");
 import Slider = require("esri/widgets/Slider");
 import Feature = require("esri/widgets/Feature");
 import intl = require("esri/intl");
@@ -8,7 +7,7 @@ import Graphic = require("esri/Graphic");
 import { ClassBreaksRenderer } from "esri/renderers";
 import { createPopupTemplate } from "./popup";
 import { createLabelingInfo } from "./labels";
-import { createRenderer, updateRenderer, renderers, rendererType } from "./renderers";
+import { updateRenderer, renderers, rendererType } from "./renderers";
 import { queryStats } from "./stats";
 import { layer, views, ViewVars } from "./views";
 import { UrlParams } from "./urlParams";
@@ -27,7 +26,7 @@ const annualVisitsElement = document.getElementById("annual-visits") as HTMLSpan
 const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
 const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
 
-export function updateViewWidgets(){
+export function updateViewWidgets(isMobile?: boolean){
   const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
   const view = views[vType].view;
 
@@ -41,6 +40,7 @@ export function updateViewWidgets(){
 
   if(!legend){
     legend = new Legend({
+      style: isMobile ? "card" : "classic",
       container: document.getElementById("legend")
     });
   }
