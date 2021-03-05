@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtils"], function (require, exports, views_1, urlParams_1, widgets_1, viewUtils_1) {
+define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtils", "esri/core/watchUtils", "./stats", "./renderers", "./popup", "./labels"], function (require, exports, views_1, urlParams_1, widgets_1, viewUtils_1, watchUtils_1, stats_1, renderers_1, popup_1, labels_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -168,7 +168,7 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                 });
             });
         }
-        var viewSelect, isMobile;
+        var viewSelect, isMobile, vType, view, layerView;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -189,7 +189,7 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                                     return [4 /*yield*/, renderViews(views_1.ViewVars.viewType)];
                                 case 1:
                                     _a.sent();
-                                    widgets_1.udpateViewWidgets();
+                                    widgets_1.updateViewWidgets();
                                     return [2 /*return*/];
                             }
                         });
@@ -197,8 +197,40 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                     return [4 /*yield*/, renderViews(views_1.ViewVars.viewType)];
                 case 1:
                     _a.sent();
-                    widgets_1.udpateViewWidgets();
-                    widgets_1.initializeSlider();
+                    vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
+                    view = views_1.views[vType].view;
+                    widgets_1.yearElement.innerHTML = widgets_1.year.toString();
+                    widgets_1.previousYearElement.innerHTML = (widgets_1.year - 1).toString();
+                    return [4 /*yield*/, view.whenLayerView(views_1.layer)];
+                case 2:
+                    layerView = _a.sent();
+                    watchUtils_1.whenFalseOnce(layerView, "updating", function () { return __awaiter(void 0, void 0, void 0, function () {
+                        var stats, _a, _b;
+                        return __generator(this, function (_c) {
+                            switch (_c.label) {
+                                case 0: return [4 /*yield*/, stats_1.queryStats(layerView, widgets_1.year)];
+                                case 1:
+                                    stats = _c.sent();
+                                    widgets_1.updateParkVisitationDisplay(stats);
+                                    _a = renderers_1.renderers;
+                                    _b = renderers_1.rendererType;
+                                    return [4 /*yield*/, renderers_1.createRenderer({
+                                            layer: views_1.layer,
+                                            view: view,
+                                            year: widgets_1.year,
+                                            type: renderers_1.rendererType
+                                        })];
+                                case 2:
+                                    _a[_b] = _c.sent();
+                                    views_1.layer.renderer = renderers_1.renderers[renderers_1.rendererType];
+                                    views_1.layer.popupTemplate = popup_1.createPopupTemplate(widgets_1.year);
+                                    views_1.layer.labelingInfo = labels_1.createLabelingInfo(widgets_1.year);
+                                    widgets_1.initializeSlider();
+                                    widgets_1.updateViewWidgets();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     return [2 /*return*/];
             }
         });

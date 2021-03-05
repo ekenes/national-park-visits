@@ -18,16 +18,16 @@ export class Widgets {
 }
 
 let legend: Legend;
-export let year: number;
+export let year: number = 2020;
 
-const yearElement = document.getElementById("year") as HTMLSpanElement;
-const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
+export const yearElement = document.getElementById("year") as HTMLSpanElement;
+export const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
 
 const annualVisitsElement = document.getElementById("annual-visits") as HTMLSpanElement;
 const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
 const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
 
-export function udpateViewWidgets(){
+export function updateViewWidgets(){
   const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
   const view = views[vType].view;
 
@@ -47,51 +47,30 @@ export function udpateViewWidgets(){
   legend.view = view;
 }
 
-export const slider = new Slider({
-  disabled: true,
-  container: "timeSlider",
-  min: 1905,
-  max: 2020,
-  values: [ 2020 ],
-  steps: 1,
-  layout: "vertical",
-  visibleElements: {
-    labels: false,
-    rangeLabels: true
-  },
-  tickConfigs: [{
-    mode: "position",
-    values: [ 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010 ],
-    labelsVisible: true
-  }]
-});
-
 
 export async function initializeSlider() {
-  year = slider.values[0];
+  const slider = new Slider({
+    container: "timeSlider",
+    min: 1905,
+    max: year,
+    values: [ year ],
+    steps: 1,
+    layout: "vertical",
+    visibleElements: {
+      labels: false,
+      rangeLabels: true
+    },
+    tickConfigs: [{
+      mode: "position",
+      values: [ 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010 ],
+      labelsVisible: true
+    }]
+  });
 
   const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
   const view = views[vType].view;
 
-  yearElement.innerHTML = year.toString();
-  previousYearElement.innerHTML = (year-1).toString();
   const layerView = await view.whenLayerView(layer);
-  watchUtils.whenFalseOnce(layerView, "updating", async () => {
-    const stats = await queryStats(layerView, year);
-    updateParkVisitationDisplay(stats);
-
-    renderers[rendererType] = await createRenderer({
-      layer,
-      view,
-      year,
-      type: rendererType
-    });
-
-    layer.renderer = renderers[rendererType];
-    layer.popupTemplate = createPopupTemplate(year);
-    layer.labelingInfo = createLabelingInfo(year);
-    slider.disabled = false;
-  });
 
   slider.watch("values", async ([ value ]) => {
     year = value;
@@ -117,7 +96,7 @@ function updateLayer(year: number){
   layer.labelingInfo = createLabelingInfo(year);
 }
 
-function updateParkVisitationDisplay(stats: Graphic["attributes"]){
+export function updateParkVisitationDisplay(stats: Graphic["attributes"]){
   const annual = stats.annual_visitation;
   const total = stats.total_accumulated_visitation;
   const previous = stats.previous_annual_visitation || null;

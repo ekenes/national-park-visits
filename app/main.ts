@@ -1,8 +1,13 @@
 import WebMap = require("esri/WebMap");
-import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars } from "./views";
+import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars, layer } from "./views";
 import { getUrlParams, setUrlParams, UrlParams } from "./urlParams";
-import { initializeSlider, udpateViewWidgets, disableSelectOptionByValue } from "./widgets";
+import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay } from "./widgets";
 import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maintainFixedExtent } from "./viewUtils";
+import { whenFalseOnce } from "esri/core/watchUtils";
+import { queryStats } from "./stats";
+import { renderers, rendererType, createRenderer } from "./renderers";
+import { createPopupTemplate } from "./popup";
+import { createLabelingInfo } from "./labels";
 
 (async () => {
 
@@ -22,12 +27,36 @@ import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maint
   viewSelect.addEventListener("change", async ()=> {
     ViewVars.viewType = viewSelect.value as UrlParams["viewType"];
     await renderViews(ViewVars.viewType);
-    udpateViewWidgets();
+    updateViewWidgets();
   });
 
   await renderViews(ViewVars.viewType);
-  udpateViewWidgets();
-  initializeSlider();
+
+  const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
+  const view = views[vType].view;
+
+  yearElement.innerHTML = year.toString();
+  previousYearElement.innerHTML = (year-1).toString();
+  const layerView = await view.whenLayerView(layer);
+
+  whenFalseOnce(layerView, "updating", async () => {
+    const stats = await queryStats(layerView, year);
+    updateParkVisitationDisplay(stats);
+
+    renderers[rendererType] = await createRenderer({
+      layer,
+      view,
+      year,
+      type: rendererType
+    });
+
+    layer.renderer = renderers[rendererType];
+    layer.popupTemplate = createPopupTemplate(year);
+    layer.labelingInfo = createLabelingInfo(year);
+
+    initializeSlider();
+    updateViewWidgets();
+  });
 
   async function createAllViews(map: WebMap){
 
