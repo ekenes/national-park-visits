@@ -54,12 +54,19 @@ body,
   display: none;
 }
 #timeSlider {
+  display: none;
   position: absolute;
   left: 10px;
   top: 30px;
   height: 400px;
   width: 50px;
   background-color: rgba(0, 0, 0, 0);
+}
+#year-picker {
+  display: none;
+  position: absolute;
+  left: 10px;
+  top: 30px;
 }
 #title {
   padding: 10px;

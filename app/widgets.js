@@ -93,6 +93,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                                     labelsVisible: true
                                 }]
                         });
+                        slider.container.style.display = "flex";
                         vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
                         view = views_1.views[vType].view;
                         return [4 /*yield*/, view.whenLayerView(views_1.layer)];
@@ -124,6 +125,54 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
         });
     }
     exports.initializeSlider = initializeSlider;
+    function initializeYearSelect() {
+        return __awaiter(this, void 0, void 0, function () {
+            var container, yearPicker, min, y, option, vType, view, layerView;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        container = document.getElementById("year-picker");
+                        container.style.display = "flex";
+                        yearPicker = document.createElement("select");
+                        yearPicker.classList.add("esri-widget");
+                        container.appendChild(yearPicker);
+                        min = 1905;
+                        for (y = exports.year; y >= min; y--) {
+                            option = document.createElement("option");
+                            option.value = y.toString();
+                            option.text = y.toString();
+                            option.selected = y === exports.year;
+                            yearPicker.appendChild(option);
+                        }
+                        vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
+                        view = views_1.views[vType].view;
+                        return [4 /*yield*/, view.whenLayerView(views_1.layer)];
+                    case 1:
+                        layerView = _a.sent();
+                        yearPicker.addEventListener("change", function () { return __awaiter(_this, void 0, void 0, function () {
+                            var stats;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        exports.year = parseInt(yearPicker.value);
+                                        exports.yearElement.innerHTML = exports.year.toString();
+                                        exports.previousYearElement.innerHTML = (exports.year - 1).toString();
+                                        updateLayer(exports.year);
+                                        return [4 /*yield*/, stats_1.queryStats(layerView, exports.year)];
+                                    case 1:
+                                        stats = _a.sent();
+                                        updateParkVisitationDisplay(stats);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    exports.initializeYearSelect = initializeYearSelect;
     function updateLayer(year) {
         renderers_1.renderers[renderers_1.rendererType] = renderers_1.updateRenderer({
             renderer: views_1.layer.renderer,

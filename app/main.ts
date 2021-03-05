@@ -1,7 +1,7 @@
 import WebMap = require("esri/WebMap");
 import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars, layer } from "./views";
 import { getUrlParams, setUrlParams, UrlParams } from "./urlParams";
-import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay } from "./widgets";
+import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay, initializeYearSelect } from "./widgets";
 import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maintainFixedExtent } from "./viewUtils";
 import { whenFalseOnce } from "esri/core/watchUtils";
 import { queryStats } from "./stats";
@@ -54,8 +54,13 @@ import { createLabelingInfo } from "./labels";
     layer.popupTemplate = createPopupTemplate(year);
     layer.labelingInfo = createLabelingInfo(year);
 
-    initializeSlider();
     updateViewWidgets();
+
+    if(isMobile){
+      initializeYearSelect();
+      return;
+    }
+    initializeSlider();
   });
 
   async function createAllViews(map: WebMap){

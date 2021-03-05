@@ -277,12 +277,12 @@ export function createHiView(params: CreateViewParams){
     maxScale: 4766466,
     geometry: new Extent({
       spatialReference: {
-        wkid: 5936
+        wkid: 102007
       },
-      xmin: 737823.0703569443,
-      ymin: -2103604.250401656,
-      xmax: 3689660.4504700145,
-      ymax: 110273.7846831464
+      xmin: -390787.1649959057,
+      ymin: 564313.6231185358,
+      xmax: 756460.4545479296,
+      ymax: 1183827.3376722068
     })
   };
 

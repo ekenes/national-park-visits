@@ -66,6 +66,7 @@ export async function initializeSlider() {
       labelsVisible: true
     }]
   });
+  (slider.container as HTMLElement).style.display = "flex";
 
   const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
   const view = views[vType].view;
@@ -78,6 +79,40 @@ export async function initializeSlider() {
     previousYearElement.innerHTML = (year - 1).toString();
 
     updateLayer(value);
+
+    const stats = await queryStats(layerView, year);
+    updateParkVisitationDisplay(stats);
+  });
+}
+
+export async function initializeYearSelect() {
+  const container = document.getElementById("year-picker") as HTMLDivElement;
+  container.style.display = "flex";
+
+  const yearPicker = document.createElement("select") as HTMLSelectElement;
+  yearPicker.classList.add("esri-widget");
+  container.appendChild(yearPicker);
+  const min = 1905;
+
+  for (let y = year; y >= min; y--){
+    const option = document.createElement("option") as HTMLOptionElement;
+    option.value = y.toString();
+    option.text = y.toString();
+    option.selected = y === year;
+    yearPicker.appendChild(option);
+  }
+
+  const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
+  const view = views[vType].view;
+
+  const layerView = await view.whenLayerView(layer);
+
+  yearPicker.addEventListener("change", async () => {
+    year = parseInt(yearPicker.value);
+    yearElement.innerHTML = year.toString();
+    previousYearElement.innerHTML = (year - 1).toString();
+
+    updateLayer(year);
 
     const stats = await queryStats(layerView, year);
     updateParkVisitationDisplay(stats);

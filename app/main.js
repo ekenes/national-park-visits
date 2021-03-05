@@ -225,8 +225,12 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                                     views_1.layer.renderer = renderers_1.renderers[renderers_1.rendererType];
                                     views_1.layer.popupTemplate = popup_1.createPopupTemplate(widgets_1.year);
                                     views_1.layer.labelingInfo = labels_1.createLabelingInfo(widgets_1.year);
-                                    widgets_1.initializeSlider();
                                     widgets_1.updateViewWidgets();
+                                    if (isMobile) {
+                                        widgets_1.initializeYearSelect();
+                                        return [2 /*return*/];
+                                    }
+                                    widgets_1.initializeSlider();
                                     return [2 /*return*/];
                             }
                         });
