@@ -72,56 +72,53 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     exports.updateViewWidgets = updateViewWidgets;
     function initializeSlider() {
         return __awaiter(this, void 0, void 0, function () {
-            var slider, vType, view, layerView;
+            var slider;
             var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        slider = new Slider({
-                            container: "timeSlider",
-                            min: 1905,
-                            max: exports.year,
-                            values: [exports.year],
-                            steps: 1,
-                            layout: "vertical",
-                            visibleElements: {
-                                labels: false,
-                                rangeLabels: true
-                            },
-                            tickConfigs: [{
-                                    mode: "position",
-                                    values: [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
-                                    labelsVisible: true
-                                }]
+                slider = new Slider({
+                    container: "timeSlider",
+                    min: 1905,
+                    max: exports.year,
+                    values: [exports.year],
+                    steps: 1,
+                    layout: "vertical",
+                    visibleElements: {
+                        labels: false,
+                        rangeLabels: true
+                    },
+                    tickConfigs: [{
+                            mode: "position",
+                            values: [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
+                            labelsVisible: true
+                        }]
+                });
+                slider.container.style.display = "flex";
+                slider.watch("values", function (_a) {
+                    var value = _a[0];
+                    return __awaiter(_this, void 0, void 0, function () {
+                        var vType, view, layerView, stats;
+                        return __generator(this, function (_b) {
+                            switch (_b.label) {
+                                case 0:
+                                    exports.year = value;
+                                    exports.yearElement.innerHTML = exports.year.toString();
+                                    exports.previousYearElement.innerHTML = (exports.year - 1).toString();
+                                    updateLayer(value);
+                                    vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
+                                    view = views_1.views[vType].view;
+                                    return [4 /*yield*/, view.whenLayerView(views_1.layer)];
+                                case 1:
+                                    layerView = _b.sent();
+                                    return [4 /*yield*/, stats_1.queryStats(layerView, exports.year)];
+                                case 2:
+                                    stats = _b.sent();
+                                    updateParkVisitationDisplay(stats);
+                                    return [2 /*return*/];
+                            }
                         });
-                        slider.container.style.display = "flex";
-                        vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
-                        view = views_1.views[vType].view;
-                        return [4 /*yield*/, view.whenLayerView(views_1.layer)];
-                    case 1:
-                        layerView = _a.sent();
-                        slider.watch("values", function (_a) {
-                            var value = _a[0];
-                            return __awaiter(_this, void 0, void 0, function () {
-                                var stats;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
-                                        case 0:
-                                            exports.year = value;
-                                            exports.yearElement.innerHTML = exports.year.toString();
-                                            exports.previousYearElement.innerHTML = (exports.year - 1).toString();
-                                            updateLayer(value);
-                                            return [4 /*yield*/, stats_1.queryStats(layerView, exports.year)];
-                                        case 1:
-                                            stats = _b.sent();
-                                            updateParkVisitationDisplay(stats);
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            });
-                        });
-                        return [2 /*return*/];
-                }
+                    });
+                });
+                return [2 /*return*/];
             });
         });
     }

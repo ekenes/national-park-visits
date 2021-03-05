@@ -68,11 +68,6 @@ export async function initializeSlider() {
   });
   (slider.container as HTMLElement).style.display = "flex";
 
-  const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
-  const view = views[vType].view;
-
-  const layerView = await view.whenLayerView(layer);
-
   slider.watch("values", async ([ value ]) => {
     year = value;
     yearElement.innerHTML = year.toString();
@@ -80,6 +75,9 @@ export async function initializeSlider() {
 
     updateLayer(value);
 
+    const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
+    const view = views[vType].view;
+    const layerView = await view.whenLayerView(layer);
     const stats = await queryStats(layerView, year);
     updateParkVisitationDisplay(stats);
   });
