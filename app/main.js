@@ -45,24 +45,44 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                     switch (_e.label) {
                         case 0:
                             _a = views_1.views.us;
-                            return [4 /*yield*/, views_1.createUsView(views_1.views.us.container, map)
+                            return [4 /*yield*/, views_1.createUsView({
+                                    container: views_1.views.us.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: false
+                                })
                                     .then(viewUtils_1.maintainFixedExtent)
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 1:
                             _a.view = _e.sent();
                             _b = views_1.views.ak;
-                            return [4 /*yield*/, views_1.createAkView(views_1.views.ak.container, map)
+                            return [4 /*yield*/, views_1.createAkView({
+                                    container: views_1.views.ak.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: true
+                                })
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 2:
                             _b.view = _e.sent();
                             _c = views_1.views.hi;
-                            return [4 /*yield*/, views_1.createHiView(views_1.views.hi.container, map)
+                            return [4 /*yield*/, views_1.createHiView({
+                                    container: views_1.views.hi.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: true
+                                })
                                     .then(viewUtils_1.disableNavigation)
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 3:
                             _c.view = _e.sent();
                             _d = views_1.views.vi;
-                            return [4 /*yield*/, views_1.createViView(views_1.views.vi.container, map)
+                            return [4 /*yield*/, views_1.createViView({
+                                    container: views_1.views.vi.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: true
+                                })
                                     .then(viewUtils_1.disableNavigation)
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 4:
@@ -74,13 +94,13 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
         }
         function renderViews(newValue) {
             return __awaiter(this, void 0, void 0, function () {
-                var esriMap, _a, _b, _c, _d, _e;
+                var map, _a, _b, _c, _d, _e;
                 return __generator(this, function (_f) {
                     switch (_f.label) {
                         case 0:
                             urlParams_1.setUrlParams(newValue);
                             views_1.destroyAllViews();
-                            esriMap = views_1.createMap();
+                            map = views_1.createMap();
                             _a = newValue;
                             switch (_a) {
                                 case "all": return [3 /*break*/, 1];
@@ -90,34 +110,54 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                                 case "vi": return [3 /*break*/, 9];
                             }
                             return [3 /*break*/, 11];
-                        case 1: return [4 /*yield*/, createAllViews(esriMap)];
+                        case 1: return [4 /*yield*/, createAllViews(map)];
                         case 2:
                             _f.sent();
                             return [3 /*break*/, 12];
                         case 3:
                             _b = views_1.views.us;
-                            return [4 /*yield*/, views_1.createUsView(views_1.views.us.container, esriMap)
+                            return [4 /*yield*/, views_1.createUsView({
+                                    container: views_1.views.us.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: false
+                                })
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 4:
                             _b.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 5:
                             _c = views_1.views.ak;
-                            return [4 /*yield*/, views_1.createAkView(views_1.views.us.container, esriMap)
+                            return [4 /*yield*/, views_1.createAkView({
+                                    container: views_1.views.us.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: false
+                                })
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 6:
                             _c.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 7:
                             _d = views_1.views.hi;
-                            return [4 /*yield*/, views_1.createHiView(views_1.views.us.container, esriMap)
+                            return [4 /*yield*/, views_1.createHiView({
+                                    container: views_1.views.us.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: false
+                                })
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 8:
                             _d.view = _f.sent();
                             return [3 /*break*/, 12];
                         case 9:
                             _e = views_1.views.vi;
-                            return [4 /*yield*/, views_1.createViView(views_1.views.us.container, esriMap)
+                            return [4 /*yield*/, views_1.createViView({
+                                    container: views_1.views.us.container,
+                                    map: map,
+                                    isMobile: isMobile,
+                                    isInset: false
+                                })
                                     .then(viewUtils_1.enableHighlightOnPointerMove)];
                         case 10:
                             _e.view = _f.sent();
@@ -128,13 +168,14 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                 });
             });
         }
-        var viewSelect;
+        var viewSelect, isMobile;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     viewSelect = document.getElementById("viewSelect");
                     views_1.ViewVars.viewType = urlParams_1.getUrlParams();
-                    if (viewUtils_1.isMobileBrowser()) {
+                    isMobile = viewUtils_1.isMobileBrowser();
+                    if (isMobile) {
                         views_1.ViewVars.viewType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
                         widgets_1.disableSelectOptionByValue(viewSelect, "all");
                     }

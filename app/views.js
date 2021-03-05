@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/renderers", "esri/symbols", "esri/geometry", "./renderers", "./labels", "./popup", "./widgets"], function (require, exports, WebMap, MapView, FeatureLayer, renderers_1, symbols_1, geometry_1, renderers_2, labels_1, popup_1, widgets_1) {
+define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/renderers", "esri/symbols", "esri/geometry", "./renderers", "./labels", "./popup", "./widgets", "esri/geometry/support/jsonUtils"], function (require, exports, WebMap, MapView, FeatureLayer, renderers_1, symbols_1, geometry_1, renderers_2, labels_1, popup_1, widgets_1, jsonUtils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ViewVars = /** @class */ (function () {
@@ -127,13 +127,47 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         });
     }
     exports.createMap = createMap;
-    function createUsView(container, map) {
+    function createUsView(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var usView;
+            var container, map, isMobile, isInset, mobileScale, desktopScale, scale, center, mobileConstraints, desktopConstraints, constraints, usView;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
                         container.style.display = "flex";
+                        mobileScale = 36353220;
+                        desktopScale = 16723716;
+                        scale = isMobile ? mobileScale : desktopScale;
+                        center = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": -7456.301870036883, "y": 1666581.490601381 });
+                        mobileConstraints = {
+                            rotationEnabled: false,
+                            minScale: mobileScale,
+                            maxScale: 2000000,
+                            geometry: new geometry_1.Extent({
+                                spatialReference: {
+                                    wkid: 5070
+                                },
+                                xmin: -1921286.8554006994,
+                                ymin: 726332.1394147258,
+                                xmax: 1694697.29902421,
+                                ymax: 2715123.424348426
+                            })
+                        };
+                        desktopConstraints = {
+                            rotationEnabled: false,
+                            minScale: 16215262,
+                            maxScale: 2000000,
+                            geometry: new geometry_1.Extent({
+                                spatialReference: {
+                                    wkid: 5070
+                                },
+                                xmin: -1921286.8554006994,
+                                ymin: 726332.1394147258,
+                                xmax: 1694697.29902421,
+                                ymax: 2715123.424348426
+                            })
+                        };
+                        constraints = isMobile ? mobileConstraints : desktopConstraints;
                         usView = new MapView({
                             map: map,
                             container: container,
@@ -145,28 +179,9 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                     position: "top-right"
                                 }
                             },
-                            extent: {
-                                spatialReference: {
-                                    wkid: 5070
-                                },
-                                xmin: -2985714.7547551794,
-                                ymin: 66403.41816565767,
-                                xmax: 2965420.009085534,
-                                ymax: 3244802.8703926024
-                            },
-                            constraints: {
-                                minScale: 16215262,
-                                maxScale: 2000000,
-                                geometry: new geometry_1.Extent({
-                                    spatialReference: {
-                                        wkid: 5070
-                                    },
-                                    xmin: -1921286.8554006994,
-                                    ymin: 726332.1394147258,
-                                    xmax: 1694697.29902421,
-                                    ymax: 2715123.424348426
-                                })
-                            },
+                            center: center,
+                            scale: scale,
+                            constraints: constraints,
                             spatialReference: {
                                 // NAD_1983_Contiguous_USA_Albers
                                 wkid: 5070
@@ -182,17 +197,26 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         });
     }
     exports.createUsView = createUsView;
-    function createAkView(container, map) {
+    function createAkView(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var akView;
+            var container, map, isMobile, isInset, mobileScale, desktopScale, insetScale, scale, insetCenter, fullCenter, center, mobileConstraints, desktopConstraints, constraints, akView;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
                         container.style.display = "flex";
-                        akView = new MapView({
-                            map: map,
-                            container: container,
-                            extent: new geometry_1.Extent({
+                        mobileScale = 24510951;
+                        desktopScale = 13076340;
+                        insetScale = 40436349;
+                        scale = isInset ? insetScale : isMobile ? mobileScale : desktopScale;
+                        insetCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 2103194.674427798, "y": -957221.1614695506 });
+                        fullCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 1811978.2456641502, "y": -1043832.0433061125 });
+                        center = isInset ? insetCenter : fullCenter;
+                        mobileConstraints = {
+                            rotationEnabled: false,
+                            minScale: isInset ? insetScale : mobileScale,
+                            maxScale: 5893891,
+                            geometry: new geometry_1.Extent({
                                 spatialReference: {
                                     wkid: 5936
                                 },
@@ -200,23 +224,32 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 ymin: -2103604.250401656,
                                 xmax: 3689660.4504700145,
                                 ymax: 110273.7846831464
-                            }),
+                            })
+                        };
+                        desktopConstraints = {
+                            rotationEnabled: false,
+                            minScale: desktopScale,
+                            maxScale: 4338033,
+                            geometry: new geometry_1.Extent({
+                                spatialReference: {
+                                    wkid: 5936
+                                },
+                                xmin: 737823.0703569443,
+                                ymin: -2103604.250401656,
+                                xmax: 3689660.4504700145,
+                                ymax: 110273.7846831464
+                            })
+                        };
+                        constraints = isInset || isMobile ? mobileConstraints : desktopConstraints;
+                        akView = new MapView({
+                            map: map,
+                            container: container,
+                            center: center,
+                            scale: scale,
+                            constraints: constraints,
                             spatialReference: {
                                 // WGS_1984_EPSG_Alaska_Polar_Stereographic
                                 wkid: 5936
-                            },
-                            constraints: {
-                                minScale: 36810426,
-                                maxScale: 12400323,
-                                geometry: new geometry_1.Extent({
-                                    spatialReference: {
-                                        wkid: 5936
-                                    },
-                                    xmin: 737823.0703569443,
-                                    ymin: -2103604.250401656,
-                                    xmax: 3689660.4504700145,
-                                    ymax: 110273.7846831464
-                                })
                             },
                             ui: {
                                 components: []
@@ -229,12 +262,21 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         });
     }
     exports.createAkView = createAkView;
-    function createHiView(container, map) {
+    function createHiView(params) {
+        var container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
         container.style.display = "flex";
-        var hiView = new MapView({
-            map: map,
-            container: container,
-            extent: new geometry_1.Extent({
+        var mobileScale = 5728779;
+        var desktopScale = 2416226;
+        var insetScale = 16833054;
+        var scale = isInset ? insetScale : isMobile ? mobileScale : desktopScale;
+        var insetCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 102007 }, "x": 143836.25219758786, "y": 869819.4196612639 });
+        var fullCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 102007 }, "x": -4804.986580757636, "y": 856852.2343004141 });
+        var center = isInset ? insetCenter : fullCenter;
+        var mobileConstraints = {
+            rotationEnabled: false,
+            minScale: isInset ? insetScale : 10099832,
+            maxScale: 2874526,
+            geometry: new geometry_1.Extent({
                 spatialReference: {
                     wkid: 102007
                 },
@@ -242,22 +284,32 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 ymin: 564313.6231185358,
                 xmax: 756460.4545479296,
                 ymax: 1183827.3376722068
-            }),
+            })
+        };
+        var desktopConstraints = {
+            rotationEnabled: false,
+            minScale: 1315641,
+            maxScale: 4766466,
+            geometry: new geometry_1.Extent({
+                spatialReference: {
+                    wkid: 5936
+                },
+                xmin: 737823.0703569443,
+                ymin: -2103604.250401656,
+                xmax: 3689660.4504700145,
+                ymax: 110273.7846831464
+            })
+        };
+        var constraints = isInset || isMobile ? mobileConstraints : desktopConstraints;
+        var hiView = new MapView({
+            map: map,
+            container: container,
+            center: center,
+            scale: scale,
+            constraints: constraints,
             spatialReference: {
                 // Hawaii_Albers_Equal_Area_Conic
                 wkid: 102007
-            },
-            constraints: {
-                minScale: 17344181,
-                geometry: new geometry_1.Extent({
-                    spatialReference: {
-                        wkid: 102007
-                    },
-                    xmin: -390787.1649959057,
-                    ymin: 564313.6231185358,
-                    xmax: 756460.4545479296,
-                    ymax: 1183827.3376722068
-                })
             },
             ui: {
                 components: []
@@ -266,12 +318,13 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         return hiView.when();
     }
     exports.createHiView = createHiView;
-    function createViView(container, map) {
+    function createViView(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var viView;
+            var container, map, isMobile, isInset, viView;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
                         container.style.display = "flex";
                         viView = new MapView({
                             map: map,
@@ -289,6 +342,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 wkid: 5070
                             },
                             constraints: {
+                                rotationEnabled: false,
                                 minScale: 43200,
                                 maxScale: 43200,
                                 geometry: new geometry_1.Extent({

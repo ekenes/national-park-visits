@@ -7,34 +7,17 @@ import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maint
 (async () => {
 
   const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
-
-  async function createAllViews(map: WebMap){
-
-    views.us.view = await createUsView(views.us.container, map)
-      .then(maintainFixedExtent)
-      .then(enableHighlightOnPointerMove)
-    views.ak.view = await createAkView(views.ak.container, map)
-      .then(enableHighlightOnPointerMove)
-    views.hi.view = await createHiView(views.hi.container, map)
-      .then(disableNavigation)
-      .then(enableHighlightOnPointerMove)
-    views.vi.view = await createViView(views.vi.container, map)
-      .then(disableNavigation)
-      .then(enableHighlightOnPointerMove)
-
-    return views;
-  }
-
   ViewVars.viewType = getUrlParams();
 
-  if(isMobileBrowser()){
+  const isMobile = isMobileBrowser();
+
+  if(isMobile){
     ViewVars.viewType = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
     disableSelectOptionByValue(viewSelect, "all");
   }
 
   setUrlParams(ViewVars.viewType);
   viewSelect.value = ViewVars.viewType;
-
 
   viewSelect.addEventListener("change", async ()=> {
     ViewVars.viewType = viewSelect.value as UrlParams["viewType"];
@@ -43,36 +26,95 @@ import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maint
   });
 
   await renderViews(ViewVars.viewType);
-
   udpateViewWidgets();
   initializeSlider();
+
+  async function createAllViews(map: WebMap){
+
+    views.us.view = await createUsView({
+      container: views.us.container,
+      map,
+      isMobile,
+      isInset: false
+    })
+    .then(maintainFixedExtent)
+    .then(enableHighlightOnPointerMove)
+
+    views.ak.view = await createAkView({
+      container: views.ak.container,
+      map,
+      isMobile,
+      isInset: true
+    })
+    .then(enableHighlightOnPointerMove)
+
+    views.hi.view = await createHiView({
+      container: views.hi.container,
+      map,
+      isMobile,
+      isInset: true
+    })
+    .then(disableNavigation)
+    .then(enableHighlightOnPointerMove)
+
+    views.vi.view = await createViView({
+      container: views.vi.container,
+      map,
+      isMobile,
+      isInset: true
+    })
+    .then(disableNavigation)
+    .then(enableHighlightOnPointerMove)
+
+    return views;
+  }
 
   async function renderViews(newValue: UrlParams["viewType"]) {
     setUrlParams(newValue);
 
     destroyAllViews();
 
-    const esriMap = createMap();
+    const map = createMap();
 
     switch(newValue){
       case "all":
-        await createAllViews(esriMap);
+        await createAllViews(map);
         break;
       case "us":
-        views.us.view = await createUsView(views.us.container, esriMap)
-          .then(enableHighlightOnPointerMove)
+        views.us.view = await createUsView({
+          container: views.us.container,
+          map,
+          isMobile,
+          isInset: false
+        })
+        .then(enableHighlightOnPointerMove)
         break;
       case "ak":
-        views.ak.view = await createAkView(views.us.container, esriMap)
-          .then(enableHighlightOnPointerMove)
+        views.ak.view = await createAkView({
+          container: views.us.container,
+          map,
+          isMobile,
+          isInset: false
+        })
+        .then(enableHighlightOnPointerMove)
         break;
       case "hi":
-        views.hi.view = await createHiView(views.us.container, esriMap)
-          .then(enableHighlightOnPointerMove)
+        views.hi.view = await createHiView({
+          container: views.us.container,
+          map,
+          isMobile,
+          isInset: false
+        })
+        .then(enableHighlightOnPointerMove)
         break;
       case "vi":
-        views.vi.view = await createViView(views.us.container, esriMap)
-          .then(enableHighlightOnPointerMove)
+        views.vi.view = await createViView({
+          container: views.us.container,
+          map,
+          isMobile,
+          isInset: false
+        })
+        .then(enableHighlightOnPointerMove)
         break;
       default:
         break;
