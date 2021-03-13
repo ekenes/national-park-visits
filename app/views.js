@@ -77,7 +77,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             }),
             labelsVisible: true,
             labelingInfo: renderers_2.renderers[renderers_2.RendererVars.rendererType] ? labels_1.createLabelingInfo(widgets_1.year) : null,
-            popupTemplate: renderers_2.RendererVars.rendererType[renderers_2.RendererVars.rendererType] ? popup_1.createPopupTemplate(widgets_1.year) : null,
+            popupTemplate: renderers_2.renderers[renderers_2.RendererVars.rendererType] ? popup_1.createPopupTemplate(widgets_1.year) : null,
             outFields: ["*"],
             layerId: 0,
             minScale: 0,

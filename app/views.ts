@@ -51,7 +51,7 @@ export function createLayer(){
     }),
     labelsVisible: true,
     labelingInfo: renderers[RendererVars.rendererType] ? createLabelingInfo(year) : null,
-    popupTemplate: RendererVars.rendererType[RendererVars.rendererType] ? createPopupTemplate(year) : null,
+    popupTemplate: renderers[RendererVars.rendererType] ? createPopupTemplate(year) : null,
     outFields: ["*"],
     layerId: 0,
     minScale: 0,
