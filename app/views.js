@@ -69,15 +69,15 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
             portalItem: {
                 id: "0e3fd5de259f46acb169c54eb501cfe5"
             },
-            renderer: renderers_2.renderers[renderers_2.rendererType] ? renderers_2.renderers[renderers_2.rendererType] : new renderers_1.SimpleRenderer({
+            renderer: renderers_2.renderers[renderers_2.RendererVars.rendererType] ? renderers_2.renderers[renderers_2.RendererVars.rendererType] : new renderers_1.SimpleRenderer({
                 symbol: new symbols_1.SimpleMarkerSymbol({
                     color: [255, 0, 0, 0],
                     outline: null
                 })
             }),
             labelsVisible: true,
-            labelingInfo: renderers_2.renderers[renderers_2.rendererType] ? labels_1.createLabelingInfo(widgets_1.year) : null,
-            popupTemplate: renderers_2.rendererType[renderers_2.rendererType] ? popup_1.createPopupTemplate(widgets_1.year) : null,
+            labelingInfo: renderers_2.renderers[renderers_2.RendererVars.rendererType] ? labels_1.createLabelingInfo(widgets_1.year) : null,
+            popupTemplate: renderers_2.RendererVars.rendererType[renderers_2.RendererVars.rendererType] ? popup_1.createPopupTemplate(widgets_1.year) : null,
             outFields: ["*"],
             layerId: 0,
             minScale: 0,

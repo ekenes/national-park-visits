@@ -34,6 +34,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtils", "esri/core/watchUtils", "./stats", "./renderers", "./popup", "./labels"], function (require, exports, views_1, urlParams_1, widgets_1, viewUtils_1, watchUtils_1, stats_1, renderers_1, popup_1, labels_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -98,7 +105,6 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                 return __generator(this, function (_f) {
                     switch (_f.label) {
                         case 0:
-                            urlParams_1.setUrlParams(newValue);
                             views_1.destroyAllViews();
                             map = views_1.createMap();
                             _a = newValue;
@@ -168,18 +174,26 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                 });
             });
         }
-        var viewSelect, isMobile, vType, view, layerView;
+        var viewSelect, rendererSelect, uParams, isMobile, vType, view, layerView;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     viewSelect = document.getElementById("viewSelect");
-                    views_1.ViewVars.viewType = urlParams_1.getUrlParams();
+                    rendererSelect = document.getElementById("rendererSelect");
+                    uParams = urlParams_1.getUrlParams();
+                    views_1.ViewVars.viewType = uParams.viewType;
+                    renderers_1.RendererVars.rendererType = uParams.variable;
+                    __spreadArrays(viewSelect.children).forEach(function (child) {
+                        child.checked = child.value === views_1.ViewVars.viewType;
+                    });
+                    __spreadArrays(rendererSelect.children).forEach(function (child) {
+                        child.checked = child.value === renderers_1.RendererVars.rendererType;
+                    });
                     isMobile = viewUtils_1.isMobileBrowser();
                     if (isMobile) {
                         views_1.ViewVars.viewType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
                         widgets_1.disableSelectOptionByValue(viewSelect, "all");
                     }
-                    urlParams_1.setUrlParams(views_1.ViewVars.viewType);
                     viewSelect.value = views_1.ViewVars.viewType;
                     viewSelect.addEventListener("calciteRadioGroupChange", function (e) { return __awaiter(void 0, void 0, void 0, function () {
                         var viewType;
@@ -188,10 +202,50 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                                 case 0:
                                     viewType = e.detail;
                                     views_1.ViewVars.viewType = viewType;
+                                    urlParams_1.updateUrlParams({
+                                        viewType: viewType
+                                    });
                                     return [4 /*yield*/, renderViews(views_1.ViewVars.viewType)];
                                 case 1:
                                     _a.sent();
                                     widgets_1.updateViewWidgets(isMobile);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    rendererSelect.addEventListener("calciteRadioGroupChange", function (e) { return __awaiter(void 0, void 0, void 0, function () {
+                        var variable, renderer, vType, view, _a, _b;
+                        return __generator(this, function (_c) {
+                            switch (_c.label) {
+                                case 0:
+                                    variable = e.detail;
+                                    renderers_1.RendererVars.rendererType = variable;
+                                    urlParams_1.updateUrlParams({
+                                        variable: variable
+                                    });
+                                    if (renderers_1.renderers[renderers_1.RendererVars.rendererType]) {
+                                        renderer = renderers_1.renderers[renderers_1.RendererVars.rendererType];
+                                        renderers_1.renderers[renderers_1.RendererVars.rendererType] = renderers_1.updateRenderer({
+                                            renderer: renderer,
+                                            year: widgets_1.year,
+                                            type: renderers_1.RendererVars.rendererType
+                                        });
+                                        views_1.layer.renderer = renderers_1.renderers[renderers_1.RendererVars.rendererType];
+                                        return [2 /*return*/];
+                                    }
+                                    vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
+                                    view = views_1.views[vType].view;
+                                    _a = renderers_1.renderers;
+                                    _b = renderers_1.RendererVars.rendererType;
+                                    return [4 /*yield*/, renderers_1.createRenderer({
+                                            layer: views_1.layer,
+                                            view: view,
+                                            year: widgets_1.year,
+                                            type: renderers_1.RendererVars.rendererType
+                                        })];
+                                case 1:
+                                    _a[_b] = _c.sent();
+                                    views_1.layer.renderer = renderers_1.renderers[renderers_1.RendererVars.rendererType];
                                     return [2 /*return*/];
                             }
                         });
@@ -215,16 +269,16 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                                     stats = _c.sent();
                                     widgets_1.updateParkVisitationDisplay(stats);
                                     _a = renderers_1.renderers;
-                                    _b = renderers_1.rendererType;
+                                    _b = renderers_1.RendererVars.rendererType;
                                     return [4 /*yield*/, renderers_1.createRenderer({
                                             layer: views_1.layer,
                                             view: view,
                                             year: widgets_1.year,
-                                            type: renderers_1.rendererType
+                                            type: renderers_1.RendererVars.rendererType
                                         })];
                                 case 2:
                                     _a[_b] = _c.sent();
-                                    views_1.layer.renderer = renderers_1.renderers[renderers_1.rendererType];
+                                    views_1.layer.renderer = renderers_1.renderers[renderers_1.RendererVars.rendererType];
                                     views_1.layer.popupTemplate = popup_1.createPopupTemplate(widgets_1.year);
                                     views_1.layer.labelingInfo = labels_1.createLabelingInfo(widgets_1.year);
                                     widgets_1.updateViewWidgets(isMobile);

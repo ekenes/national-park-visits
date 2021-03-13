@@ -43,7 +43,13 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
         theme: "above-and-below"
     });
     exports.renderers = {};
-    exports.rendererType = "percent-change";
+    var RendererVars = /** @class */ (function () {
+        function RendererVars() {
+        }
+        RendererVars.rendererType = null;
+        return RendererVars;
+    }());
+    exports.RendererVars = RendererVars;
     function createPercentChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
             var layer, view, year, _a, valueExpression, valueExpressionTitle, rendererParams, renderer, sizeVariable;

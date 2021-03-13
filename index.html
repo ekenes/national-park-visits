@@ -29,28 +29,9 @@
     <div id="akViewDiv" class="esri-widget"></div>
     <div id="hiViewDiv" class="esri-widget"></div>
     <div id="viViewDiv" class="esri-widget"></div>
-    <!-- <div id="viewSelectContainer">
-      <select id="viewSelect">
-        <option value="all">All</option>
-        <option value="us">Lower 48</option>
-        <option value="ak">Alaska</option>
-        <option value="hi">Hawaii</option>
-      </select>
-    </div> -->
     <div id="title" class="esri-widget">
       <div id="titleText"><span id="annual-visits"></span> people visited <span class="emphasis">national parks</span> in <span class="emphasis" id="year"></span></div>
       <div>a <span id="percent-change"></span> change <span id="total-change"></span> from <span id="previous-year"></span></div>
-      <!-- <div>
-        <fieldset class="radio-group">
-          <legend class="radio-group-title">Choose your style</legend>
-          <input class="radio-group-input" type="radio" id="renderer-percent-change" name="renderer-type" checked/>
-          <label class="radio-group-label" for="react">Percent change</label>
-          <input class="radio-group-input" type="radio" id="renderer-total-change" name="renderer-type"/>
-          <label class="radio-group-label" for="ember">Total change</label>
-          <input class="radio-group-input" type="radio" id="renderer-bivariate" name="renderer-type"/>
-          <label class="radio-group-label" for="angular">Total visits</label>
-        </fieldset>
-      </div> -->
 
       <div>
         <calcite-radio-group
@@ -60,9 +41,10 @@
           width="auto"
           role="radiogroup"
           calcite-hydrated=""
+          id="rendererSelect"
         >
           <calcite-radio-group-item
-            value="renderer-percent-change"
+            value="percent-change"
             checked=""
             tabindex="0"
             appearance="solid"
@@ -76,7 +58,7 @@
             Percent change
           </calcite-radio-group-item>
           <calcite-radio-group-item
-            value="renderer-total-change"
+            value="total-change"
             appearance="solid"
             aria-checked="false"
             layout="horizontal"
@@ -88,7 +70,7 @@
             Total change
           </calcite-radio-group-item>
           <calcite-radio-group-item
-            value="renderer-bivariate"
+            value="bivariate"
             appearance="solid"
             aria-checked="false"
             layout="horizontal"
@@ -102,19 +84,6 @@
           <input type="hidden" />
         </calcite-radio-group>
 
-
-
-        <!-- <fieldset class="radio-group">
-          <legend class="radio-group-title">Choose area of interest</legend>
-          <input class="radio-group-input" type="radio" id="view-all" name="view-type" checked/>
-          <label class="radio-group-label" for="angular">All</label>
-          <input class="radio-group-input" type="radio" id="view-us" name="view-type"/>
-          <label class="radio-group-label" for="react">Lower 48</label>
-          <input class="radio-group-input" type="radio" id="view-ak" name="view-type"/>
-          <label class="radio-group-label" for="ember">Alaska</label>
-          <input class="radio-group-input" type="radio" id="view-hi" name="view-type"/>
-          <label class="radio-group-label" for="angular">Hawaii</label>
-        </fieldset> -->
       </div>
 
       <div>

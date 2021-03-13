@@ -8,16 +8,29 @@ define(["require", "exports"], function (require, exports) {
             var item = part.split("=");
             result[item[0]] = decodeURIComponent(item[1]);
         });
-        if (result && result.viewType) {
-            return result.viewType;
-        }
-        return "all";
+        result = {
+            viewType: result.viewType || "all",
+            variable: result.variable || "percent-change",
+            year: parseInt(result.year) || 2020
+        };
+        setUrlParams(result);
+        return result;
     }
     exports.getUrlParams = getUrlParams;
     // function to set an id as a url param
-    function setUrlParams(viewType) {
-        window.history.pushState("", "", window.location.pathname + "?viewType=" + viewType);
+    function setUrlParams(params) {
+        var viewType = params.viewType, variable = params.variable, year = params.year;
+        window.history.pushState("", "", window.location.pathname + "?viewType=" + viewType + "&variable=" + variable + "&year=" + year);
     }
     exports.setUrlParams = setUrlParams;
+    function updateUrlParams(params) {
+        var urlParams = getUrlParams();
+        for (var p in params) {
+            urlParams[p] = params[p];
+        }
+        ;
+        setUrlParams(urlParams);
+    }
+    exports.updateUrlParams = updateUrlParams;
 });
 //# sourceMappingURL=urlParams.js.map

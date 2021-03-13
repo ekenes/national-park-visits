@@ -5,7 +5,7 @@ import FeatureLayer = require("esri/layers/FeatureLayer");
 import { SimpleRenderer } from "esri/renderers";
 import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { Extent } from "esri/geometry";
-import { renderers, rendererType } from "./renderers";
+import { renderers, RendererVars } from "./renderers";
 import { createLabelingInfo } from "./labels";
 import { createPopupTemplate } from "./popup";
 import { UrlParams } from "./urlParams";
@@ -43,15 +43,15 @@ export function createLayer(){
     portalItem: {
       id: "0e3fd5de259f46acb169c54eb501cfe5"
     },
-    renderer: renderers[rendererType] ? renderers[rendererType] : new SimpleRenderer({
+    renderer: renderers[RendererVars.rendererType] ? renderers[RendererVars.rendererType] : new SimpleRenderer({
       symbol: new SimpleMarkerSymbol({
         color: [255,0,0,0],
         outline: null
       })
     }),
     labelsVisible: true,
-    labelingInfo: renderers[rendererType] ? createLabelingInfo(year) : null,
-    popupTemplate: rendererType[rendererType] ? createPopupTemplate(year) : null,
+    labelingInfo: renderers[RendererVars.rendererType] ? createLabelingInfo(year) : null,
+    popupTemplate: RendererVars.rendererType[RendererVars.rendererType] ? createPopupTemplate(year) : null,
     outFields: ["*"],
     layerId: 0,
     minScale: 0,

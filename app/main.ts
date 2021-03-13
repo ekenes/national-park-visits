@@ -1,18 +1,30 @@
 import WebMap = require("esri/WebMap");
 import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars, layer } from "./views";
-import { getUrlParams, setUrlParams, UrlParams } from "./urlParams";
+import { getUrlParams, updateUrlParams, UrlParams } from "./urlParams";
 import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay, initializeYearSelect } from "./widgets";
 import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maintainFixedExtent } from "./viewUtils";
 import { whenFalseOnce } from "esri/core/watchUtils";
 import { queryStats } from "./stats";
-import { renderers, rendererType, createRenderer } from "./renderers";
+import { renderers, RendererVars, createRenderer, updateRenderer } from "./renderers";
 import { createPopupTemplate } from "./popup";
 import { createLabelingInfo } from "./labels";
 
 (async () => {
 
   const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
-  ViewVars.viewType = getUrlParams();
+  const rendererSelect = document.getElementById("rendererSelect") as HTMLSelectElement;
+
+  const uParams = getUrlParams();
+  ViewVars.viewType = uParams.viewType;
+  RendererVars.rendererType = uParams.variable;
+
+  [...(viewSelect.children as any)].forEach(child => {
+    child.checked = child.value === ViewVars.viewType;
+  });
+
+  [...(rendererSelect.children as any)].forEach(child => {
+    child.checked = child.value === RendererVars.rendererType;
+  });
 
   const isMobile = isMobileBrowser();
 
@@ -21,14 +33,46 @@ import { createLabelingInfo } from "./labels";
     disableSelectOptionByValue(viewSelect, "all");
   }
 
-  setUrlParams(ViewVars.viewType);
   viewSelect.value = ViewVars.viewType;
 
   viewSelect.addEventListener("calciteRadioGroupChange", async (e:any)=> {
     const viewType = e.detail;
     ViewVars.viewType = viewType as UrlParams["viewType"];
+    updateUrlParams({
+      viewType
+    });
     await renderViews(ViewVars.viewType);
     updateViewWidgets(isMobile);
+  });
+
+  rendererSelect.addEventListener("calciteRadioGroupChange", async (e:any)=> {
+    const variable = e.detail;
+    RendererVars.rendererType = variable as UrlParams["variable"];
+    updateUrlParams({
+      variable
+    });
+
+    if(renderers[RendererVars.rendererType]){
+      const renderer = renderers[RendererVars.rendererType];
+      renderers[RendererVars.rendererType] = updateRenderer({
+        renderer,
+        year,
+        type: RendererVars.rendererType
+      });
+      layer.renderer = renderers[RendererVars.rendererType];
+      return;
+    }
+
+    const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
+    const view = views[vType].view;
+
+    renderers[RendererVars.rendererType] = await createRenderer({
+      layer,
+      view,
+      year,
+      type: RendererVars.rendererType
+    });
+    layer.renderer = renderers[RendererVars.rendererType];
   });
 
   await renderViews(ViewVars.viewType);
@@ -44,14 +88,14 @@ import { createLabelingInfo } from "./labels";
     const stats = await queryStats(layerView, year);
     updateParkVisitationDisplay(stats);
 
-    renderers[rendererType] = await createRenderer({
+    renderers[RendererVars.rendererType] = await createRenderer({
       layer,
       view,
       year,
-      type: rendererType
+      type: RendererVars.rendererType
     });
 
-    layer.renderer = renderers[rendererType];
+    layer.renderer = renderers[RendererVars.rendererType];
     layer.popupTemplate = createPopupTemplate(year);
     layer.labelingInfo = createLabelingInfo(year);
 
@@ -105,7 +149,6 @@ import { createLabelingInfo } from "./labels";
   }
 
   async function renderViews(newValue: UrlParams["viewType"]) {
-    setUrlParams(newValue);
 
     destroyAllViews();
 

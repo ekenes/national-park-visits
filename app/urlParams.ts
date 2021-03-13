@@ -1,5 +1,7 @@
 export type UrlParams = {
-  viewType?: "all" | "us" | "ak" | "hi" | "vi"
+  viewType?: "all" | "us" | "ak" | "hi" | "vi";
+  variable?: "percent-change" | "total-change" | "bivariate";
+  year?: number;
 }
 
 export function getUrlParams() {
@@ -11,13 +13,26 @@ export function getUrlParams() {
     result[item[0]] = decodeURIComponent(item[1]);
   });
 
-  if (result && result.viewType){
-    return result.viewType;
-  }
-  return "all";
+  result = {
+    viewType: result.viewType || "all",
+    variable: result.variable || "percent-change",
+    year: parseInt(result.year as any) || 2020
+  };
+
+  setUrlParams(result);
+  return result;
 }
 
 // function to set an id as a url param
-export function setUrlParams(viewType: UrlParams["viewType"]) {
-  window.history.pushState("", "", `${window.location.pathname}?viewType=${viewType}`);
+export function setUrlParams(params: UrlParams) {
+  const { viewType, variable, year } = params;
+  window.history.pushState("", "", `${window.location.pathname}?viewType=${viewType}&variable=${variable}&year=${year}`);
+}
+
+export function updateUrlParams(params: UrlParams){
+  const urlParams = getUrlParams();
+  for (const p in params){
+    urlParams[p] = params[p];
+  };
+  setUrlParams(urlParams);
 }

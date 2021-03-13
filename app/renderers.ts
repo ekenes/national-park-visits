@@ -12,6 +12,7 @@ import { CIMSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { ClassBreaksRenderer } from "esri/renderers";
 import { cimReference } from "./cimReference";
 import { updatePercentChangeValueExpression, updateTotalChangeValueExpression } from "./expressions";
+import { UrlParams } from "./urlParams";
 
 const colorScheme = colorSchemes.getSchemeByName({
   geometryType: "point",
@@ -21,13 +22,15 @@ const colorScheme = colorSchemes.getSchemeByName({
 
 export const renderers = { };
 
-export const rendererType = "percent-change";
+export class RendererVars {
+  public static rendererType: UrlParams["variable"] = null;
+}
 
 interface CreateRendererParams {
   layer: FeatureLayer;
   view: MapView;
   year: number;
-  type?: "percent-change" | "total-change" | "bivariate";
+  type?: UrlParams["variable"];
 }
 
 async function createPercentChangeRenderer(params: CreateRendererParams): Promise<ClassBreaksRenderer> {

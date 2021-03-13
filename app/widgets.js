@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/widgets/Expand", "./popup", "./labels", "./renderers", "./stats", "./views"], function (require, exports, Legend, Slider, Feature, intl, Expand, popup_1, labels_1, renderers_1, stats_1, views_1) {
+define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/widgets/Expand", "./popup", "./labels", "./renderers", "./stats", "./views", "./urlParams"], function (require, exports, Legend, Slider, Feature, intl, Expand, popup_1, labels_1, renderers_1, stats_1, views_1, urlParams_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Widgets = /** @class */ (function () {
@@ -45,7 +45,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     }());
     exports.Widgets = Widgets;
     var legend;
-    exports.year = 2020;
+    exports.year = urlParams_1.getUrlParams().year;
     exports.yearElement = document.getElementById("year");
     exports.previousYearElement = document.getElementById("previous-year");
     var annualVisitsElement = document.getElementById("annual-visits");
@@ -82,7 +82,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                 slider = new Slider({
                     container: "timeSlider",
                     min: 1905,
-                    max: exports.year,
+                    max: 2020,
                     values: [exports.year],
                     steps: 1,
                     layout: "horizontal",
@@ -105,6 +105,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                             switch (_b.label) {
                                 case 0:
                                     exports.year = value;
+                                    urlParams_1.updateUrlParams({ year: exports.year });
                                     exports.yearElement.innerHTML = exports.year.toString();
                                     exports.previousYearElement.innerHTML = (exports.year - 1).toString();
                                     updateLayer(value);
@@ -176,12 +177,12 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     }
     exports.initializeYearSelect = initializeYearSelect;
     function updateLayer(year) {
-        renderers_1.renderers[renderers_1.rendererType] = renderers_1.updateRenderer({
+        renderers_1.renderers[renderers_1.RendererVars.rendererType] = renderers_1.updateRenderer({
             renderer: views_1.layer.renderer,
             year: year,
-            type: renderers_1.rendererType
+            type: renderers_1.RendererVars.rendererType
         });
-        views_1.layer.renderer = renderers_1.renderers[renderers_1.rendererType];
+        views_1.layer.renderer = renderers_1.renderers[renderers_1.RendererVars.rendererType];
         views_1.layer.popupTemplate = popup_1.createPopupTemplate(year);
         views_1.layer.labelingInfo = labels_1.createLabelingInfo(year);
     }

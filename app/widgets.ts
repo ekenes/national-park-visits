@@ -8,17 +8,18 @@ import Expand = require("esri/widgets/Expand");
 import { ClassBreaksRenderer } from "esri/renderers";
 import { createPopupTemplate } from "./popup";
 import { createLabelingInfo } from "./labels";
-import { updateRenderer, renderers, rendererType } from "./renderers";
+import { updateRenderer, renderers, RendererVars } from "./renderers";
 import { queryStats } from "./stats";
 import { layer, views, ViewVars } from "./views";
-import { UrlParams } from "./urlParams";
+import { getUrlParams, updateUrlParams, UrlParams } from "./urlParams";
 
 export class Widgets {
   public static featureWidget: Feature = null;
 }
 
 let legend: Legend;
-export let year: number = 2020;
+
+export let { year } = getUrlParams();
 
 export const yearElement = document.getElementById("year") as HTMLSpanElement;
 export const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
@@ -57,7 +58,7 @@ export async function initializeSlider() {
   const slider = new Slider({
     container: "timeSlider",
     min: 1905,
-    max: year,
+    max: 2020,
     values: [ year ],
     steps: 1,
     layout: "horizontal",
@@ -75,6 +76,7 @@ export async function initializeSlider() {
 
   slider.watch("values", async ([ value ]) => {
     year = value;
+    updateUrlParams({ year });
     yearElement.innerHTML = year.toString();
     previousYearElement.innerHTML = (year - 1).toString();
 
@@ -123,13 +125,13 @@ export async function initializeYearSelect() {
 }
 
 function updateLayer(year: number){
-  renderers[rendererType] = updateRenderer({
+  renderers[RendererVars.rendererType] = updateRenderer({
     renderer: layer.renderer as ClassBreaksRenderer,
     year,
-    type: rendererType
+    type: RendererVars.rendererType
   });
 
-  layer.renderer = renderers[rendererType];
+  layer.renderer = renderers[RendererVars.rendererType];
   layer.popupTemplate = createPopupTemplate(year);
   layer.labelingInfo = createLabelingInfo(year);
 }
