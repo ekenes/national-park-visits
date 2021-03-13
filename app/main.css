@@ -120,24 +120,12 @@ body,
   text-align: left;
   padding: 10px 10px 10px 10px;
   position: absolute;
-  top: 95px;
+  top: 10px;
   width: 500px;
-  right: 10px;
+  left: 10px;
   background-color: rgba(255,255,255,0.8);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   display: none;
   z-index: 2;
-}
-
-#viewSelectContainer{
-  top: 10px;
-  left: 10px;
-  position: absolute;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  left: 0;
-  width: 10%; */
 }
 
