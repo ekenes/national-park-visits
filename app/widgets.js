@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "./popup", "./labels", "./renderers", "./stats", "./views"], function (require, exports, Legend, Slider, Feature, intl, popup_1, labels_1, renderers_1, stats_1, views_1) {
+define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/widgets/Expand", "./popup", "./labels", "./renderers", "./stats", "./views"], function (require, exports, Legend, Slider, Feature, intl, Expand, popup_1, labels_1, renderers_1, stats_1, views_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Widgets = /** @class */ (function () {
@@ -63,8 +63,12 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
         Widgets.featureWidget.spatialReference = view.spatialReference;
         if (!legend) {
             legend = new Legend({
-                style: isMobile ? "card" : "classic",
-                container: document.getElementById("legend")
+                view: view
+            });
+            new Expand({
+                expanded: !isMobile,
+                container: document.getElementById("legend"),
+                content: legend
             });
         }
         legend.view = view;
@@ -81,14 +85,14 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                     max: exports.year,
                     values: [exports.year],
                     steps: 1,
-                    layout: "vertical",
+                    layout: "horizontal",
                     visibleElements: {
                         labels: false,
-                        rangeLabels: true
+                        rangeLabels: false
                     },
                     tickConfigs: [{
                             mode: "position",
-                            values: [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
+                            values: [1905, 1918, 1942, 1980, 2000, 2020],
                             labelsVisible: true
                         }]
                 });

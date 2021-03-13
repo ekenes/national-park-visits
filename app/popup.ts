@@ -15,7 +15,7 @@ let fieldInfos: FieldInfo[] = [];
 
 function createFieldsForChart (){
   const start = 1905;
-  const end = 2019;
+  const end = 2020;
   fieldsForChart = [];
   fieldInfos = [];
 

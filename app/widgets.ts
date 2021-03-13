@@ -3,6 +3,7 @@ import Slider = require("esri/widgets/Slider");
 import Feature = require("esri/widgets/Feature");
 import intl = require("esri/intl");
 import Graphic = require("esri/Graphic");
+import Expand = require("esri/widgets/Expand");
 
 import { ClassBreaksRenderer } from "esri/renderers";
 import { createPopupTemplate } from "./popup";
@@ -40,8 +41,12 @@ export function updateViewWidgets(isMobile?: boolean){
 
   if(!legend){
     legend = new Legend({
-      style: isMobile ? "card" : "classic",
-      container: document.getElementById("legend")
+      view
+    });
+    new Expand({
+      expanded: !isMobile,
+      container: document.getElementById("legend"),
+      content: legend
     });
   }
   legend.view = view;
@@ -55,14 +60,14 @@ export async function initializeSlider() {
     max: year,
     values: [ year ],
     steps: 1,
-    layout: "vertical",
+    layout: "horizontal",
     visibleElements: {
       labels: false,
-      rangeLabels: true
+      rangeLabels: false
     },
     tickConfigs: [{
       mode: "position",
-      values: [ 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010 ],
+      values: [ 1905, 1918, 1942, 1980, 2000, 2020 ],
       labelsVisible: true
     }]
   });

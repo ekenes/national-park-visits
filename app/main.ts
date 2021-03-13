@@ -24,8 +24,9 @@ import { createLabelingInfo } from "./labels";
   setUrlParams(ViewVars.viewType);
   viewSelect.value = ViewVars.viewType;
 
-  viewSelect.addEventListener("change", async ()=> {
-    ViewVars.viewType = viewSelect.value as UrlParams["viewType"];
+  viewSelect.addEventListener("calciteRadioGroupChange", async (e:any)=> {
+    const viewType = e.detail;
+    ViewVars.viewType = viewType as UrlParams["viewType"];
     await renderViews(ViewVars.viewType);
     updateViewWidgets(isMobile);
   });

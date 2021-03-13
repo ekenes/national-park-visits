@@ -12,7 +12,7 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
     var fieldInfos = [];
     function createFieldsForChart() {
         var start = 1905;
-        var end = 2019;
+        var end = 2020;
         fieldsForChart = [];
         fieldInfos = [];
         for (var y = start; y <= end; y++) {

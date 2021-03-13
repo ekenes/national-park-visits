@@ -3,6 +3,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
     <title>National Park Visitation Statistics</title>
+
+    <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.0-beta.50/dist/calcite/calcite.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/@esri/calcite-components@1.0.0-beta.50/dist/calcite/calcite.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@esri/calcite-components@1.0.0-beta.50/dist/calcite/calcite.css" />
+
     <link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/css/main.css">
     <link rel="stylesheet" href="app/main.css">
     <script>
@@ -16,7 +21,7 @@
         ]
       };
     </script>
-    <script src="https://js.arcgis.com/4.18/"></script>
+    <script src="https://js.arcgis.com/4.19/"></script>
   </head>
   <body>
     <script>require(["app/main"]);</script>
@@ -24,19 +29,160 @@
     <div id="akViewDiv" class="esri-widget"></div>
     <div id="hiViewDiv" class="esri-widget"></div>
     <div id="viViewDiv" class="esri-widget"></div>
-    <div id="viewSelectContainer">
+    <!-- <div id="viewSelectContainer">
       <select id="viewSelect">
         <option value="all">All</option>
         <option value="us">Lower 48</option>
         <option value="ak">Alaska</option>
         <option value="hi">Hawaii</option>
       </select>
-    </div>
-    <div id="timeSlider"></div>
-    <div id="year-picker"></div>
+    </div> -->
     <div id="title" class="esri-widget">
       <div id="titleText"><span id="annual-visits"></span> people visited <span class="emphasis">national parks</span> in <span class="emphasis" id="year"></span></div>
       <div>a <span id="percent-change"></span> change <span id="total-change"></span> from <span id="previous-year"></span></div>
+      <!-- <div>
+        <fieldset class="radio-group">
+          <legend class="radio-group-title">Choose your style</legend>
+          <input class="radio-group-input" type="radio" id="renderer-percent-change" name="renderer-type" checked/>
+          <label class="radio-group-label" for="react">Percent change</label>
+          <input class="radio-group-input" type="radio" id="renderer-total-change" name="renderer-type"/>
+          <label class="radio-group-label" for="ember">Total change</label>
+          <input class="radio-group-input" type="radio" id="renderer-bivariate" name="renderer-type"/>
+          <label class="radio-group-label" for="angular">Total visits</label>
+        </fieldset>
+      </div> -->
+
+      <div>
+        <calcite-radio-group
+          layout="horizontal"
+          appearance="solid"
+          scale="m"
+          width="auto"
+          role="radiogroup"
+          calcite-hydrated=""
+        >
+          <calcite-radio-group-item
+            value="renderer-percent-change"
+            checked=""
+            tabindex="0"
+            appearance="solid"
+            aria-checked="true"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            Percent change
+          </calcite-radio-group-item>
+          <calcite-radio-group-item
+            value="renderer-total-change"
+            appearance="solid"
+            aria-checked="false"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            Total change
+          </calcite-radio-group-item>
+          <calcite-radio-group-item
+            value="renderer-bivariate"
+            appearance="solid"
+            aria-checked="false"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            Total visits
+          </calcite-radio-group-item>
+          <input type="hidden" />
+        </calcite-radio-group>
+
+
+
+        <!-- <fieldset class="radio-group">
+          <legend class="radio-group-title">Choose area of interest</legend>
+          <input class="radio-group-input" type="radio" id="view-all" name="view-type" checked/>
+          <label class="radio-group-label" for="angular">All</label>
+          <input class="radio-group-input" type="radio" id="view-us" name="view-type"/>
+          <label class="radio-group-label" for="react">Lower 48</label>
+          <input class="radio-group-input" type="radio" id="view-ak" name="view-type"/>
+          <label class="radio-group-label" for="ember">Alaska</label>
+          <input class="radio-group-input" type="radio" id="view-hi" name="view-type"/>
+          <label class="radio-group-label" for="angular">Hawaii</label>
+        </fieldset> -->
+      </div>
+
+      <div>
+        <calcite-radio-group
+          layout="horizontal"
+          appearance="solid"
+          scale="m"
+          width="auto"
+          role="radiogroup"
+          calcite-hydrated=""
+          id="viewSelect"
+        >
+          <calcite-radio-group-item
+            value="all"
+            checked=""
+            tabindex="0"
+            appearance="solid"
+            aria-checked="true"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            All
+          </calcite-radio-group-item>
+          <calcite-radio-group-item
+            value="us"
+            appearance="solid"
+            aria-checked="false"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            Lower 48
+          </calcite-radio-group-item>
+          <calcite-radio-group-item
+            value="ak"
+            appearance="solid"
+            aria-checked="false"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            Alaska
+          </calcite-radio-group-item>
+          <calcite-radio-group-item
+            value="hi"
+            appearance="solid"
+            aria-checked="false"
+            layout="horizontal"
+            role="radio"
+            scale="m"
+            icon-position="start"
+            calcite-hydrated=""
+          >
+            Hawaii
+          </calcite-radio-group-item>
+          <input type="hidden" />
+        </calcite-radio-group>
+      </div>
+
+      <div id="timeSlider"></div>
+      <div id="year-picker"></div>
     </div>
     <div id="feature"></div>
     <div id="legend"></div>

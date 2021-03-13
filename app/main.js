@@ -181,11 +181,13 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                     }
                     urlParams_1.setUrlParams(views_1.ViewVars.viewType);
                     viewSelect.value = views_1.ViewVars.viewType;
-                    viewSelect.addEventListener("change", function () { return __awaiter(void 0, void 0, void 0, function () {
+                    viewSelect.addEventListener("calciteRadioGroupChange", function (e) { return __awaiter(void 0, void 0, void 0, function () {
+                        var viewType;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    views_1.ViewVars.viewType = viewSelect.value;
+                                    viewType = e.detail;
+                                    views_1.ViewVars.viewType = viewType;
                                     return [4 /*yield*/, renderViews(views_1.ViewVars.viewType)];
                                 case 1:
                                     _a.sent();
