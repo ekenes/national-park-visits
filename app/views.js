@@ -111,16 +111,6 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                         }),
                         effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
                     }),
-                    new FeatureLayer({
-                        popupEnabled: false,
-                        portalItem: {
-                            id: "f092c20803a047cba81fbf1e30eff0b5"
-                        },
-                        minScale: 0,
-                        maxScale: 0,
-                        definitionExpression: "NAME LIKE '%NP%' OR NAME LIKE '%National Park%'",
-                        effect: "grayscale(0.3) opacity(0.55) drop-shadow(2px 2px 10px green)"
-                    })
                 ]
             },
             layers: [exports.layer]

@@ -30,14 +30,19 @@
     <div id="hiViewDiv" class="esri-widget"></div>
     <div id="viViewDiv" class="esri-widget"></div>
     <div id="title" class="esri-widget">
+      <div id="name">
+        National park visits
+      </div>
       <div id="titleText"><span id="annual-visits"></span> people visited <span class="emphasis">national parks</span> in <span class="emphasis" id="year"></span></div>
       <div>a <span id="percent-change"></span> change <span id="total-change"></span> from <span id="previous-year"></span></div>
 
-      <div>
+      <div class="options">
+        <calcite-label>
+          Select a variable
         <calcite-radio-group
           layout="horizontal"
           appearance="solid"
-          scale="m"
+          scale="s"
           width="auto"
           role="radiogroup"
           calcite-hydrated=""
@@ -48,10 +53,10 @@
             checked=""
             tabindex="0"
             appearance="solid"
-            aria-checked="true"
+            aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -63,7 +68,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -75,7 +80,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -83,14 +88,17 @@
           </calcite-radio-group-item>
           <input type="hidden" />
         </calcite-radio-group>
+      </calcite-label>
 
       </div>
 
-      <div>
+      <div class="options">
+        <calcite-label>
+            Select a view
         <calcite-radio-group
           layout="horizontal"
           appearance="solid"
-          scale="m"
+          scale="s"
           width="auto"
           role="radiogroup"
           calcite-hydrated=""
@@ -101,10 +109,10 @@
             checked=""
             tabindex="0"
             appearance="solid"
-            aria-checked="true"
+            aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -116,7 +124,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -128,7 +136,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -140,7 +148,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="m"
+            scale="s"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -148,6 +156,7 @@
           </calcite-radio-group-item>
           <input type="hidden" />
         </calcite-radio-group>
+      </calcite-label>
       </div>
 
       <div id="timeSlider"></div>

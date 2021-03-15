@@ -107,6 +107,19 @@ body,
   color:#a6611a;
   font-weight: 500;
 }
+
+.options {
+  display: flex;
+  padding: 5px;
+  text-align: left;
+}
+
+.radio-description {
+  vertical-align: middle;
+  align-self: center;
+  font-weight: 600;
+}
+
 #legend{
   /* width: 200px; */
   /* opacity: 0.9; */
@@ -114,6 +127,8 @@ body,
   right: 10px;
   position: absolute;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  overflow: auto;
+  max-height: 50%;
 }
 
 #feature{

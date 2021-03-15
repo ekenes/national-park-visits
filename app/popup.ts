@@ -96,7 +96,7 @@ export function createPopupTemplate(year: number): PopupTemplate {
       type: "media",
       mediaInfos: [{
         type: "line-chart",
-        title: "Park visitation (1905-2019)",
+        title: "Annual park visits (1905-2019)",
         value: {
           fields: fieldsForChart
         }

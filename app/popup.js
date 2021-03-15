@@ -79,7 +79,7 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
                     type: "media",
                     mediaInfos: [{
                             type: "line-chart",
-                            title: "Park visitation (1905-2019)",
+                            title: "Annual park visits (1905-2019)",
                             value: {
                                 fields: fieldsForChart
                             }

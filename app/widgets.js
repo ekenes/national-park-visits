@@ -92,7 +92,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                     },
                     tickConfigs: [{
                             mode: "position",
-                            values: [1905, 1918, 1942, 1980, 2000, 2020],
+                            values: [1905, 1920, 1940, 1960, 1980, 2000, 2020],
                             labelsVisible: true
                         }]
                 });
