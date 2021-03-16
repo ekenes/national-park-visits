@@ -118,7 +118,7 @@ export async function createUsView(params: CreateViewParams) {
   const desktopScale = 16723716;
   const scale = isMobile ? mobileScale : desktopScale;
 
-  const center = fromJSON({"spatialReference":{"wkid":5070},"x":-7456.301870036883,"y":1666581.490601381});
+  const center = fromJSON({"spatialReference":{"wkid":5070},"x":672019.4302996567,"y":1501270.997751099});
 
   const mobileConstraints = {
     rotationEnabled: false,

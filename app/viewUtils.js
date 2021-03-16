@@ -55,7 +55,12 @@ define(["require", "exports", "./views", "./widgets"], function (require, export
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, view.whenLayerView(views_1.layer)];
+                    case 0:
+                        view.watch("extent", function (extent) {
+                            console.log("center", JSON.stringify(view.center.toJSON()));
+                            console.log("scale", view.scale);
+                        });
+                        return [4 /*yield*/, view.whenLayerView(views_1.layer)];
                     case 1:
                         layerView = _a.sent();
                         view.on("click", function (event) { return __awaiter(_this, void 0, void 0, function () {

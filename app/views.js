@@ -128,7 +128,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                         mobileScale = 36353220;
                         desktopScale = 16723716;
                         scale = isMobile ? mobileScale : desktopScale;
-                        center = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": -7456.301870036883, "y": 1666581.490601381 });
+                        center = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": 672019.4302996567, "y": 1501270.997751099 });
                         mobileConstraints = {
                             rotationEnabled: false,
                             minScale: mobileScale,

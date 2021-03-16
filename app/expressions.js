@@ -13,7 +13,7 @@ define(["require", "exports"], function (require, exports) {
     exports.updatePercentChangeValueExpression = updatePercentChangeValueExpression;
     function updateTotalChangeValueExpression(year) {
         var previousYear = year - 1;
-        var valueExpression = "$feature.F" + year + " - $feature.F" + previousYear;
+        var valueExpression = "\n    if(IsEmpty($feature.F" + year + ") || IsEmpty($feature.F" + previousYear + ")){\n      return null;\n    }\n    $feature.F" + year + " - $feature.F" + previousYear + "\n  ";
         var valueExpressionTitle = "Total change in park visits (" + previousYear + " - " + year + ")";
         return { valueExpression: valueExpression, valueExpressionTitle: valueExpressionTitle };
     }

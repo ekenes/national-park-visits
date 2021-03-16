@@ -128,6 +128,8 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                         return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer(rendererParams)];
                     case 1:
                         renderer = (_b.sent()).renderer;
+                        renderer.classBreakInfos[0].maxValue = 0;
+                        renderer.classBreakInfos[1].minValue = 0;
                         sizeVariable = renderer.visualVariables.filter(function (vv) { return vv.type === "size"; })[0];
                         ;
                         sizeVariable.stops = [

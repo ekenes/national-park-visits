@@ -72,7 +72,12 @@ export function updatePercentChangeValueExpression(year: number): ValueExpressio
 
 export function updateTotalChangeValueExpression(year: number): ValueExpressionInfo {
   const previousYear = year - 1;
-  const valueExpression = `$feature.F${year} - $feature.F${previousYear}`;
+  const valueExpression = `
+    if(IsEmpty($feature.F${year}) || IsEmpty($feature.F${previousYear})){
+      return null;
+    }
+    $feature.F${year} - $feature.F${previousYear}
+  `;
   const valueExpressionTitle = `Total change in park visits (${previousYear} - ${year})`;
 
   return { valueExpression, valueExpressionTitle };

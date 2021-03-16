@@ -112,6 +112,8 @@ async function createTotalChangeRenderer(params: CreateRendererParams) {
   } as esri.univariateColorSizeCreateContinuousRendererParams;
 
   const { renderer } = await univariateRendererCreator.createContinuousRenderer(rendererParams);
+  renderer.classBreakInfos[0].maxValue = 0;
+  renderer.classBreakInfos[1].minValue = 0;
   const sizeVariable = renderer.visualVariables.filter( vv => vv.type === "size")[0] as esri.SizeVariable;;
   sizeVariable.stops = [
     new SizeStop({ value: -500000, size: 40 }),

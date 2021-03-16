@@ -18,6 +18,10 @@ export let highlight: esri.Handle = null;
 export let lastHighlight: esri.Handle = null;
 
 export async function enableHighlightOnPointerMove(view: MapView): Promise<MapView> {
+  view.watch("extent", (extent) => {
+    console.log("center", JSON.stringify(view.center.toJSON()));
+    console.log("scale", view.scale);
+  })
   const layerView = await view.whenLayerView(layer);
   view.on("click", async (event) => {
     const response = await view.hitTest(event, {
