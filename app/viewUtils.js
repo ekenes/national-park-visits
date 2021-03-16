@@ -47,8 +47,8 @@ define(["require", "exports", "./views", "./widgets"], function (require, export
         return view;
     }
     exports.maintainFixedExtent = maintainFixedExtent;
-    var highlight = null;
-    var lastHighlight = null;
+    exports.highlight = null;
+    exports.lastHighlight = null;
     function enableHighlightOnPointerMove(view) {
         return __awaiter(this, void 0, void 0, function () {
             var layerView;
@@ -67,17 +67,17 @@ define(["require", "exports", "./views", "./widgets"], function (require, export
                                         })];
                                     case 1:
                                         response = _a.sent();
-                                        lastHighlight = highlight;
+                                        exports.lastHighlight = exports.highlight;
                                         id = null;
                                         if (response && response.results.length) {
                                             feature = response.results[0].graphic;
                                             // feature.popupTemplate = layer.popupTemplate;
                                             id = feature.getObjectId();
-                                            highlight = layerView.highlight([id]);
+                                            exports.highlight = layerView.highlight([id]);
                                             selectionId = widgets_1.Widgets.featureWidget.graphic
                                                 ? widgets_1.Widgets.featureWidget.graphic.getObjectId()
                                                 : null;
-                                            if (highlight && id !== selectionId) {
+                                            if (exports.highlight && id !== selectionId) {
                                                 widgets_1.Widgets.featureWidget.graphic = feature;
                                                 widgets_1.Widgets.featureWidget.container.style.display = "block";
                                             }
@@ -89,9 +89,9 @@ define(["require", "exports", "./views", "./widgets"], function (require, export
                                             }
                                         }
                                         // remove the previous highlight
-                                        if (lastHighlight) {
-                                            lastHighlight.remove();
-                                            lastHighlight = null;
+                                        if (exports.lastHighlight) {
+                                            exports.lastHighlight.remove();
+                                            exports.lastHighlight = null;
                                         }
                                         return [2 /*return*/];
                                 }

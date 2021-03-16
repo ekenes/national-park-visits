@@ -11,6 +11,7 @@ import { createLabelingInfo } from "./labels";
 import { updateRenderer, renderers, RendererVars } from "./renderers";
 import { queryStats } from "./stats";
 import { layer, views, ViewVars } from "./views";
+import { highlight } from "./viewUtils";
 import { getUrlParams, updateUrlParams, UrlParams } from "./urlParams";
 
 export class Widgets {
@@ -35,6 +36,13 @@ export function updateViewWidgets(isMobile?: boolean){
   if(!Widgets.featureWidget){
     Widgets.featureWidget = new Feature({
       container: document.getElementById("feature")
+    });
+    document.getElementById("feature-close").addEventListener("click", ()=>{
+      (Widgets.featureWidget.container as HTMLElement).style.display = "none";
+      Widgets.featureWidget.graphic = null;
+      if (highlight) {
+        highlight.remove();
+      }
     });
   }
   Widgets.featureWidget.map = view.map;

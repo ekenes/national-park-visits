@@ -29,20 +29,20 @@
     <div id="akViewDiv" class="esri-widget"></div>
     <div id="hiViewDiv" class="esri-widget"></div>
     <div id="viViewDiv" class="esri-widget"></div>
+    <div id="controls"></div>
     <div id="title" class="esri-widget">
       <div id="name">
         National park visits
       </div>
       <div id="titleText"><span id="annual-visits"></span> people visited <span class="emphasis">national parks</span> in <span class="emphasis" id="year"></span></div>
       <div>a <span id="percent-change"></span> change <span id="total-change"></span> from <span id="previous-year"></span></div>
-
       <div class="options">
         <calcite-label>
           Select a variable
         <calcite-radio-group
           layout="horizontal"
           appearance="solid"
-          scale="s"
+          scale="m"
           width="auto"
           role="radiogroup"
           calcite-hydrated=""
@@ -56,7 +56,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -68,7 +68,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -80,7 +80,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -98,7 +98,7 @@
         <calcite-radio-group
           layout="horizontal"
           appearance="solid"
-          scale="s"
+          scale="m"
           width="auto"
           role="radiogroup"
           calcite-hydrated=""
@@ -112,7 +112,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -124,7 +124,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -136,7 +136,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -148,7 +148,7 @@
             aria-checked="false"
             layout="horizontal"
             role="radio"
-            scale="s"
+            scale="m"
             icon-position="start"
             calcite-hydrated=""
           >
@@ -162,7 +162,7 @@
       <div id="timeSlider"></div>
       <div id="year-picker"></div>
     </div>
-    <div id="feature"></div>
+    <div id="feature"><span id="feature-close" class="esri-icon-close"></span></div>
     <div id="legend"></div>
   </body>
 </html>

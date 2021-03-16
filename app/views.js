@@ -242,7 +242,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 wkid: 5936
                             },
                             ui: {
-                                components: []
+                                components: !isInset ? ["attribution"] : []
                             }
                         });
                         return [4 /*yield*/, akView.when()];
@@ -302,7 +302,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 wkid: 102007
             },
             ui: {
-                components: []
+                components: !isInset ? ["attribution"] : []
             }
         });
         return hiView.when();
@@ -346,7 +346,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 })
                             },
                             ui: {
-                                components: []
+                                components: !isInset ? ["attribution"] : []
                             }
                         });
                         return [4 /*yield*/, viView.when()];

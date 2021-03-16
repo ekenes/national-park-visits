@@ -6,6 +6,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/symbols"],
         var haloColor = "#f7ebd6";
         var haloSize = 0;
         return [new LabelClass({
+                deconflictionStrategy: "static",
                 where: "F" + year + " >= 3000000",
                 labelExpressionInfo: {
                     expression: "Replace($feature.Park, 'National Park', '')"
@@ -25,6 +26,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/symbols"],
                     haloSize: haloSize
                 })
             }), new LabelClass({
+                deconflictionStrategy: "static",
                 where: "F" + year + " >= 1000000 AND F" + year + " < 3000000",
                 // minScale: 9387410,
                 labelExpressionInfo: {
@@ -45,6 +47,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/symbols"],
                     haloSize: haloSize
                 })
             }), new LabelClass({
+                deconflictionStrategy: "static",
                 where: "F" + year + " < 1000000",
                 // minScale: 9387410,
                 labelExpressionInfo: {

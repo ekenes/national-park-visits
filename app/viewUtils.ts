@@ -14,8 +14,8 @@ export function maintainFixedExtent(view: MapView): MapView {
   return view;
 }
 
-let highlight: esri.Handle = null;
-let lastHighlight: esri.Handle = null;
+export let highlight: esri.Handle = null;
+export let lastHighlight: esri.Handle = null;
 
 export async function enableHighlightOnPointerMove(view: MapView): Promise<MapView> {
   const layerView = await view.whenLayerView(layer);

@@ -235,7 +235,7 @@ export async function createAkView(params: CreateViewParams){
       wkid: 5936
     },
     ui: {
-      components: []
+      components: !isInset ? ["attribution"] : []
     }
   });
   return await akView.when();
@@ -299,7 +299,7 @@ export function createHiView(params: CreateViewParams){
       wkid: 102007
     },
     ui: {
-      components: []
+      components: !isInset ? ["attribution"] : []
     }
   });
   return hiView.when();
@@ -339,7 +339,7 @@ export async function createViView(params: CreateViewParams){
       })
     },
     ui: {
-      components: []
+      components: !isInset ? ["attribution"] : []
     }
   });
   return await viView.when();

@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/widgets/Expand", "./popup", "./labels", "./renderers", "./stats", "./views", "./urlParams"], function (require, exports, Legend, Slider, Feature, intl, Expand, popup_1, labels_1, renderers_1, stats_1, views_1, urlParams_1) {
+define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esri/widgets/Feature", "esri/intl", "esri/widgets/Expand", "./popup", "./labels", "./renderers", "./stats", "./views", "./viewUtils", "./urlParams"], function (require, exports, Legend, Slider, Feature, intl, Expand, popup_1, labels_1, renderers_1, stats_1, views_1, viewUtils_1, urlParams_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Widgets = /** @class */ (function () {
@@ -57,6 +57,13 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
         if (!Widgets.featureWidget) {
             Widgets.featureWidget = new Feature({
                 container: document.getElementById("feature")
+            });
+            document.getElementById("feature-close").addEventListener("click", function () {
+                Widgets.featureWidget.container.style.display = "none";
+                Widgets.featureWidget.graphic = null;
+                if (viewUtils_1.highlight) {
+                    viewUtils_1.highlight.remove();
+                }
             });
         }
         Widgets.featureWidget.map = view.map;

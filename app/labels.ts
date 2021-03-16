@@ -7,6 +7,7 @@ export function createLabelingInfo(year: number): LabelClass[] {
   const haloSize = 0;
 
   return [new LabelClass({
+    deconflictionStrategy: "static",
     where: `F${year} >= 3000000`,
     labelExpressionInfo: {
       expression: "Replace($feature.Park, 'National Park', '')"
@@ -27,6 +28,7 @@ export function createLabelingInfo(year: number): LabelClass[] {
 
     })
   }), new LabelClass({
+    deconflictionStrategy: "static",
     where: `F${year} >= 1000000 AND F${year} < 3000000`,
     // minScale: 9387410,
     labelExpressionInfo: {
@@ -48,6 +50,7 @@ export function createLabelingInfo(year: number): LabelClass[] {
 
     })
   }), new LabelClass({
+    deconflictionStrategy: "static",
     where: `F${year} < 1000000`,
     // minScale: 9387410,
     labelExpressionInfo: {

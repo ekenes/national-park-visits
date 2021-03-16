@@ -1,4 +1,6 @@
 import WebMap = require("esri/WebMap");
+import Expand = require("esri/widgets/Expand");
+
 import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars, layer } from "./views";
 import { getUrlParams, updateUrlParams, UrlParams } from "./urlParams";
 import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay, initializeYearSelect } from "./widgets";
@@ -13,6 +15,7 @@ import { createLabelingInfo } from "./labels";
 
   const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
   const rendererSelect = document.getElementById("rendererSelect") as HTMLSelectElement;
+  const uiElements = document.getElementById("title") as HTMLDivElement;
 
   const uParams = getUrlParams();
   ViewVars.viewType = uParams.viewType;
@@ -32,6 +35,13 @@ import { createLabelingInfo } from "./labels";
     ViewVars.viewType = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
     disableSelectOptionByValue(viewSelect, "all");
   }
+
+  new Expand({
+    content: uiElements,
+    expanded: !isMobile,
+    expandIconClass: "esri-icon-sliders-horizontal",
+    container: document.getElementById("controls")
+  })
 
   viewSelect.value = ViewVars.viewType;
 
