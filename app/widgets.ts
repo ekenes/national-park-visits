@@ -18,7 +18,8 @@ export class Widgets {
   public static featureWidget: Feature = null;
 }
 
-let legend: Legend;
+const uiElements = document.getElementById("title") as HTMLDivElement;
+let legend: Legend = null;
 
 export let { year } = getUrlParams();
 
@@ -32,6 +33,8 @@ const totalChangeElement = document.getElementById("total-change") as HTMLSpanEl
 export function updateViewWidgets(isMobile?: boolean){
   const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
   const view = views[vType].view;
+
+  // Feature widget
 
   if(!Widgets.featureWidget){
     Widgets.featureWidget = new Feature({
@@ -48,17 +51,42 @@ export function updateViewWidgets(isMobile?: boolean){
   Widgets.featureWidget.map = view.map;
   Widgets.featureWidget.spatialReference = view.spatialReference;
 
-  if(!legend){
-    legend = new Legend({
-      view
-    });
-    new Expand({
-      expanded: !isMobile,
-      container: document.getElementById("legend"),
-      content: legend
-    });
+  // UI controls
+
+  const uiControls = new Expand({
+    view,
+    content: uiElements,
+    expanded: true,
+    expandIconClass: "esri-icon-sliders-horizontal",
+    group: isMobile ? "mobile" : null,
+    // container: document.createElement("div")
+  });
+  // (uiControls.content as HTMLElement).style.maxHeight = "85%";
+  // (uiControls.content as HTMLElement).style.overflow = "auto";
+  view.ui.add(uiControls, "top-right");
+
+  // Legend
+
+  if(legend){
+    legend.container = null;
+    legend.destroy();
+    legend = null;
   }
-  legend.view = view;
+  legend = new Legend({
+    view,
+    container: document.createElement("div")
+  });
+  (legend.container as HTMLElement).classList.add("legend");
+  (legend.container as HTMLElement).style.width = "200px";
+  (legend.container as HTMLElement).style.overflow = "auto";
+  // legendContainer.appendChild(legend.container as HTMLElement);
+  view.ui.add(new Expand({
+    view,
+    expanded: !isMobile,
+    content: legend.container,
+    group: isMobile ? "mobile" : null,
+    expandIconClass: "esri-icon-legend"
+  }), "bottom-right");
 }
 
 

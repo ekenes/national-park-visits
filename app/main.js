@@ -41,7 +41,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-define(["require", "exports", "esri/widgets/Expand", "./views", "./urlParams", "./widgets", "./viewUtils", "esri/core/watchUtils", "./stats", "./renderers", "./popup", "./labels"], function (require, exports, Expand, views_1, urlParams_1, widgets_1, viewUtils_1, watchUtils_1, stats_1, renderers_1, popup_1, labels_1) {
+define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtils", "esri/core/watchUtils", "./stats", "./renderers", "./popup", "./labels"], function (require, exports, views_1, urlParams_1, widgets_1, viewUtils_1, watchUtils_1, stats_1, renderers_1, popup_1, labels_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -174,13 +174,12 @@ define(["require", "exports", "esri/widgets/Expand", "./views", "./urlParams", "
                 });
             });
         }
-        var viewSelect, rendererSelect, uiElements, uParams, isMobile, vType, view, layerView;
+        var viewSelect, rendererSelect, uParams, isMobile, vType, view, layerView;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     viewSelect = document.getElementById("viewSelect");
                     rendererSelect = document.getElementById("rendererSelect");
-                    uiElements = document.getElementById("title");
                     uParams = urlParams_1.getUrlParams();
                     views_1.ViewVars.viewType = uParams.viewType;
                     renderers_1.RendererVars.rendererType = uParams.variable;
@@ -195,12 +194,6 @@ define(["require", "exports", "esri/widgets/Expand", "./views", "./urlParams", "
                         views_1.ViewVars.viewType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
                         widgets_1.disableSelectOptionByValue(viewSelect, "all");
                     }
-                    new Expand({
-                        content: uiElements,
-                        expanded: !isMobile,
-                        expandIconClass: "esri-icon-sliders-horizontal",
-                        container: document.getElementById("controls")
-                    });
                     viewSelect.value = views_1.ViewVars.viewType;
                     viewSelect.addEventListener("calciteRadioGroupChange", function (e) { return __awaiter(void 0, void 0, void 0, function () {
                         var viewType;
@@ -289,10 +282,10 @@ define(["require", "exports", "esri/widgets/Expand", "./views", "./urlParams", "
                                     views_1.layer.popupTemplate = popup_1.createPopupTemplate(widgets_1.year);
                                     views_1.layer.labelingInfo = labels_1.createLabelingInfo(widgets_1.year);
                                     widgets_1.updateViewWidgets(isMobile);
-                                    if (isMobile) {
-                                        widgets_1.initializeYearSelect();
-                                        return [2 /*return*/];
-                                    }
+                                    // if(isMobile){
+                                    //   initializeYearSelect();
+                                    //   return;
+                                    // }
                                     widgets_1.initializeSlider();
                                     return [2 /*return*/];
                             }

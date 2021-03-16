@@ -44,7 +44,8 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
         return Widgets;
     }());
     exports.Widgets = Widgets;
-    var legend;
+    var uiElements = document.getElementById("title");
+    var legend = null;
     exports.year = urlParams_1.getUrlParams().year;
     exports.yearElement = document.getElementById("year");
     exports.previousYearElement = document.getElementById("previous-year");
@@ -54,6 +55,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     function updateViewWidgets(isMobile) {
         var vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
         var view = views_1.views[vType].view;
+        // Feature widget
         if (!Widgets.featureWidget) {
             Widgets.featureWidget = new Feature({
                 container: document.getElementById("feature")
@@ -68,17 +70,38 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
         }
         Widgets.featureWidget.map = view.map;
         Widgets.featureWidget.spatialReference = view.spatialReference;
-        if (!legend) {
-            legend = new Legend({
-                view: view
-            });
-            new Expand({
-                expanded: !isMobile,
-                container: document.getElementById("legend"),
-                content: legend
-            });
+        // UI controls
+        var uiControls = new Expand({
+            view: view,
+            content: uiElements,
+            expanded: true,
+            expandIconClass: "esri-icon-sliders-horizontal",
+            group: isMobile ? "mobile" : null,
+        });
+        // (uiControls.content as HTMLElement).style.maxHeight = "85%";
+        // (uiControls.content as HTMLElement).style.overflow = "auto";
+        view.ui.add(uiControls, "top-right");
+        // Legend
+        if (legend) {
+            legend.container = null;
+            legend.destroy();
+            legend = null;
         }
-        legend.view = view;
+        legend = new Legend({
+            view: view,
+            container: document.createElement("div")
+        });
+        legend.container.classList.add("legend");
+        legend.container.style.width = "200px";
+        legend.container.style.overflow = "auto";
+        // legendContainer.appendChild(legend.container as HTMLElement);
+        view.ui.add(new Expand({
+            view: view,
+            expanded: !isMobile,
+            content: legend.container,
+            group: isMobile ? "mobile" : null,
+            expandIconClass: "esri-icon-legend"
+        }), "bottom-right");
     }
     exports.updateViewWidgets = updateViewWidgets;
     function initializeSlider() {

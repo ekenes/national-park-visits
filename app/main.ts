@@ -15,7 +15,6 @@ import { createLabelingInfo } from "./labels";
 
   const viewSelect = document.getElementById("viewSelect") as HTMLSelectElement;
   const rendererSelect = document.getElementById("rendererSelect") as HTMLSelectElement;
-  const uiElements = document.getElementById("title") as HTMLDivElement;
 
   const uParams = getUrlParams();
   ViewVars.viewType = uParams.viewType;
@@ -35,13 +34,6 @@ import { createLabelingInfo } from "./labels";
     ViewVars.viewType = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
     disableSelectOptionByValue(viewSelect, "all");
   }
-
-  new Expand({
-    content: uiElements,
-    expanded: !isMobile,
-    expandIconClass: "esri-icon-sliders-horizontal",
-    container: document.getElementById("controls")
-  })
 
   viewSelect.value = ViewVars.viewType;
 
@@ -111,10 +103,10 @@ import { createLabelingInfo } from "./labels";
 
     updateViewWidgets(isMobile);
 
-    if(isMobile){
-      initializeYearSelect();
-      return;
-    }
+    // if(isMobile){
+    //   initializeYearSelect();
+    //   return;
+    // }
     initializeSlider();
   });
 
