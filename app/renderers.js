@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/SizeVariable", "esri/renderers/visualVariables/ColorVariable", "esri/renderers/visualVariables/support/SizeStop", "esri/symbols", "esri/renderers", "./cimReference", "./expressions"], function (require, exports, colorSchemes, univariateRendererCreator, SizeVariable, ColorVariable, SizeStop, symbols_1, renderers_1, cimReference_1, expressions_1) {
+define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/SizeVariable", "esri/Color", "esri/renderers/visualVariables/support/SizeStop", "esri/symbols/support/cimSymbolUtils", "esri/symbols", "esri/renderers", "./cimReference", "./expressions"], function (require, exports, colorSchemes, univariateRendererCreator, SizeVariable, Color, SizeStop, cimSymbolUtils_1, symbols_1, renderers_1, cimReference_1, expressions_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var colorScheme = colorSchemes.getSchemeByName({
@@ -158,6 +158,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
         var symbol = new symbols_1.CIMSymbol({
             data: cimReference_1.cimReference
         });
+        cimSymbolUtils_1.applyCIMSymbolColor(symbol, new Color(colors[4]));
         return new renderers_1.ClassBreaksRenderer({
             field: "F" + year,
             classBreakInfos: [
@@ -178,16 +179,6 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                         { value: 1000000, size: "25px" },
                         { value: 4000000, size: "40px" },
                         { value: 10000000, size: "60px" }
-                    ]
-                }), new ColorVariable({
-                    valueExpression: "\n          var current = DefaultValue($feature.F" + year + ", 1);\n          var previous = 0;\n          if(" + year + " > 1905){\n            previous = DefaultValue($feature.F" + (year - 1) + ", 1)\n          }\n          var val = ((current - previous) / previous) * 100;\n          return val;\n        ",
-                    valueExpressionTitle: "% Change from previous year",
-                    stops: [
-                        { value: -10, color: colors[0], label: "Fewer visits" },
-                        { value: -0.1, color: colors[1] },
-                        { value: 0, color: colors[2], label: "No change" },
-                        { value: 0.1, color: colors[3] },
-                        { value: 10, color: colors[4], label: "More visits" }
                     ]
                 })
             ]

@@ -5,8 +5,9 @@ import FeatureLayer = require("esri/layers/FeatureLayer");
 import colorSchemes = require("esri/smartMapping/symbology/color");
 import univariateRendererCreator = require("esri/smartMapping/renderers/univariateColorSize");
 import SizeVariable = require("esri/renderers/visualVariables/SizeVariable");
-import ColorVariable = require("esri/renderers/visualVariables/ColorVariable");
+import Color = require("esri/Color");
 import SizeStop = require("esri/renderers/visualVariables/support/SizeStop");
+import { applyCIMSymbolColor } from "esri/symbols/support/cimSymbolUtils";
 
 import { CIMSymbol, SimpleMarkerSymbol } from "esri/symbols";
 import { ClassBreaksRenderer } from "esri/renderers";
@@ -146,6 +147,8 @@ function createBivariateRenderer(year: number): ClassBreaksRenderer {
     data: cimReference
   });
 
+  applyCIMSymbolColor(symbol, new Color(colors[4]));
+
   return new ClassBreaksRenderer({
     field: `F${year}`,
     classBreakInfos: [
@@ -166,24 +169,6 @@ function createBivariateRenderer(year: number): ClassBreaksRenderer {
           { value: 1000000, size: "25px" },
           { value: 4000000, size: "40px" },
           { value: 10000000, size: "60px" }
-        ]
-      }), new ColorVariable({
-        valueExpression: `
-          var current = DefaultValue($feature.F${year}, 1);
-          var previous = 0;
-          if(${year} > 1905){
-            previous = DefaultValue($feature.F${year - 1}, 1)
-          }
-          var val = ((current - previous) / previous) * 100;
-          return val;
-        `,
-        valueExpressionTitle: "% Change from previous year",
-        stops: [
-          { value: -10, color: colors[0], label: "Fewer visits" },
-          { value: -0.1, color: colors[1] },
-          { value: 0, color: colors[2], label: "No change" },
-          { value: 0.1, color: colors[3] },
-          { value: 10, color: colors[4], label: "More visits" }
         ]
       })
     ]
