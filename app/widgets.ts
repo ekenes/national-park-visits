@@ -104,7 +104,28 @@ export async function initializeSlider() {
     },
     tickConfigs: [{
       mode: "position",
-      values: [ 1905, 1920, 1940, 1960, 1980, 2000, 2020 ],
+      values: [ 1905, 1918, 1942, 1960, 1980, 2000, 2020 ],
+      labelFormatFunction: (value, type, index) => {
+        const labels = {
+          1918: "Flu",
+          1942: "WWII"
+        };
+        if(type === "tick"){
+          if(labels[value]){
+            return labels[value];
+          }
+        }
+        return value;
+      },
+      tickCreatedFunction: (value, tickElement, labelElement) => {
+        const setValue = () => {
+          slider.values = [ value ];
+        };
+        tickElement.addEventListener("click", setValue);
+        tickElement.style.cursor = "pointer";
+        labelElement.addEventListener("click", setValue);
+        labelElement.style.cursor = "pointer";
+      },
       labelsVisible: true
     }]
   });

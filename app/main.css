@@ -153,3 +153,11 @@ body,
   float: right;
   cursor: pointer;
 }
+
+.esri-slider__track{
+  background-color: #018571;
+}
+
+.esri-slider__thumb{
+  border: 2px solid #018571;
+}
