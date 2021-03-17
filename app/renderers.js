@@ -82,7 +82,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                         sizeVariable.stops = [
                             new SizeStop({ value: -100, size: 40 }),
                             new SizeStop({ value: -50, size: 24 }),
-                            new SizeStop({ value: 0, size: 12 }),
+                            new SizeStop({ value: 0, size: 8 }),
                             new SizeStop({ value: 50, size: 24 }),
                             new SizeStop({ value: 100, size: 40 })
                         ];
@@ -133,11 +133,11 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                         sizeVariable = renderer.visualVariables.filter(function (vv) { return vv.type === "size"; })[0];
                         ;
                         sizeVariable.stops = [
-                            new SizeStop({ value: -500000, size: 40 }),
-                            new SizeStop({ value: -250000, size: 24 }),
-                            new SizeStop({ value: 0, size: 12 }),
-                            new SizeStop({ value: 250000, size: 24 }),
-                            new SizeStop({ value: 500000, size: 40 })
+                            new SizeStop({ value: -2000000, size: 40 }),
+                            new SizeStop({ value: -1000000, size: 24 }),
+                            new SizeStop({ value: 0, size: 8 }),
+                            new SizeStop({ value: 250000, size: 12 }),
+                            new SizeStop({ value: 500000, size: 16 })
                         ];
                         return [2 /*return*/, renderer];
                 }
