@@ -64,7 +64,12 @@ interface ValueExpressionInfo {
 
 export function updatePercentChangeValueExpression(year: number): ValueExpressionInfo {
   const previousYear = year - 1;
-  const valueExpression = `(($feature.F${year} - $feature.F${previousYear}) / $feature.F${previousYear}) * 100`;
+  const valueExpression = `
+    if(IsEmpty($feature.F${year}) || IsEmpty($feature.F${previousYear})){
+      return null;
+    }
+    return (($feature.F${year} - $feature.F${previousYear}) / $feature.F${previousYear}) * 100;
+  `;
   const valueExpressionTitle = `% Change in park visitation (${previousYear} - ${year})`;
 
   return { valueExpression, valueExpressionTitle };

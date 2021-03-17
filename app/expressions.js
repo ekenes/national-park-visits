@@ -6,7 +6,7 @@ define(["require", "exports"], function (require, exports) {
     exports.visitationChangeArcade = "\n  var lowest = Infinity;\n  var ignoreFields = [ \"OBJECTID\", \"x\", \"y\", \"Range\" ];\n  for (var att in $feature){\n    var value = $feature[att];\n    if( typeof(value) == 'Number' && IndexOf(ignoreFields, att) == -1){\n      lowest = IIF(value < lowest, value, lowest);\n    }\n  }\n  return lowest;\n";
     function updatePercentChangeValueExpression(year) {
         var previousYear = year - 1;
-        var valueExpression = "(($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100";
+        var valueExpression = "\n    if(IsEmpty($feature.F" + year + ") || IsEmpty($feature.F" + previousYear + ")){\n      return null;\n    }\n    return (($feature.F" + year + " - $feature.F" + previousYear + ") / $feature.F" + previousYear + ") * 100;\n  ";
         var valueExpressionTitle = "% Change in park visitation (" + previousYear + " - " + year + ")";
         return { valueExpression: valueExpression, valueExpressionTitle: valueExpressionTitle };
     }
