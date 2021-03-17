@@ -76,6 +76,7 @@ body,
   --calcite-ui-brand: #018571;
 }
 #name{
+  color:#018571;
   font-size: 2.5em;
   font-weight: 600;
   line-height: 1.5em;
@@ -150,4 +151,5 @@ body,
 
 #feature-close{
   float: right;
+  cursor: pointer;
 }

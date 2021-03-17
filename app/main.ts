@@ -54,6 +54,8 @@ import { createLabelingInfo } from "./labels";
       variable
     });
 
+    layer.labelingInfo = createLabelingInfo(year);
+
     if(renderers[RendererVars.rendererType]){
       const renderer = renderers[RendererVars.rendererType];
       renderers[RendererVars.rendererType] = updateRenderer({

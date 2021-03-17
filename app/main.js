@@ -223,6 +223,7 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                                     urlParams_1.updateUrlParams({
                                         variable: variable
                                     });
+                                    views_1.layer.labelingInfo = labels_1.createLabelingInfo(widgets_1.year);
                                     if (renderers_1.renderers[renderers_1.RendererVars.rendererType]) {
                                         renderer = renderers_1.renderers[renderers_1.RendererVars.rendererType];
                                         renderers_1.renderers[renderers_1.RendererVars.rendererType] = renderers_1.updateRenderer({
