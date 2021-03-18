@@ -47,6 +47,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     var uiElements = document.getElementById("title");
     var legend = null;
     exports.year = urlParams_1.getUrlParams().year;
+    exports.endYear = 2020;
     exports.yearElement = document.getElementById("year");
     exports.previousYearElement = document.getElementById("previous-year");
     var annualVisitsElement = document.getElementById("annual-visits");
@@ -112,7 +113,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                 slider = new Slider({
                     container: "timeSlider",
                     min: 1905,
-                    max: 2020,
+                    max: exports.endYear,
                     values: [exports.year],
                     steps: 1,
                     layout: "horizontal",

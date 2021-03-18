@@ -1,4 +1,4 @@
-define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./expressions"], function (require, exports, FieldInfo, PopupTemplate, expressions_1) {
+define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./expressions", "./widgets"], function (require, exports, FieldInfo, PopupTemplate, expressions_1, widgets_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function disablePopupOnClick(view) {
@@ -12,7 +12,7 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
     var fieldInfos = [];
     function createFieldsForChart() {
         var start = 1905;
-        var end = 2020;
+        var end = widgets_1.endYear;
         fieldsForChart = [];
         fieldInfos = [];
         for (var y = start; y <= end; y++) {
@@ -79,7 +79,7 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
                     type: "media",
                     mediaInfos: [{
                             type: "line-chart",
-                            title: "Annual park visits (1905-2019)",
+                            title: "Annual park visits (1905-" + widgets_1.endYear + ")",
                             value: {
                                 fields: fieldsForChart
                             }

@@ -22,6 +22,7 @@ const uiElements = document.getElementById("title") as HTMLDivElement;
 let legend: Legend = null;
 
 export let { year } = getUrlParams();
+export const endYear = 2020;
 
 export const yearElement = document.getElementById("year") as HTMLSpanElement;
 export const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
@@ -94,7 +95,7 @@ export async function initializeSlider() {
   const slider = new Slider({
     container: "timeSlider",
     min: 1905,
-    max: 2020,
+    max: endYear,
     values: [ year ],
     steps: 1,
     layout: "horizontal",

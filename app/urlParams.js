@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "./widgets"], function (require, exports, widgets_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getUrlParams() {
@@ -11,7 +11,7 @@ define(["require", "exports"], function (require, exports) {
         result = {
             viewType: result.viewType || "all",
             variable: result.variable || "percent-change",
-            year: parseInt(result.year) || 2020
+            year: parseInt(result.year) || widgets_1.endYear
         };
         setUrlParams(result);
         return result;
