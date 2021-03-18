@@ -61,7 +61,7 @@ async function createPercentChangeRenderer(params: CreateRendererParams): Promis
   sizeVariable.stops = [
     new SizeStop({ value: -100, size: 40 }),
     new SizeStop({ value: -50, size: 24 }),
-    new SizeStop({ value: 0, size: 12 }),
+    new SizeStop({ value: 0, size: 8 }),
     new SizeStop({ value: 50, size: 24 }),
     new SizeStop({ value: 100, size: 40 })
   ];
@@ -116,11 +116,11 @@ async function createTotalChangeRenderer(params: CreateRendererParams) {
   renderer.classBreakInfos[1].minValue = 0;
   const sizeVariable = renderer.visualVariables.filter( vv => vv.type === "size")[0] as esri.SizeVariable;;
   sizeVariable.stops = [
-    new SizeStop({ value: -500000, size: 40 }),
-    new SizeStop({ value: -250000, size: 24 }),
-    new SizeStop({ value: 0, size: 12 }),
-    new SizeStop({ value: 250000, size: 24 }),
-    new SizeStop({ value: 500000, size: 40 })
+    new SizeStop({ value: -2000000, size: 40 }),
+    new SizeStop({ value: -1000000, size: 24 }),
+    new SizeStop({ value: 0, size: 8 }),
+    new SizeStop({ value: 250000, size: 12 }),
+    new SizeStop({ value: 500000, size: 16 })
   ];
 
   return renderer;

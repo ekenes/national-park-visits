@@ -66,7 +66,7 @@ body,
   top: 30px;
 }
 #title {
-  padding: 10px;
+  padding: 15px;
   text-align: right;
   /* right: 10px; */
   background-color: rgba(255,255,255,0.8);
@@ -152,4 +152,16 @@ body,
 #feature-close{
   float: right;
   cursor: pointer;
+}
+
+.esri-slider__track{
+  background-color: #018571;
+}
+
+.esri-slider__thumb{
+  border: 2px solid #018571;
+}
+
+.esri-feature-media__item-title {
+  text-align: center;
 }

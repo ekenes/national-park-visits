@@ -104,11 +104,6 @@ import { createLabelingInfo } from "./labels";
     layer.labelingInfo = createLabelingInfo(year);
 
     updateViewWidgets(isMobile);
-
-    // if(isMobile){
-    //   initializeYearSelect();
-    //   return;
-    // }
     initializeSlider();
   });
 

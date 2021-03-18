@@ -2,6 +2,7 @@ import MapView = require("esri/views/MapView");
 import FieldInfo = require("esri/popup/FieldInfo");
 import PopupTemplate = require("esri/PopupTemplate");
 import { highestGrowthArcade, lowestGrowthArcade } from "./expressions";
+import { endYear } from "./widgets";
 
 export function disablePopupOnClick(view: MapView) {
   view.on("click", function (event) {
@@ -15,7 +16,7 @@ let fieldInfos: FieldInfo[] = [];
 
 function createFieldsForChart (){
   const start = 1905;
-  const end = 2020;
+  const end = endYear;
   fieldsForChart = [];
   fieldInfos = [];
 
@@ -96,7 +97,7 @@ export function createPopupTemplate(year: number): PopupTemplate {
       type: "media",
       mediaInfos: [{
         type: "line-chart",
-        title: "Annual park visits (1905-2019)",
+        title: `Annual park visits (1905-${endYear})`,
         value: {
           fields: fieldsForChart
         }
