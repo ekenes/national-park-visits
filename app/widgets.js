@@ -118,7 +118,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                     steps: 1,
                     layout: "horizontal",
                     visibleElements: {
-                        labels: false,
+                        labels: true,
                         rangeLabels: false
                     },
                     tickConfigs: [{

@@ -100,7 +100,7 @@ export async function initializeSlider() {
     steps: 1,
     layout: "horizontal",
     visibleElements: {
-      labels: false,
+      labels: true,
       rangeLabels: false
     },
     tickConfigs: [{
