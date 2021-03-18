@@ -183,17 +183,17 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                     uParams = urlParams_1.getUrlParams();
                     views_1.ViewVars.viewType = uParams.viewType;
                     renderers_1.RendererVars.rendererType = uParams.variable;
+                    isMobile = viewUtils_1.isMobileBrowser();
                     __spreadArrays(viewSelect.children).forEach(function (child) {
+                        if (isMobile && child.value === "all") {
+                            child.style.display = "none";
+                            return;
+                        }
                         child.checked = child.value === views_1.ViewVars.viewType;
                     });
                     __spreadArrays(rendererSelect.children).forEach(function (child) {
                         child.checked = child.value === renderers_1.RendererVars.rendererType;
                     });
-                    isMobile = viewUtils_1.isMobileBrowser();
-                    if (isMobile) {
-                        views_1.ViewVars.viewType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
-                        widgets_1.disableSelectOptionByValue(viewSelect, "all");
-                    }
                     viewSelect.value = views_1.ViewVars.viewType;
                     viewSelect.addEventListener("calciteRadioGroupChange", function (e) { return __awaiter(void 0, void 0, void 0, function () {
                         var viewType;

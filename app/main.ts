@@ -2,7 +2,7 @@ import WebMap = require("esri/WebMap");
 
 import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars, layer } from "./views";
 import { getUrlParams, updateUrlParams, UrlParams } from "./urlParams";
-import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay } from "./widgets";
+import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, updateParkVisitationDisplay } from "./widgets";
 import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maintainFixedExtent } from "./viewUtils";
 import { whenFalseOnce } from "esri/core/watchUtils";
 import { queryStats } from "./stats";
@@ -19,20 +19,19 @@ import { createLabelingInfo } from "./labels";
   ViewVars.viewType = uParams.viewType;
   RendererVars.rendererType = uParams.variable;
 
+  const isMobile = isMobileBrowser();
+
   [...(viewSelect.children as any)].forEach(child => {
+    if(isMobile && child.value === "all"){
+      child.style.display = "none";
+      return;
+    }
     child.checked = child.value === ViewVars.viewType;
   });
 
   [...(rendererSelect.children as any)].forEach(child => {
     child.checked = child.value === RendererVars.rendererType;
   });
-
-  const isMobile = isMobileBrowser();
-
-  if(isMobile){
-    ViewVars.viewType = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
-    disableSelectOptionByValue(viewSelect, "all");
-  }
 
   viewSelect.value = ViewVars.viewType;
 

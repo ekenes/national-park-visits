@@ -1,3 +1,5 @@
+import { isMobileBrowser } from "./viewUtils";
+
 export type UrlParams = {
   viewType?: "all" | "us" | "ak" | "hi" | "vi";
   variable?: "percent-change" | "total-change" | "bivariate";
@@ -8,13 +10,24 @@ export function getUrlParams() {
   const queryParams = document.location.search.substr(1);
   let result: UrlParams = {};
 
+  const isMobile = isMobileBrowser();
+
   queryParams.split("&").forEach(function(part) {
     var item = part.split("=");
     result[item[0]] = decodeURIComponent(item[1]);
   });
 
+  if(!result.viewType){
+    result.viewType = "all";
+  }
+  if(isMobile){
+    if(result.viewType === "all"){
+      result.viewType = "us";
+    }
+  }
+
   result = {
-    viewType: result.viewType || "all",
+    viewType: result.viewType,
     variable: result.variable || "percent-change",
     year: parseInt(result.year as any) || 2020
   };

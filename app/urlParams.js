@@ -1,15 +1,24 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "./viewUtils"], function (require, exports, viewUtils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getUrlParams() {
         var queryParams = document.location.search.substr(1);
         var result = {};
+        var isMobile = viewUtils_1.isMobileBrowser();
         queryParams.split("&").forEach(function (part) {
             var item = part.split("=");
             result[item[0]] = decodeURIComponent(item[1]);
         });
+        if (!result.viewType) {
+            result.viewType = "all";
+        }
+        if (isMobile) {
+            if (result.viewType === "all") {
+                result.viewType = "us";
+            }
+        }
         result = {
-            viewType: result.viewType || "all",
+            viewType: result.viewType,
             variable: result.variable || "percent-change",
             year: parseInt(result.year) || 2020
         };
