@@ -118,13 +118,13 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
                     steps: 1,
                     layout: "horizontal",
                     visibleElements: {
-                        labels: true,
+                        labels: false,
                         rangeLabels: false
                     },
                     tickConfigs: [{
                             mode: "position",
                             values: [1905, 1918, 1942, 1960, 1980, 2000, 2020],
-                            labelFormatFunction: function (value, type, index) {
+                            labelFormatFunction: function (value, type) {
                                 var labels = {
                                     1918: "Flu",
                                     1942: "WWII"

@@ -161,3 +161,7 @@ body,
 .esri-slider__thumb{
   border: 2px solid #018571;
 }
+
+.esri-feature-media__item-title {
+  text-align: center;
+}

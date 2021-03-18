@@ -100,13 +100,13 @@ export async function initializeSlider() {
     steps: 1,
     layout: "horizontal",
     visibleElements: {
-      labels: true,
+      labels: false,
       rangeLabels: false
     },
     tickConfigs: [{
       mode: "position",
       values: [ 1905, 1918, 1942, 1960, 1980, 2000, 2020 ],
-      labelFormatFunction: (value, type, index) => {
+      labelFormatFunction: (value, type) => {
         const labels = {
           1918: "Flu",
           1942: "WWII"
