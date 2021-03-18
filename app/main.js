@@ -256,8 +256,6 @@ define(["require", "exports", "./views", "./urlParams", "./widgets", "./viewUtil
                     _a.sent();
                     vType = views_1.ViewVars.viewType === "all" ? "us" : views_1.ViewVars.viewType;
                     view = views_1.views[vType].view;
-                    widgets_1.yearElement.innerHTML = widgets_1.year.toString();
-                    widgets_1.previousYearElement.innerHTML = (widgets_1.year - 1).toString();
                     return [4 /*yield*/, view.whenLayerView(views_1.layer)];
                 case 2:
                     layerView = _a.sent();

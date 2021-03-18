@@ -1,9 +1,8 @@
 import WebMap = require("esri/WebMap");
-import Expand = require("esri/widgets/Expand");
 
 import { createViView, createAkView, createHiView, createUsView, createMap, views, destroyAllViews, ViewVars, layer } from "./views";
 import { getUrlParams, updateUrlParams, UrlParams } from "./urlParams";
-import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay, initializeYearSelect } from "./widgets";
+import { initializeSlider, updateViewWidgets, disableSelectOptionByValue, year, yearElement, previousYearElement, updateParkVisitationDisplay } from "./widgets";
 import { disableNavigation, enableHighlightOnPointerMove, isMobileBrowser, maintainFixedExtent } from "./viewUtils";
 import { whenFalseOnce } from "esri/core/watchUtils";
 import { queryStats } from "./stats";
@@ -84,8 +83,6 @@ import { createLabelingInfo } from "./labels";
   const vType: UrlParams["viewType"] = ViewVars.viewType === "all" ? "us" : ViewVars.viewType;
   const view = views[vType].view;
 
-  yearElement.innerHTML = year.toString();
-  previousYearElement.innerHTML = (year-1).toString();
   const layerView = await view.whenLayerView(layer);
 
   whenFalseOnce(layerView, "updating", async () => {

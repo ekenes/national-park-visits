@@ -1,5 +1,3 @@
-import { endYear } from "./widgets";
-
 export type UrlParams = {
   viewType?: "all" | "us" | "ak" | "hi" | "vi";
   variable?: "percent-change" | "total-change" | "bivariate";
@@ -18,7 +16,7 @@ export function getUrlParams() {
   result = {
     viewType: result.viewType || "all",
     variable: result.variable || "percent-change",
-    year: parseInt(result.year as any) || endYear
+    year: parseInt(result.year as any) || 2020
   };
 
   setUrlParams(result);

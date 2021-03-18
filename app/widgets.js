@@ -50,6 +50,8 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     exports.endYear = 2020;
     exports.yearElement = document.getElementById("year");
     exports.previousYearElement = document.getElementById("previous-year");
+    exports.yearElement.innerHTML = exports.year.toString();
+    exports.previousYearElement.innerHTML = (exports.year - 1).toString();
     var annualVisitsElement = document.getElementById("annual-visits");
     var percentChangeElement = document.getElementById("percent-change");
     var totalChangeElement = document.getElementById("total-change");

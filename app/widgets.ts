@@ -27,6 +27,9 @@ export const endYear = 2020;
 export const yearElement = document.getElementById("year") as HTMLSpanElement;
 export const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
 
+yearElement.innerHTML = year.toString();
+previousYearElement.innerHTML = (year-1).toString();
+
 const annualVisitsElement = document.getElementById("annual-visits") as HTMLSpanElement;
 const percentChangeElement = document.getElementById("percent-change") as HTMLSpanElement;
 const totalChangeElement = document.getElementById("total-change") as HTMLSpanElement;
