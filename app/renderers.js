@@ -52,28 +52,27 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     exports.RendererVars = RendererVars;
     function createPercentChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var layer, view, year, _a, valueExpression, valueExpressionTitle, rendererParams, renderer, sizeVariable;
+            var layer, view, year, _a, valueExpression, valueExpressionTitle, renderer, sizeVariable;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
                         _a = expressions_1.updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
-                        rendererParams = {
-                            layer: layer,
-                            view: view,
-                            theme: "above-and-below",
-                            valueExpression: valueExpression,
-                            valueExpressionTitle: valueExpressionTitle,
-                            defaultSymbolEnabled: false,
-                            colorOptions: {
-                                colorScheme: colorScheme,
-                                isContinuous: false,
-                            },
-                            symbolOptions: {
-                                symbolStyle: "circle-arrow"
-                            }
-                        };
-                        return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer(rendererParams)];
+                        return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer({
+                                layer: layer,
+                                view: view,
+                                theme: "above-and-below",
+                                valueExpression: valueExpression,
+                                valueExpressionTitle: valueExpressionTitle,
+                                defaultSymbolEnabled: false,
+                                colorOptions: {
+                                    colorScheme: colorScheme,
+                                    isContinuous: false,
+                                },
+                                symbolOptions: {
+                                    symbolStyle: "circle-arrow"
+                                }
+                            })];
                     case 1:
                         renderer = (_b.sent()).renderer;
                         renderer.classBreakInfos[0].maxValue = 0;
@@ -104,28 +103,27 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     }
     function createTotalChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var layer, view, year, _a, valueExpression, valueExpressionTitle, rendererParams, renderer, sizeVariable;
+            var layer, view, year, _a, valueExpression, valueExpressionTitle, renderer, sizeVariable;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
                         _a = expressions_1.updateTotalChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
-                        rendererParams = {
-                            layer: layer,
-                            view: view,
-                            theme: "above-and-below",
-                            valueExpression: valueExpression,
-                            valueExpressionTitle: valueExpressionTitle,
-                            defaultSymbolEnabled: false,
-                            colorOptions: {
-                                colorScheme: colorScheme,
-                                isContinuous: false,
-                            },
-                            symbolOptions: {
-                                symbolStyle: "circle-arrow"
-                            }
-                        };
-                        return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer(rendererParams)];
+                        return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer({
+                                layer: layer,
+                                view: view,
+                                theme: "above-and-below",
+                                valueExpression: valueExpression,
+                                valueExpressionTitle: valueExpressionTitle,
+                                defaultSymbolEnabled: false,
+                                colorOptions: {
+                                    colorScheme: colorScheme,
+                                    isContinuous: false,
+                                },
+                                symbolOptions: {
+                                    symbolStyle: "circle-arrow"
+                                }
+                            })];
                     case 1:
                         renderer = (_b.sent()).renderer;
                         renderer.classBreakInfos[0].maxValue = 0;
@@ -136,8 +134,8 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                             new SizeStop({ value: -2000000, size: 40 }),
                             new SizeStop({ value: -1000000, size: 24 }),
                             new SizeStop({ value: 0, size: 8 }),
-                            new SizeStop({ value: 250000, size: 12 }),
-                            new SizeStop({ value: 500000, size: 16 })
+                            new SizeStop({ value: 1000000, size: 24 }),
+                            new SizeStop({ value: 2000000, size: 40 }),
                         ];
                         return [2 /*return*/, renderer];
                 }

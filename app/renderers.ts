@@ -38,7 +38,7 @@ async function createPercentChangeRenderer(params: CreateRendererParams): Promis
   const { layer, view, year } = params;
   const { valueExpression, valueExpressionTitle } = updatePercentChangeValueExpression(year);
 
-  let rendererParams = {
+  const { renderer } = await univariateRendererCreator.createContinuousRenderer({
     layer,
     view,
     theme: "above-and-below",
@@ -52,9 +52,7 @@ async function createPercentChangeRenderer(params: CreateRendererParams): Promis
     symbolOptions: {
       symbolStyle: "circle-arrow"
     }
-  } as esri.univariateColorSizeCreateContinuousRendererParams;
-
-  const { renderer } = await univariateRendererCreator.createContinuousRenderer(rendererParams);
+  });
   renderer.classBreakInfos[0].maxValue = 0;
   renderer.classBreakInfos[1].minValue = 0;
   const sizeVariable = renderer.visualVariables.filter( vv => vv.type === "size")[0] as esri.SizeVariable;
@@ -95,7 +93,7 @@ async function createTotalChangeRenderer(params: CreateRendererParams) {
   const { layer, view, year } = params;
   const { valueExpression, valueExpressionTitle } = updateTotalChangeValueExpression(year);
 
-  const rendererParams = {
+  const { renderer } = await univariateRendererCreator.createContinuousRenderer({
     layer,
     view,
     theme: "above-and-below",
@@ -109,9 +107,7 @@ async function createTotalChangeRenderer(params: CreateRendererParams) {
     symbolOptions: {
       symbolStyle: "circle-arrow"
     }
-  } as esri.univariateColorSizeCreateContinuousRendererParams;
-
-  const { renderer } = await univariateRendererCreator.createContinuousRenderer(rendererParams);
+  });
   renderer.classBreakInfos[0].maxValue = 0;
   renderer.classBreakInfos[1].minValue = 0;
   const sizeVariable = renderer.visualVariables.filter( vv => vv.type === "size")[0] as esri.SizeVariable;;
@@ -119,8 +115,8 @@ async function createTotalChangeRenderer(params: CreateRendererParams) {
     new SizeStop({ value: -2000000, size: 40 }),
     new SizeStop({ value: -1000000, size: 24 }),
     new SizeStop({ value: 0, size: 8 }),
-    new SizeStop({ value: 250000, size: 12 }),
-    new SizeStop({ value: 500000, size: 16 })
+    new SizeStop({ value: 1000000, size: 24 }),
+    new SizeStop({ value: 2000000, size: 40 }),
   ];
 
   return renderer;
