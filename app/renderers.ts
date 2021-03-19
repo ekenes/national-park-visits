@@ -36,14 +36,14 @@ interface CreateRendererParams {
 
 async function createPercentChangeRenderer(params: CreateRendererParams): Promise<ClassBreaksRenderer> {
   const { layer, view, year } = params;
-  const { valueExpression, valueExpressionTitle } = updatePercentChangeValueExpression(year);
+  const previousYear = year - 1;
 
   const { renderer } = await univariateRendererCreator.createContinuousRenderer({
     layer,
     view,
     theme: "above-and-below",
-    valueExpression,
-    valueExpressionTitle,
+    valueExpression: `$feature.F${year} - $feature.F${previousYear}`,
+    valueExpressionTitle: `Total change in park visits (${previousYear} - ${year})`,
     defaultSymbolEnabled: false,
     colorOptions: {
       colorScheme,
@@ -53,17 +53,6 @@ async function createPercentChangeRenderer(params: CreateRendererParams): Promis
       symbolStyle: "circle-arrow"
     }
   });
-  renderer.classBreakInfos[0].maxValue = 0;
-  renderer.classBreakInfos[1].minValue = 0;
-  const sizeVariable = renderer.visualVariables.filter( vv => vv.type === "size")[0] as esri.SizeVariable;
-  sizeVariable.stops = [
-    new SizeStop({ value: -100, size: 40 }),
-    new SizeStop({ value: -50, size: 24 }),
-    new SizeStop({ value: 0, size: 8 }),
-    new SizeStop({ value: 50, size: 24 }),
-    new SizeStop({ value: 100, size: 40 })
-  ];
-
   return renderer;
 }
 

@@ -52,18 +52,18 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     exports.RendererVars = RendererVars;
     function createPercentChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var layer, view, year, _a, valueExpression, valueExpressionTitle, renderer, sizeVariable;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var layer, view, year, previousYear, renderer;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
-                        _a = expressions_1.updatePercentChangeValueExpression(year), valueExpression = _a.valueExpression, valueExpressionTitle = _a.valueExpressionTitle;
+                        previousYear = year - 1;
                         return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer({
                                 layer: layer,
                                 view: view,
                                 theme: "above-and-below",
-                                valueExpression: valueExpression,
-                                valueExpressionTitle: valueExpressionTitle,
+                                valueExpression: "$feature.F" + year + " - $feature.F" + previousYear,
+                                valueExpressionTitle: "Total change in park visits (" + previousYear + " - " + year + ")",
                                 defaultSymbolEnabled: false,
                                 colorOptions: {
                                     colorScheme: colorScheme,
@@ -74,17 +74,7 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                                 }
                             })];
                     case 1:
-                        renderer = (_b.sent()).renderer;
-                        renderer.classBreakInfos[0].maxValue = 0;
-                        renderer.classBreakInfos[1].minValue = 0;
-                        sizeVariable = renderer.visualVariables.filter(function (vv) { return vv.type === "size"; })[0];
-                        sizeVariable.stops = [
-                            new SizeStop({ value: -100, size: 40 }),
-                            new SizeStop({ value: -50, size: 24 }),
-                            new SizeStop({ value: 0, size: 8 }),
-                            new SizeStop({ value: 50, size: 24 }),
-                            new SizeStop({ value: 100, size: 40 })
-                        ];
+                        renderer = (_a.sent()).renderer;
                         return [2 /*return*/, renderer];
                 }
             });
