@@ -165,3 +165,7 @@ body,
 .esri-feature-media__item-title {
   text-align: center;
 }
+
+.esri-ui-corner .esri-component .esri-expand__content {
+  overflow: auto;
+}
