@@ -37,11 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMapping/renderers/univariateColorSize", "esri/renderers/visualVariables/SizeVariable", "esri/Color", "esri/renderers/visualVariables/support/SizeStop", "esri/symbols/support/cimSymbolUtils", "esri/symbols", "esri/renderers", "./cimReference", "./expressions"], function (require, exports, colorSchemes, univariateRendererCreator, SizeVariable, Color, SizeStop, cimSymbolUtils_1, symbols_1, renderers_1, cimReference_1, expressions_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var colorScheme = colorSchemes.getSchemeByName({
-        geometryType: "point",
-        name: "Green and Brown 1",
-        theme: "above-and-below"
-    });
     exports.renderers = {};
     var RendererVars = /** @class */ (function () {
         function RendererVars() {
@@ -52,12 +47,17 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
     exports.RendererVars = RendererVars;
     function createPercentChangeRenderer(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var layer, view, year, previousYear, renderer;
+            var layer, view, year, previousYear, colorScheme, renderer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         layer = params.layer, view = params.view, year = params.year;
                         previousYear = year - 1;
+                        colorScheme = colorSchemes.getSchemeByName({
+                            geometryType: "point",
+                            name: "Green and Brown 1",
+                            theme: "above-and-below"
+                        });
                         return [4 /*yield*/, univariateRendererCreator.createContinuousRenderer({
                                 layer: layer,
                                 view: view,

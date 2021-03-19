@@ -15,12 +15,6 @@ import { cimReference } from "./cimReference";
 import { updatePercentChangeValueExpression, updateTotalChangeValueExpression } from "./expressions";
 import { UrlParams } from "./urlParams";
 
-const colorScheme = colorSchemes.getSchemeByName({
-  geometryType: "point",
-  name: "Green and Brown 1",
-  theme: "above-and-below"
-});
-
 export const renderers = { };
 
 export class RendererVars {
@@ -37,6 +31,12 @@ interface CreateRendererParams {
 async function createPercentChangeRenderer(params: CreateRendererParams): Promise<ClassBreaksRenderer> {
   const { layer, view, year } = params;
   const previousYear = year - 1;
+
+  const colorScheme = colorSchemes.getSchemeByName({
+    geometryType: "point",
+    name: "Green and Brown 1",
+    theme: "above-and-below"
+  });
 
   const { renderer } = await univariateRendererCreator.createContinuousRenderer({
     layer,
