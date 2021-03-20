@@ -5,22 +5,26 @@ export async function queryStats(layerView:esri.FeatureLayerView, year:number): 
   const query = layerView.createQuery();
   const onStatisticField = createCumulativeSumField(year);
 
-  query.outStatistics = [new StatisticDefinition({
-    statisticType: "sum",
-    onStatisticField,
-    outStatisticFieldName: "total_accumulated_visitation"
-  }), new StatisticDefinition({
-    statisticType: "sum",
-    onStatisticField: `F${year}`,
-    outStatisticFieldName: "annual_visitation"
-  }), new StatisticDefinition({
-    statisticType: "sum",
-    onStatisticField: year > 1904 ? `F${year-1}` : "F1904",
-    outStatisticFieldName: "previous_annual_visitation"
-  })];
+  query.outStatistics = [
+    new StatisticDefinition({
+      statisticType: "sum",
+      onStatisticField,
+      outStatisticFieldName: "total_accumulated_visitation"
+    }), new StatisticDefinition({
+      statisticType: "sum",
+      onStatisticField: `F${year}`,
+      outStatisticFieldName: "annual_visitation"
+    }), new StatisticDefinition({
+      statisticType: "sum",
+      onStatisticField: year > 1904 ? `F${year-1}` : "F1904",
+      outStatisticFieldName: "previous_annual_visitation"
+    })
+  ];
 
+  // queries data available on the client
   const response = await layerView.queryFeatures(query);
   const stats = response.features[0].attributes;
+
   return stats;
 }
 

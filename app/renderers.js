@@ -71,11 +71,14 @@ define(["require", "exports", "esri/smartMapping/symbology/color", "esri/smartMa
                                 },
                                 symbolOptions: {
                                     symbolStyle: "circle-arrow"
+                                    // "caret" | "arrow" | "plus-minus"
+                                    // "square" | "circle" | "triangle"
                                 }
                             })];
                     case 1:
                         renderer = (_a.sent()).renderer;
-                        return [2 /*return*/, renderer];
+                        layer.renderer = renderer;
+                        return [2 /*return*/];
                 }
             });
         });

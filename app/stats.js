@@ -45,7 +45,8 @@ define(["require", "exports", "esri/tasks/support/StatisticDefinition"], functio
                     case 0:
                         query = layerView.createQuery();
                         onStatisticField = createCumulativeSumField(year);
-                        query.outStatistics = [new StatisticDefinition({
+                        query.outStatistics = [
+                            new StatisticDefinition({
                                 statisticType: "sum",
                                 onStatisticField: onStatisticField,
                                 outStatisticFieldName: "total_accumulated_visitation"
@@ -57,7 +58,8 @@ define(["require", "exports", "esri/tasks/support/StatisticDefinition"], functio
                                 statisticType: "sum",
                                 onStatisticField: year > 1904 ? "F" + (year - 1) : "F1904",
                                 outStatisticFieldName: "previous_annual_visitation"
-                            })];
+                            })
+                        ];
                         return [4 /*yield*/, layerView.queryFeatures(query)];
                     case 1:
                         response = _a.sent();

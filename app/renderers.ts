@@ -51,9 +51,11 @@ async function createPercentChangeRenderer(params: CreateRendererParams): Promis
     },
     symbolOptions: {
       symbolStyle: "circle-arrow"
+      // "caret" | "arrow" | "plus-minus"
+      // "square" | "circle" | "triangle"
     }
   });
-  return renderer;
+  layer.renderer = renderer;
 }
 
 interface UpdateRendererParams {
