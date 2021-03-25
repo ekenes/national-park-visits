@@ -95,9 +95,9 @@ export function createPopupTemplate(year: number): PopupTemplate {
       }]
     }, {
       type: "media",
+      title: `Annual park visits (1905-${endYear})`,
       mediaInfos: [{
         type: "line-chart",
-        title: `Annual park visits (1905-${endYear})`,
         value: {
           fields: fieldsForChart
         }

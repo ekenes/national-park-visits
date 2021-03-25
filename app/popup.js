@@ -77,9 +77,9 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
                         }]
                 }, {
                     type: "media",
+                    title: "Annual park visits (1905-" + widgets_1.endYear + ")",
                     mediaInfos: [{
                             type: "line-chart",
-                            title: "Annual park visits (1905-" + widgets_1.endYear + ")",
                             value: {
                                 fields: fieldsForChart
                             }
