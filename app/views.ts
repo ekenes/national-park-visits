@@ -238,6 +238,18 @@ export async function createAkView(params: CreateViewParams){
       components: !isInset ? ["attribution"] : []
     }
   });
+  if(isInset){
+    akView.on("blur", () => {
+      akView.goTo({
+        center: insetCenter,
+        scale: insetScale
+      }, {
+        animate: true,
+        duration: 1000,
+        easing: "ease-in"
+      });
+    });
+  }
   return await akView.when();
 }
 

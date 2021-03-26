@@ -245,6 +245,18 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                                 components: !isInset ? ["attribution"] : []
                             }
                         });
+                        if (isInset) {
+                            akView.on("blur", function () {
+                                akView.goTo({
+                                    center: insetCenter,
+                                    scale: insetScale
+                                }, {
+                                    animate: true,
+                                    duration: 1000,
+                                    easing: "ease-in"
+                                });
+                            });
+                        }
                         return [4 /*yield*/, akView.when()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
