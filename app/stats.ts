@@ -21,7 +21,7 @@ export async function queryStats(layerView:esri.FeatureLayerView, year:number): 
     })
   ];
 
-  // queried from in-memory data available on the client for rendering
+  // queried from in-memory data required for rendering
   const response = await layerView.queryFeatures(query);
   const stats = response.features[0].attributes;
 
