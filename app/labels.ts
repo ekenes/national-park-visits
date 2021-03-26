@@ -61,7 +61,7 @@ function createBasicLabelingInfo(year: number): LabelClass[] {
       })
     }), new LabelClass({
       deconflictionStrategy,
-      where: `F${year} < 1000000`,
+      where: `F${year} > 0 AND F${year} < 1000000`,
       // minScale: 9387410,
       labelExpressionInfo,
       labelPlacement,
@@ -114,7 +114,7 @@ function createChangeLabelingInfo(year: number): LabelClass[] {
       })
     }), new LabelClass({
       deconflictionStrategy,
-      where: `F${year} < 1000000 ${aboveWhere}`,
+      where: `F${year} > 0 AND F${year} < 1000000 ${aboveWhere}`,
       // minScale: 9387410,
       labelExpressionInfo,
       labelPlacement,
@@ -161,7 +161,7 @@ function createChangeLabelingInfo(year: number): LabelClass[] {
       })
     }), new LabelClass({
       deconflictionStrategy,
-      where: `F${year} < 1000000 ${belowWhere}`,
+      where: `F${year} > 0 AND F${year} < 1000000 ${belowWhere}`,
       // minScale: 9387410,
       labelExpressionInfo,
       labelPlacement,
