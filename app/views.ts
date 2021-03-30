@@ -85,17 +85,7 @@ export function createMap(){
             })
           }),
           effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
-        }),
-        // new FeatureLayer({
-        //   popupEnabled: false,
-        //   portalItem: {
-        //     id: "f092c20803a047cba81fbf1e30eff0b5"
-        //   },
-        //   minScale: 0,
-        //   maxScale: 0,
-        //   definitionExpression: `NAME LIKE '%NP%' OR NAME LIKE '%National Park%'`,
-        //   effect: "grayscale(0.3) opacity(0.55) drop-shadow(2px 2px 10px green)"
-        // })
+        })
       ]
     },
     layers: [layer]
@@ -174,7 +164,7 @@ export async function createUsView(params: CreateViewParams) {
       components: ["attribution"]
     }
   });
-  return await usView.when();
+  return usView.when();
 }
 
 export async function createAkView(params: CreateViewParams){
@@ -250,7 +240,7 @@ export async function createAkView(params: CreateViewParams){
       });
     });
   }
-  return await akView.when();
+  return akView.when();
 }
 
 export function createHiView(params: CreateViewParams){
@@ -354,7 +344,7 @@ export async function createViView(params: CreateViewParams){
       components: !isInset ? ["attribution"] : []
     }
   });
-  return await viView.when();
+  return viView.when();
 }
 
 function destroyView(view: MapView, key: string){

@@ -110,7 +110,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                             })
                         }),
                         effect: "grayscale(0.3) drop-shadow(0px 7px 20px gray)"
-                    }),
+                    })
                 ]
             },
             layers: [exports.layer]
@@ -121,68 +121,64 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         return __awaiter(this, void 0, void 0, function () {
             var container, map, isMobile, isInset, mobileScale, desktopScale, scale, center, mobileConstraints, desktopConstraints, constraints, usView;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
-                        container.style.display = "flex";
-                        mobileScale = 36353220;
-                        desktopScale = 16723716;
-                        scale = isMobile ? mobileScale : desktopScale;
-                        center = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": 672019.4302996567, "y": 1501270.997751099 });
-                        mobileConstraints = {
-                            rotationEnabled: false,
-                            minScale: mobileScale,
-                            maxScale: 2000000,
-                            geometry: new geometry_1.Extent({
-                                spatialReference: {
-                                    wkid: 5070
-                                },
-                                xmin: -1921286.8554006994,
-                                ymin: 726332.1394147258,
-                                xmax: 1694697.29902421,
-                                ymax: 2715123.424348426
-                            })
-                        };
-                        desktopConstraints = {
-                            rotationEnabled: false,
-                            minScale: 16215262,
-                            maxScale: 2000000,
-                            geometry: new geometry_1.Extent({
-                                spatialReference: {
-                                    wkid: 5070
-                                },
-                                xmin: -1921286.8554006994,
-                                ymin: 726332.1394147258,
-                                xmax: 1694697.29902421,
-                                ymax: 2715123.424348426
-                            })
-                        };
-                        constraints = isMobile ? mobileConstraints : desktopConstraints;
-                        usView = new MapView({
-                            map: map,
-                            container: container,
-                            popup: {
-                                highlightEnabled: true,
-                                dockEnabled: true,
-                                dockOptions: {
-                                    breakpoint: false,
-                                    position: "top-right"
-                                }
-                            },
-                            center: center,
-                            scale: scale,
-                            constraints: constraints,
-                            spatialReference: {
-                                // NAD_1983_Contiguous_USA_Albers
-                                wkid: 5070
-                            },
-                            ui: {
-                                components: ["attribution"]
-                            }
-                        });
-                        return [4 /*yield*/, usView.when()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+                container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
+                container.style.display = "flex";
+                mobileScale = 36353220;
+                desktopScale = 16723716;
+                scale = isMobile ? mobileScale : desktopScale;
+                center = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": 672019.4302996567, "y": 1501270.997751099 });
+                mobileConstraints = {
+                    rotationEnabled: false,
+                    minScale: mobileScale,
+                    maxScale: 2000000,
+                    geometry: new geometry_1.Extent({
+                        spatialReference: {
+                            wkid: 5070
+                        },
+                        xmin: -1921286.8554006994,
+                        ymin: 726332.1394147258,
+                        xmax: 1694697.29902421,
+                        ymax: 2715123.424348426
+                    })
+                };
+                desktopConstraints = {
+                    rotationEnabled: false,
+                    minScale: 16215262,
+                    maxScale: 2000000,
+                    geometry: new geometry_1.Extent({
+                        spatialReference: {
+                            wkid: 5070
+                        },
+                        xmin: -1921286.8554006994,
+                        ymin: 726332.1394147258,
+                        xmax: 1694697.29902421,
+                        ymax: 2715123.424348426
+                    })
+                };
+                constraints = isMobile ? mobileConstraints : desktopConstraints;
+                usView = new MapView({
+                    map: map,
+                    container: container,
+                    popup: {
+                        highlightEnabled: true,
+                        dockEnabled: true,
+                        dockOptions: {
+                            breakpoint: false,
+                            position: "top-right"
+                        }
+                    },
+                    center: center,
+                    scale: scale,
+                    constraints: constraints,
+                    spatialReference: {
+                        // NAD_1983_Contiguous_USA_Albers
+                        wkid: 5070
+                    },
+                    ui: {
+                        components: ["attribution"]
+                    }
+                });
+                return [2 /*return*/, usView.when()];
             });
         });
     }
@@ -191,75 +187,71 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         return __awaiter(this, void 0, void 0, function () {
             var container, map, isMobile, isInset, mobileScale, desktopScale, insetScale, scale, insetCenter, fullCenter, center, mobileConstraints, desktopConstraints, constraints, akView;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
-                        container.style.display = "flex";
-                        mobileScale = 24510951;
-                        desktopScale = 13076340;
-                        insetScale = 40436349;
-                        scale = isInset ? insetScale : isMobile ? mobileScale : desktopScale;
-                        insetCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 2103194.674427798, "y": -957221.1614695506 });
-                        fullCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 1811978.2456641502, "y": -1043832.0433061125 });
-                        center = isInset ? insetCenter : fullCenter;
-                        mobileConstraints = {
-                            rotationEnabled: false,
-                            minScale: isInset ? insetScale : mobileScale,
-                            maxScale: 5893891,
-                            geometry: new geometry_1.Extent({
-                                spatialReference: {
-                                    wkid: 5936
-                                },
-                                xmin: 737823.0703569443,
-                                ymin: -2103604.250401656,
-                                xmax: 3689660.4504700145,
-                                ymax: 110273.7846831464
-                            })
-                        };
-                        desktopConstraints = {
-                            rotationEnabled: false,
-                            minScale: desktopScale,
-                            maxScale: 4338033,
-                            geometry: new geometry_1.Extent({
-                                spatialReference: {
-                                    wkid: 5936
-                                },
-                                xmin: 737823.0703569443,
-                                ymin: -2103604.250401656,
-                                xmax: 3689660.4504700145,
-                                ymax: 110273.7846831464
-                            })
-                        };
-                        constraints = isInset || isMobile ? mobileConstraints : desktopConstraints;
-                        akView = new MapView({
-                            map: map,
-                            container: container,
-                            center: center,
-                            scale: scale,
-                            constraints: constraints,
-                            spatialReference: {
-                                // WGS_1984_EPSG_Alaska_Polar_Stereographic
-                                wkid: 5936
-                            },
-                            ui: {
-                                components: !isInset ? ["attribution"] : []
-                            }
+                container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
+                container.style.display = "flex";
+                mobileScale = 24510951;
+                desktopScale = 13076340;
+                insetScale = 40436349;
+                scale = isInset ? insetScale : isMobile ? mobileScale : desktopScale;
+                insetCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 2103194.674427798, "y": -957221.1614695506 });
+                fullCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 1811978.2456641502, "y": -1043832.0433061125 });
+                center = isInset ? insetCenter : fullCenter;
+                mobileConstraints = {
+                    rotationEnabled: false,
+                    minScale: isInset ? insetScale : mobileScale,
+                    maxScale: 5893891,
+                    geometry: new geometry_1.Extent({
+                        spatialReference: {
+                            wkid: 5936
+                        },
+                        xmin: 737823.0703569443,
+                        ymin: -2103604.250401656,
+                        xmax: 3689660.4504700145,
+                        ymax: 110273.7846831464
+                    })
+                };
+                desktopConstraints = {
+                    rotationEnabled: false,
+                    minScale: desktopScale,
+                    maxScale: 4338033,
+                    geometry: new geometry_1.Extent({
+                        spatialReference: {
+                            wkid: 5936
+                        },
+                        xmin: 737823.0703569443,
+                        ymin: -2103604.250401656,
+                        xmax: 3689660.4504700145,
+                        ymax: 110273.7846831464
+                    })
+                };
+                constraints = isInset || isMobile ? mobileConstraints : desktopConstraints;
+                akView = new MapView({
+                    map: map,
+                    container: container,
+                    center: center,
+                    scale: scale,
+                    constraints: constraints,
+                    spatialReference: {
+                        // WGS_1984_EPSG_Alaska_Polar_Stereographic
+                        wkid: 5936
+                    },
+                    ui: {
+                        components: !isInset ? ["attribution"] : []
+                    }
+                });
+                if (isInset) {
+                    akView.on("blur", function () {
+                        akView.goTo({
+                            center: insetCenter,
+                            scale: insetScale
+                        }, {
+                            animate: true,
+                            duration: 1000,
+                            easing: "ease-in"
                         });
-                        if (isInset) {
-                            akView.on("blur", function () {
-                                akView.goTo({
-                                    center: insetCenter,
-                                    scale: insetScale
-                                }, {
-                                    animate: true,
-                                    duration: 1000,
-                                    easing: "ease-in"
-                                });
-                            });
-                        }
-                        return [4 /*yield*/, akView.when()];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    });
                 }
+                return [2 /*return*/, akView.when()];
             });
         });
     }
@@ -324,46 +316,42 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         return __awaiter(this, void 0, void 0, function () {
             var container, map, isMobile, isInset, viView;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
-                        container.style.display = "flex";
-                        viView = new MapView({
-                            map: map,
-                            container: container,
-                            extent: {
-                                spatialReference: {
-                                    wkid: 5070
-                                },
-                                xmin: 3368052.0840510447,
-                                ymin: 56364.032814495884,
-                                xmax: 3369766.5874800514,
-                                ymax: 58078.53624350274
-                            },
+                container = params.container, map = params.map, isMobile = params.isMobile, isInset = params.isInset;
+                container.style.display = "flex";
+                viView = new MapView({
+                    map: map,
+                    container: container,
+                    extent: {
+                        spatialReference: {
+                            wkid: 5070
+                        },
+                        xmin: 3368052.0840510447,
+                        ymin: 56364.032814495884,
+                        xmax: 3369766.5874800514,
+                        ymax: 58078.53624350274
+                    },
+                    spatialReference: {
+                        wkid: 5070
+                    },
+                    constraints: {
+                        rotationEnabled: false,
+                        minScale: 43200,
+                        maxScale: 43200,
+                        geometry: new geometry_1.Extent({
                             spatialReference: {
                                 wkid: 5070
                             },
-                            constraints: {
-                                rotationEnabled: false,
-                                minScale: 43200,
-                                maxScale: 43200,
-                                geometry: new geometry_1.Extent({
-                                    spatialReference: {
-                                        wkid: 5070
-                                    },
-                                    xmin: 3368052.0840510447,
-                                    ymin: 56364.032814495884,
-                                    xmax: 3369766.5874800514,
-                                    ymax: 58078.53624350274
-                                })
-                            },
-                            ui: {
-                                components: !isInset ? ["attribution"] : []
-                            }
-                        });
-                        return [4 /*yield*/, viView.when()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+                            xmin: 3368052.0840510447,
+                            ymin: 56364.032814495884,
+                            xmax: 3369766.5874800514,
+                            ymax: 58078.53624350274
+                        })
+                    },
+                    ui: {
+                        components: !isInset ? ["attribution"] : []
+                    }
+                });
+                return [2 /*return*/, viView.when()];
             });
         });
     }
