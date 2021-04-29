@@ -1,6 +1,6 @@
 # national-park-visits
 
-This app allows you to explore visitation numbers to national parks 1905-2020. [View the live app](https://ekenes.github.io/national-park-visits/). Read about [how the app was built](https://www.esri.com/arcgis-blog/products/js-api-arcgis/mapping/inset-maps-for-the-web/) on the [ArcGIS Blog](https://www.esri.com/arcgis-blog/overview/).
+This app allows you to explore visitation numbers to national parks 1905-2020. [View the live app](https://ekenes.github.io/national-park-visits/), and read about [how the app was built](https://www.esri.com/arcgis-blog/products/js-api-arcgis/mapping/inset-maps-for-the-web/) on the [ArcGIS Blog](https://www.esri.com/arcgis-blog/overview/).
 
 ## Build the app
 
