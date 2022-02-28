@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/renderers", "esri/symbols", "esri/geometry", "./renderers", "./labels", "./popup", "./widgets", "esri/geometry/support/jsonUtils"], function (require, exports, WebMap, MapView, FeatureLayer, renderers_1, symbols_1, geometry_1, renderers_2, labels_1, popup_1, widgets_1, jsonUtils_1) {
+define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/renderers", "esri/symbols", "esri/geometry", "./renderers", "./labels", "./popup", "./widgets", "esri/geometry/Point"], function (require, exports, WebMap, MapView, FeatureLayer, renderers_1, symbols_1, geometry_1, renderers_2, labels_1, popup_1, widgets_1, Point_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ViewVars = /** @class */ (function () {
@@ -126,7 +126,7 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 mobileScale = 36353220;
                 desktopScale = 16723716;
                 scale = isMobile ? mobileScale : desktopScale;
-                center = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": 672019.4302996567, "y": 1501270.997751099 });
+                center = Point_1.fromJSON({ "spatialReference": { "wkid": 5070 }, "x": 672019.4302996567, "y": 1501270.997751099 });
                 mobileConstraints = {
                     rotationEnabled: false,
                     minScale: mobileScale,
@@ -193,8 +193,8 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
                 desktopScale = 13076340;
                 insetScale = 40436349;
                 scale = isInset ? insetScale : isMobile ? mobileScale : desktopScale;
-                insetCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 2103194.674427798, "y": -957221.1614695506 });
-                fullCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 1811978.2456641502, "y": -1043832.0433061125 });
+                insetCenter = Point_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 2103194.674427798, "y": -957221.1614695506 });
+                fullCenter = Point_1.fromJSON({ "spatialReference": { "wkid": 5936 }, "x": 1811978.2456641502, "y": -1043832.0433061125 });
                 center = isInset ? insetCenter : fullCenter;
                 mobileConstraints = {
                     rotationEnabled: false,
@@ -263,8 +263,8 @@ define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/
         var desktopScale = 2416226;
         var insetScale = 16833054;
         var scale = isInset ? insetScale : isMobile ? mobileScale : desktopScale;
-        var insetCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 102007 }, "x": 143836.25219758786, "y": 869819.4196612639 });
-        var fullCenter = jsonUtils_1.fromJSON({ "spatialReference": { "wkid": 102007 }, "x": -4804.986580757636, "y": 856852.2343004141 });
+        var insetCenter = Point_1.fromJSON({ "spatialReference": { "wkid": 102007 }, "x": 143836.25219758786, "y": 869819.4196612639 });
+        var fullCenter = Point_1.fromJSON({ "spatialReference": { "wkid": 102007 }, "x": -4804.986580757636, "y": 856852.2343004141 });
         var center = isInset ? insetCenter : fullCenter;
         var mobileConstraints = {
             rotationEnabled: false,

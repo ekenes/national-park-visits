@@ -1,5 +1,5 @@
 import esri = __esri;
-import StatisticDefinition = require("esri/tasks/support/StatisticDefinition");
+import StatisticDefinition = require("esri/rest/support/StatisticDefinition");
 
 export async function queryStats(layerView:esri.FeatureLayerView, year:number): Promise<any> {
   const query = layerView.createQuery();

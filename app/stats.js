@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/tasks/support/StatisticDefinition"], function (require, exports, StatisticDefinition) {
+define(["require", "exports", "esri/rest/support/StatisticDefinition"], function (require, exports, StatisticDefinition) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function queryStats(layerView, year) {

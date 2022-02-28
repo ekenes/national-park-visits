@@ -4,13 +4,13 @@ import FeatureLayer = require("esri/layers/FeatureLayer");
 
 import { SimpleRenderer } from "esri/renderers";
 import { SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
-import { Extent } from "esri/geometry";
+import { Extent, Point } from "esri/geometry";
 import { renderers, RendererVars } from "./renderers";
 import { createLabelingInfo } from "./labels";
 import { createPopupTemplate } from "./popup";
 import { UrlParams } from "./urlParams";
 import { year } from "./widgets";
-import { fromJSON } from "esri/geometry/support/jsonUtils";
+import { fromJSON } from "esri/geometry/Point";
 
 export class ViewVars {
   public static viewType: UrlParams["viewType"] = null;
