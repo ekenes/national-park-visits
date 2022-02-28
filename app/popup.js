@@ -36,16 +36,20 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
             outFields: ["*"],
             expressionInfos: [{
                     name: "max",
-                    title: "Highest growth year",
+                    title: "Highest growth",
                     expression: expressions_1.highestGrowthArcade
                 }, {
                     name: "min",
-                    title: "Lowest growth year",
+                    title: "Lowest growth",
                     expression: expressions_1.lowestGrowthArcade
+                }, {
+                    name: "record",
+                    title: "Year with most visits",
+                    expression: expressions_1.recordVisitsArcade
                 }, {
                     name: "growth",
                     title: "Change from " + (year - 1) + " - " + year,
-                    expression: "\n        var popCurrent = $feature.F" + year + ";\n        var popPrevious = IIF(" + year + " == 1904, 0, $feature.F" + (year - 1) + ");\n        popCurrent - popPrevious;\n      "
+                    expression: "\n        var popCurrent = $feature.F" + year + ";\n        var popPrevious = IIF(" + year + " == 1904, 0, $feature.F" + (year - 1) + ");\n        var change = popCurrent - popPrevious;\n        IIF(change > 0, \"+\", \"\") + Text(change, \"#,###\");\n      "
                 }, {
                     name: "percent-growth",
                     title: "% growth from " + (year - 1) + " - " + year,
@@ -58,15 +62,13 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
                 }, {
                     type: "fields",
                     fieldInfos: [{
-                            fieldName: "expression/growth",
-                            format: {
-                                places: 0,
-                                digitSeparator: true
-                            }
+                            fieldName: "expression/growth"
                         }, {
                             fieldName: "expression/max"
                         }, {
                             fieldName: "expression/min"
+                        }, {
+                            fieldName: "expression/record"
                         }, {
                             fieldName: "TOTAL",
                             label: "Total visits (1904-2019)",
