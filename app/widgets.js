@@ -47,7 +47,7 @@ define(["require", "exports", "esri/widgets/Legend", "esri/widgets/Slider", "esr
     var uiElements = document.getElementById("title");
     var legend = null;
     exports.year = urlParams_1.getUrlParams().year;
-    exports.endYear = 2020;
+    exports.endYear = 2021;
     exports.yearElement = document.getElementById("year");
     exports.previousYearElement = document.getElementById("previous-year");
     exports.yearElement.innerHTML = exports.year.toString();
