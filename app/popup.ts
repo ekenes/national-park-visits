@@ -1,7 +1,7 @@
 import MapView = require("esri/views/MapView");
 import FieldInfo = require("esri/popup/FieldInfo");
 import PopupTemplate = require("esri/PopupTemplate");
-import { highestGrowthArcade, lowestGrowthArcade } from "./expressions";
+import { highestGrowthArcade, lowestGrowthArcade, recordVisitsArcade } from "./expressions";
 import { endYear } from "./widgets";
 
 export function disablePopupOnClick(view: MapView) {
@@ -42,19 +42,24 @@ export function createPopupTemplate(year: number): PopupTemplate {
     outFields: ["*"],
     expressionInfos: [{
       name: "max",
-      title: "Highest growth year",
+      title: "Highest growth",
       expression: highestGrowthArcade
     }, {
       name: "min",
-      title: "Lowest growth year",
+      title: "Lowest growth",
       expression: lowestGrowthArcade
+    }, {
+      name: "record",
+      title: "Year with most visits",
+      expression: recordVisitsArcade
     }, {
       name: "growth",
       title: `Change from ${year-1} - ${year}`,
       expression: `
         var popCurrent = $feature.F${year};
         var popPrevious = IIF(${year} == 1904, 0, $feature.F${year - 1});
-        popCurrent - popPrevious;
+        var change = popCurrent - popPrevious;
+        IIF(change > 0, "+", "") + Text(change, "#,###");
       `
     }, {
       name: "percent-growth",
@@ -76,15 +81,13 @@ export function createPopupTemplate(year: number): PopupTemplate {
     }, {
       type: "fields",
       fieldInfos: [{
-        fieldName: "expression/growth",
-        format: {
-          places: 0,
-          digitSeparator: true
-        }
+        fieldName: "expression/growth"
       }, {
         fieldName: "expression/max"
       }, {
         fieldName: "expression/min"
+      }, {
+        fieldName: "expression/record"
       }, {
         fieldName: "TOTAL",
         label: "Total visits (1904-2019)",

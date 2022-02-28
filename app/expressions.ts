@@ -17,7 +17,7 @@ export const highestGrowthArcade = `
       }
     }
   }
-  return highestYear + " (" + Text(highest, "#,###") + ")";
+  return highestYear + " (+" + Text(highest, "#,###") + ")";
 `;
 
 export const lowestGrowthArcade = `
@@ -54,6 +54,23 @@ export const visitationChangeArcade = `
     }
   }
   return lowest;
+`;
+
+export const recordVisitsArcade = `
+  var highest = -Infinity;
+  var highestYear = null;
+  var value = null;
+  var years = [];
+  for (var att in $feature){
+    if( typeof($feature[att]) == 'Number' && Find('F', att) > -1){
+      value = $feature[att];
+      if(value > highest){
+        highest = value;
+        highestYear = Mid(att, 1,4);
+      }
+    }
+  }
+  return highestYear + " (" + Text(highest, "#,###") + ")";
 `;
 
 
