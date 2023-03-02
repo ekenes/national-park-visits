@@ -71,6 +71,18 @@ export function createPopupTemplate(year: number): PopupTemplate {
         var direction = IIF(perChange < 0, "decrease", "increase");
         return Text(Abs(perChange), '#,###.0') + "% " + direction;
       `
+    }, {
+      name: "total",
+      title: `Total visits (1904 - ${endYear})`,
+      expression: `
+        var s = 1904;
+        var e = ${endYear};
+        var total = 0;
+        for (var y = s; y <= e; y++){
+          total += $feature["F" + y];
+        }
+        return Text(total, "#,###");
+      `
     }],
     fieldInfos: fieldInfos,
     content: [{
@@ -89,12 +101,7 @@ export function createPopupTemplate(year: number): PopupTemplate {
       }, {
         fieldName: "expression/record"
       }, {
-        fieldName: "TOTAL",
-        label: "Total visits (1904-2019)",
-        format: {
-          places: 0,
-          digitSeparator: true
-        }
+        fieldName: "expression/total"
       }]
     }, {
       type: "media",

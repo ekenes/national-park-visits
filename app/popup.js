@@ -54,7 +54,19 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
                     name: "percent-growth",
                     title: "% growth from " + (year - 1) + " - " + year,
                     expression: "\n        var popCurrent = $feature.F" + year + ";\n        var popPrevious = IIF(" + year + " == 1904, 0, $feature.F" + (year - 1) + ");\n        var perChange = ((popCurrent - popPrevious) / popPrevious) * 100;\n        var direction = IIF(perChange < 0, \"decrease\", \"increase\");\n        return Text(Abs(perChange), '#,###.0') + \"% \" + direction;\n      "
-                }],
+                }, {
+                    name: "total",
+                    title: `Total visits (1904 - ${widgets_1.endYear})`,
+                    expression: `
+                      var s = 1904;
+                      var e = ${widgets_1.endYear};
+                      var total = 0;
+                      for (var y = s; y <= e; y++){
+                        total += $feature["F" + y];
+                      }
+                      return Text(total, "#,###");
+                    `
+                  }],
             fieldInfos: fieldInfos,
             content: [{
                     type: "text",
@@ -70,12 +82,7 @@ define(["require", "exports", "esri/popup/FieldInfo", "esri/PopupTemplate", "./e
                         }, {
                             fieldName: "expression/record"
                         }, {
-                            fieldName: "TOTAL",
-                            label: "Total visits (1904-2019)",
-                            format: {
-                                places: 0,
-                                digitSeparator: true
-                            }
+                            fieldName: "expression/total"
                         }]
                 }, {
                     type: "media",

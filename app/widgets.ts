@@ -22,7 +22,7 @@ const uiElements = document.getElementById("title") as HTMLDivElement;
 let legend: Legend = null;
 
 export let { year } = getUrlParams();
-export const endYear = 2021;
+export const endYear = 2022;
 
 export const yearElement = document.getElementById("year") as HTMLSpanElement;
 export const previousYearElement = document.getElementById("previous-year") as HTMLSpanElement;
