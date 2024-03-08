@@ -29,7 +29,7 @@ export function getUrlParams() {
   result = {
     viewType: result.viewType,
     variable: result.variable || "percent-change",
-    year: parseInt(result.year as any) || 2022
+    year: parseInt(result.year as any) || 2023
   };
 
   setUrlParams(result);

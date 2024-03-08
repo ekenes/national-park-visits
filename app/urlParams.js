@@ -20,7 +20,7 @@ define(["require", "exports", "./viewUtils"], function (require, exports, viewUt
         result = {
             viewType: result.viewType,
             variable: result.variable || "percent-change",
-            year: parseInt(result.year) || 2022
+            year: parseInt(result.year) || 2023
         };
         setUrlParams(result);
         return result;
