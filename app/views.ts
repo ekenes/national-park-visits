@@ -70,7 +70,7 @@ export function createMap(){
         new FeatureLayer({
           popupEnabled: false,
           portalItem: {
-            id: "99fd67933e754a1181cc755146be21ca"
+            id: "8c2d6d7df8fa4142b0a1211c8dd66903"
           },
           minScale: 0,
           maxScale: 0,
